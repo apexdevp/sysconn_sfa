@@ -53,3 +53,4 @@ Color kcPrimary = Color(0xff2B2926);
 const Color kcSecondary = Color(0xFF3f3c39);
 const Color kcDark = Color(0xFF414141);
 const Color kcGray = Color(0xffcdcdcd);
+Color kButton2Color = Colors.black;  //akshay addes for task responsive button

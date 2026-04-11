@@ -14,6 +14,11 @@ import 'package:sysconn_sfa/api/entity/company/party_designation_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/persona_entity.dart';
 import 'package:sysconn_sfa/api/entity/sales/retailer_complaint_entity.dart';
 import 'package:sysconn_sfa/api/entity/sales/unbilled_item_entity.dart';
+import 'package:sysconn_sfa/api/entity/taskboard/audit_log_model.dart';
+import 'package:sysconn_sfa/api/entity/taskboard/sales_task_dropdown_model.dart';
+import 'package:sysconn_sfa/api/entity/taskboard/support_task_dropdown_model.dart';
+import 'package:sysconn_sfa/api/entity/taskboard/task_bizopportunities_dropdown_entity.dart';
+import 'package:sysconn_sfa/api/entity/taskboard/taskboard_report_entity.dart';
 import 'package:sysconn_sfa/api/entity/user/userentity.dart';
 import 'package:sysconn_sfa/api/entity/login/loginentity.dart';
 import 'package:sysconn_sfa/api/entity/company/partyentity.dart';
@@ -4292,6 +4297,339 @@ static Future<String> postCustomerContactApi(
     }
   }
 
- 
+ //========================Akshay Taskboard==========================
+
+ static Future<List<TaskBoardEntity>> getSupportTaskDetApi({bool showAll = false,
+    String? fromdate,
+    String? todate,}) async {
+    List<TaskBoardEntity> taskEntityList = [];
+
+    String tasListkUrl;
+     if (showAll) {
+     tasListkUrl =
+        '${ApiUrl.supportTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&retailer_code=${Utility.customerPersonaId}&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
+     }else{ tasListkUrl =
+        '${ApiUrl.supportTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
+     }
+    if (kDebugMode) {
+      print(tasListkUrl);
+    }
+    var supportTaskResponse = await http.get(
+      Uri.parse(tasListkUrl),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+    );
+
+     if (kDebugMode) {
+    print('Support Task Response: ${supportTaskResponse.body}');
+  }
+    if (supportTaskResponse.statusCode == 200) {
+      var supportTaskData = await convert.jsonDecode(
+        supportTaskResponse.body,
+      )['data'];
+      if (supportTaskData.isNotEmpty) {
+        for (int i = 0; i < supportTaskData.length; i++) {
+          TaskBoardEntity taskListEntity = TaskBoardEntity.fromMap(
+            supportTaskData[i],
+          );
+          taskEntityList.add(taskListEntity);
+        }
+      }
+    }
+    return taskEntityList;
+  }
+
+  static Future<List<TaskBoardEntity>> getSalesTaskDetApi({bool showAll = false,
+    String? fromdate,
+    String? todate,}) async {
+    List<TaskBoardEntity> taskEntityList = [];
+    String salesTaskListkUrl;
+     if (showAll) {
+     salesTaskListkUrl =
+        '${ApiUrl.salesTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&retailer_code=${Utility.customerPersonaId}&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
+     }else{salesTaskListkUrl =
+        '${ApiUrl.salesTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
+    }
+    if (kDebugMode) {
+      print(salesTaskListkUrl);
+    }
+    var salesTaskResponse = await http.get(
+      Uri.parse(salesTaskListkUrl),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+    );
+
+     if (kDebugMode) {
+    print('Support Task Response: ${salesTaskResponse.body}');
+  }
+    if (salesTaskResponse.statusCode == 200) {
+      var salesTaskData = await convert.jsonDecode(
+        salesTaskResponse.body,
+      )['data'];
+      if (salesTaskData.isNotEmpty) {
+        for (int i = 0; i < salesTaskData.length; i++) {
+          TaskBoardEntity taskListEntity = TaskBoardEntity.fromMap(
+            salesTaskData[i],
+          );
+          taskEntityList.add(taskListEntity);
+        }
+      }
+    }
+    return taskEntityList;
+  }
+
+  static Future<SalesTaskDropdownModel> getSalesDropdownData() async {
+    try {
+      var dropdownDataUrl =
+          '${ApiUrl.salesDropGetUrl}company_id=${Utility.companyId}&db_nm=${Utility.sysDbName}';
+
+      print("MASTER DATA URL: $dropdownDataUrl");
+
+      final response = await http
+          .get(
+            Uri.parse(dropdownDataUrl),
+            headers: Utility.getSystemxsDmsHeaders(
+              token: Utility.loginDmsToken,
+            ),
+          )
+          .timeout(const Duration(seconds: Utility.tIMEOUTDURATION));
+
+      print("STATUS CODE: ${response.statusCode}");
+      print("RESPONSE BODY: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final jsonData = convert.jsonDecode(response.body);
+        return SalesTaskDropdownModel.fromJson(jsonData);
+      } else {
+        throw Exception('Failed to load master data');
+      }
+    } catch (e) {
+      print("API ERROR: $e");
+      rethrow;
+    }
+  }
+
+  static Future<SupportTaskDropdownModel> getSupportDropdownData() async {
+    try {
+      var dropdownDataUrl =
+          '${ApiUrl.supportDropGetUrl}company_id=${Utility.companyId}&db_nm=${Utility.sysDbName}';
+
+      print("MASTER DATA URL: $dropdownDataUrl");
+
+      final response = await http
+          .get(
+            Uri.parse(dropdownDataUrl),
+            headers: Utility.getSystemxsDmsHeaders(
+              token: Utility.loginDmsToken,
+            ),
+          )
+          .timeout(const Duration(seconds: Utility.tIMEOUTDURATION));
+
+      print("STATUS CODE: ${response.statusCode}");
+      print("RESPONSE BODY: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final jsonData = convert.jsonDecode(response.body);
+        return SupportTaskDropdownModel.fromJson(jsonData);
+      } else {
+        throw Exception('Failed to load master data');
+      }
+    } catch (e) {
+      print("API ERROR: $e");
+      rethrow;
+    }
+  }
+
+  static Future<List<Log>> getAuditLogs({
+  required String model,
+  required String modelId,
+}) async {
+  try {
+    var url =
+        '${ApiUrl.getAuditlog}company_id=${Utility.companyId}&model=$model&modelid=$modelId&db_nm=${Utility.sysDbName}';
+
+    final response = await http
+        .get(Uri.parse(url), headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken))
+        .timeout(const Duration(seconds: Utility.tIMEOUTDURATION));
+
+    if (response.statusCode == 200) {
+      final jsonData = convert.jsonDecode(response.body);
+      List logsList = jsonData['data'];
+      return logsList.map<Log>((e) => Log.fromJson(e)).toList();
+    } else {
+      throw Exception('Failed to load audit logs');
+    }
+  } catch (e) {
+    print("AUDIT LOG API ERROR: $e");
+    rethrow;
+  }
+}
+
+
+//==============================================================
+
+  static Future<String> getBizOpportunityList() async {
+    try {
+      var url =
+          '${ApiUrl.tskviewbizopportunity}company_id=${Utility.companyId}&db_nm=${Utility.sysDbName}';
+
+      final response = await http.get(
+        Uri.parse(url),
+        headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+      );
+
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        throw Exception(
+          "Failed to load Biz Opportunities | Status: ${response.statusCode}",
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<String> postSalesTaskApi(
+    List<Map<String, dynamic>> salesTaskListMap,
+  ) async {
+    var salesTaskUrl = '${ApiUrl.salesTaskPostUrl}db_nm=${Utility.sysDbName}';
+    if (kDebugMode) {
+      print(salesTaskUrl);
+      print(convert.jsonEncode({'data': salesTaskListMap}));
+    }
+    final response = await http.post(
+      Uri.parse(salesTaskUrl),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+      body: convert.jsonEncode({'data': salesTaskListMap}),
+    );
+    if (response.statusCode == 200) {
+      return convert.jsonDecode(response.body)['message'];
+    } else {
+      return 'Oops there is an Error!';
+    }
+  }
+
+  static Future<String> postSupportTaskApi(
+    List<Map<String, dynamic>> supportTaskListMap,
+  ) async {
+    var supportTaskUrl =
+        '${ApiUrl.supportTaskPostUrl}db_nm=${Utility.sysDbName}';
+    if (kDebugMode) {
+      print(supportTaskUrl);
+      print(convert.jsonEncode({'data': supportTaskListMap}));
+    }
+    final response = await http.post(
+      Uri.parse(supportTaskUrl),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+      body: convert.jsonEncode({'data': supportTaskListMap}),
+    );
+    if (response.statusCode == 200) {
+      return convert.jsonDecode(response.body)['message'];
+    } else {
+      return 'Oops there is an Error!';
+    }
+  }
+
+  static Future<String> addOpportunitiesApi(
+    List<Map<String, dynamic>> opportunitiesMap,
+  ) async {
+    var addOpportunitiesUrl =
+        '${ApiUrl.addOpportunitiesUrl}db_nm=${Utility.sysDbName}';
+
+    if (kDebugMode) {
+      print(addOpportunitiesUrl);
+      print(convert.jsonEncode({'data': opportunitiesMap}));
+    }
+    final response = await http.post(
+      Uri.parse(addOpportunitiesUrl),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+      body: convert.jsonEncode({"data": opportunitiesMap}),
+    );
+
+    print("STATUS: ${response.statusCode}");
+    print("BODY: ${response.body}");
+
+    if (response.statusCode == 200) {
+      return convert.jsonDecode(response.body)['message'];
+    } else {
+      return 'Oops there is an error!';
+    }
+  }
+  
+  static Future<TaskBizOpportunityDropdownEntity>
+  getTaskBizOpportunityDropdown() async {
+    try {
+      var opportunitiesDropdownUrl =
+          '${ApiUrl.dropdownOpportunities}company_id=${Utility.companyId}&db_nm=${Utility.sysDbName}';
+
+
+      final response = await http
+          .get(
+            Uri.parse(opportunitiesDropdownUrl),
+            headers: Utility.getSystemxsDmsHeaders(
+              token: Utility.loginDmsToken,
+            ),
+          )
+          .timeout(const Duration(seconds: Utility.tIMEOUTDURATION));
+
+      if (response.statusCode == 200) {
+        final jsonData = convert.jsonDecode(response.body);
+        print("JSON DECODE SUCCESS");
+        return TaskBizOpportunityDropdownEntity.fromJson(jsonData);
+      } else {
+        throw Exception('Failed to load master data');
+      }
+    } catch (e) {
+      print("API ERROR: $e");
+      rethrow;
+    }
+  }
+  static Future<String> deleteSalesTaskApiCall(
+    List<Map<String, dynamic>> salesTaskListMap,
+  ) async {
+    var deletesalesTaskUrl =
+        '${ApiUrl.salesTaskDeleteUrl}db_nm=${Utility.sysDbName}';
+
+    if (kDebugMode) {
+      print(deletesalesTaskUrl);
+      print(convert.jsonEncode({'data': salesTaskListMap}));
+    }
+
+    final response = await http.post(
+      Uri.parse(deletesalesTaskUrl),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+      body: convert.jsonEncode({'data': salesTaskListMap}),
+    );
+
+    if (response.statusCode == 200) {
+      return convert.jsonDecode(response.body)['message'];
+    } else {
+      return 'Oops there is an error!';
+    }
+  }
+
+  static Future<String> deleteSupportTaskApiCall(
+    List<Map<String, dynamic>> supportTaskListMap,
+  ) async {
+    var deletesupportTaskUrl =
+        '${ApiUrl.supportTaskDeleteUrl}db_nm=${Utility.sysDbName}';
+
+    if (kDebugMode) {
+      print(deletesupportTaskUrl);
+      print(convert.jsonEncode({'data': supportTaskListMap}));
+    }
+
+    final response = await http.post(
+      Uri.parse(deletesupportTaskUrl),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+      body: convert.jsonEncode({'data': supportTaskListMap}),
+    );
+
+    if (response.statusCode == 200) {
+      return convert.jsonDecode(response.body)['message'];
+    } else {
+      return 'Oops there is an error!';
+    }
+  }
+
 
 }

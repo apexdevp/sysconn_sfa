@@ -17,6 +17,8 @@ import 'package:sysconn_sfa/screens/buddy/sales/reports/inactive_item_report/vie
 import 'package:sysconn_sfa/screens/buddy/sales/reports/sales_order_rpt/view/itemwise_so_pending_rpt.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/reports/sales_order_rpt/view/sales_order_register.dart';
 import 'package:sysconn_sfa/screens/expenses/controllers/expenses_menu_controller.dart';
+import 'package:sysconn_sfa/screens/taskboard/controller/taskrptcontroller.dart';
+import 'package:sysconn_sfa/screens/taskboard/view/task_report_screen.dart';
 import 'package:sysconn_sfa/widgets/menuCard.dart';
 
 import '../reports/visit_summary_report/view/visit attendance_summary_rpt.dart';
@@ -91,14 +93,34 @@ class SalesMenuView extends StatelessWidget {
               SizedBox(width: size.width * 0.02),
               MenuCardView(
                 image: Image.asset(ImageList.taskImage),
-                title: 'Task',
-                function: () {},
+                // title: 'Task',
+                title: 'Sales Task',
+
+                function: () {
+                  Get.to(
+                    () => TaskReport(),
+                    binding: BindingsBuilder(() {
+                      Get.put(TaskController());
+                    }),
+                    arguments: {'type': 'sales', 'showAll': false},
+                  );
+                },
               ),
               SizedBox(width: size.width * 0.02),
               MenuCardView(
                 image: Image.asset(ImageList.supportImage),
-                title: 'Support Ticket',
-                function: () {},
+                // title: 'Support Ticket',
+                title: 'Support Task',
+
+                function: () {
+                  Get.to(
+                    () => TaskReport(),
+                    binding: BindingsBuilder(() {
+                      Get.put(TaskController());
+                    }),
+                    arguments: {'type': 'support', 'showAll': false},
+                  );
+                },
               ),
             ],
           ),

@@ -336,6 +336,35 @@ class ApiUrl {
   static String deletLedger =
       'https://${Utility.postApiHostUrlDms}/Expenses/Expenses_Ledger_Delete/ledDelFunc?';
 
+//=================akshay taskboard==========================
+  static String supportTaskUrl =
+      'https://${Utility.getApiHostUrlDms}/Taskboard/Support_TaskList/GetSupportTask?';
+  static String salesTaskUrl =
+      'https://${Utility.getApiHostUrlDms}/Taskboard/Sales_TaskList/GetSalesTask?';
+  static String salesDropGetUrl =
+      'https://${Utility.getApiHostUrlDms}/Taskboard/SalesTask_Dropdown/GetSupportTaskData?';
+  static String supportDropGetUrl =
+      'https://${Utility.getApiHostUrlDms}/Taskboard/SupportTask_Dropdown/GetSupportTaskData?';
+  static String dropdownOpportunities =
+      'https://${Utility.getApiHostUrlDms}/bizopportunity/Biz_Opportunity_Dropdown/BizOpportunityData?'; //shweta 09-03-26
+  static String getAuditlog =
+      'https://${Utility.getApiHostUrlDms}/Taskboard/Task_ActivityLog_List/GetActivityLogList?'; 
+  static String tskviewbizopportunity =
+      'https://${Utility.getApiHostUrlDms}/bizopportunity/Biz_Opportunity_DatList/GetBizDataList?';
+  
+
+  static String salesTaskPostUrl =
+      'https://${Utility.postApiHostUrlDms}/Taskboard/Sales_Task_Add/Taskadd?';
+  static String supportTaskPostUrl =
+      'https://${Utility.postApiHostUrlDms}/Taskboard/Support_Task_Add/Taskadd?';
+  static String salesTaskDeleteUrl =
+      'https://${Utility.postApiHostUrlDms}/Taskboard/Sales_Task_Del/SalesTaskDelete?';
+  static String supportTaskDeleteUrl =
+      'https://${Utility.postApiHostUrlDms}/Taskboard/Support_Task_Del/SupportTaskDelete?';
+  static String addOpportunitiesUrl =
+      'https://${Utility.postApiHostUrlDms}/bizopportunity/Add_BizOpportunity/Bizadd?'; //shweta 09-03-26
+  
+
   // static String advexpenseDeleteUrl =
   //     'https://${Utility.postApiHostUrlDms}/Expenses/Advance_Expense_Delete/Advance_Expense_Delete_Func?';
 }
