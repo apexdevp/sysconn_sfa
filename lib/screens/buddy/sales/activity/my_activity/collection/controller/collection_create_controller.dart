@@ -225,6 +225,7 @@ class CreateCollectionController extends GetxController {
       bankLedgerNameSelected.value = receiptdet.bankName ?? '';
       instruDateCntrl.text = receiptdet.instrumentDate ?? '';
       instruNoCntrl.text = receiptdet.instrumentNo ?? '';
+      remarkController.text=receiptdet.narration??'';
 
       /// ---------- DATE ----------
       if (receiptdet.date != null && receiptdet.date!.isNotEmpty) {
@@ -239,7 +240,7 @@ class CreateCollectionController extends GetxController {
       remarkController.text = receiptdet.narration ?? '';
       amntRcvdCntrl.text = receiptdet.totalAmount ?? '';
 
-      /// ---------- LEDGER ----------
+      /// ----  `------ LEDGER ----------
       if (receiptdet.recLedger != null && receiptdet.recLedger!.isNotEmpty) {
         for (final l in receiptdet.recLedger!) {
           recLedgerEntity.add(l);
@@ -359,64 +360,268 @@ class CreateCollectionController extends GetxController {
     }
   }
 
-  Future<void> postLedgerDataApi({
-    required String partyId,
-    required String ledgerId,
-    required String amount,
-    required String type,
-  }) async {
-    bool isValid = false;
+//   Future<void> postLedgerDataApi({
+//     required String partyId,
+//     required String ledgerId,
+//     required String amount,
+//     required String type,
+//   }) async {
+//     bool isValid = false;
 
-    // ---------- VALIDATION ----------
-    isValid = await isLedgerValid(type: partyId, amount: amount);
+//     // ---------- VALIDATION ----------
+//     isValid = await isLedgerValid(type: partyId, amount: amount);
 
-    if (!isValid) return;
+//     if (!isValid) return;
 
-    // ---------- PREPARE PAYLOAD ----------
-    final List<Map<String, dynamic>> purchaseTransDetMapList = [];
+//     // ---------- PREPARE PAYLOAD ----------
+//     final List<Map<String, dynamic>> purchaseTransDetMapList = [];
 
-    final ReceiptLedgerEntity billEntity = ReceiptLedgerEntity()
-      ..companyId = Utility.companyId
-      ..hedUniqueId = recUniqueId.value
-      ..uniqueId = detailUniqueId.value
+//     final ReceiptLedgerEntity billEntity = ReceiptLedgerEntity()
+//       ..companyId = Utility.companyId
+//       ..hedUniqueId = recUniqueId.value
+//       ..uniqueId = detailUniqueId.value
 
       
-      ..partyId = partyId
-      ..ledgerId = ledgerId
-      ..type = type
-      ..amount = amount;
-    purchaseTransDetMapList.add(billEntity.toJson());
-    // ---------- API CALL ----------
+//       ..partyId = partyId
+//       ..ledgerId = ledgerId
+//       ..type = type
+//       ..amount = amount;
+//     purchaseTransDetMapList.add(billEntity.toJson());
+//     // ---------- API CALL ----------
+//     final billResponse = await ApiCall.collectionLedPostApi(
+//       purchaseTransDetListMap: purchaseTransDetMapList,
+//     );
+
+//     // ---------- RESPONSE HANDLING ----------
+//     if (billResponse == 'Data Inserted Successfully') {
+//       // close loader
+//       // Get.back();
+
+//       // // close dialog
+//       // Get.back();
+//       // Close loader
+//   // if (Get.isDialogOpen ?? false) Get.back();
+
+// if (!isAddMoreClk.value) {
+//         Get.back();
+//       }      // refresh receipt data
+//       await getReceiptData();
+//     } else {
+//       // Get.back(); // close loader
+//       await Utility.showAlert(
+//         icons: Icons.close,
+//         iconcolor: Colors.red,
+//         title: 'Error',
+//         msg: 'Oops there is an error!',
+//       );
+//     }
+//   }
+// Future<void> postLedgerDataApi({
+//   required String partyId,
+//   required String ledgerId,
+//   required String amount,
+//   required String type,
+// }) async {
+//   bool isValid = await isLedgerValid(type: partyId, amount: amount);
+//   if (!isValid) return;
+
+//   final billEntity = ReceiptLedgerEntity()
+//     ..companyId = Utility.companyId
+//     ..hedUniqueId = recUniqueId.value
+//     ..uniqueId = detailUniqueId.value
+//     ..partyId = partyId
+//     ..ledgerId = ledgerId
+//     ..type = type
+//     ..amount = amount;
+
+//   final purchaseTransDetMapList = [billEntity.toJson()];
+
+//   // Show loader
+//   Utility.showCircularLoadingWid(Get.context!);
+
+//   try {
+//     final billResponse = await ApiCall.collectionLedPostApi(
+//       purchaseTransDetListMap: purchaseTransDetMapList,
+//     );
+
+//     if (billResponse == 'Data Inserted Successfully') {
+//       if (isAddMoreClk.value) {
+//         amountTextEditingControllerBlank(); // clear fields
+//         scaffoldMessageValidationBar(Get.context!, "Ledger Added", isError: false);
+//       } else {
+//         // Navigate back first
+//         Get.back(); // close Add Ledger screen
+
+//         // Refresh receipt data AFTER navigation
+//         await getReceiptData();
+
+//         // Show snackbar after navigation
+//         Future.delayed(const Duration(milliseconds: 200), () {
+//           scaffoldMessageValidationBar(Get.context!, "Ledger Added", isError: false);
+//         });
+//       }
+//     } else {
+//       await Utility.showAlert(
+//         icons: Icons.close,
+//         iconcolor: Colors.red,
+//         title: 'Error',
+//         msg: billResponse.toString(),
+//       );
+//     }
+//   } catch (e) {
+//     await Utility.showAlert(
+//       icons: Icons.close,
+//       iconcolor: Colors.red,
+//       title: 'Error',
+//       msg: e.toString(),
+//     );
+//   } finally {
+//     // ALWAYS close loader
+//     if (Get.isDialogOpen ?? false) {
+//       Get.back();
+//     }
+//   }
+// }
+
+// Future<void> postLedgerDataApi({
+//   required String partyId,
+//   required String ledgerId,
+//   required String amount,
+//   required String type,
+// }) async {
+//   // ---------- VALIDATION ----------
+//   bool isValid = await isLedgerValid(type: type, amount: amount);
+//   if (!isValid) return;
+
+//   // ---------- PREPARE ENTITY ----------
+//   final billEntity = ReceiptLedgerEntity()
+//     ..companyId = Utility.companyId
+//     ..hedUniqueId = recUniqueId.value
+//     ..uniqueId = detailUniqueId.value
+//     ..partyId = partyId
+//     ..ledgerId = ledgerId
+//     ..type = type
+//     ..amount = amount;
+
+//   final purchaseTransDetMapList = [billEntity.toJson()];
+
+//   // ---------- SHOW LOADER ----------
+//   Utility.showCircularLoadingWid(Get.context!);
+
+//   try {
+//     final billResponse = await ApiCall.collectionLedPostApi(
+//       purchaseTransDetListMap: purchaseTransDetMapList,
+//     );
+
+//     // ---------- CLOSE LOADER ----------
+//     if (Get.isDialogOpen ?? false) Get.back();
+
+//     if (billResponse == 'Data Inserted Successfully') {
+//       if (isAddMoreClk.value) {
+//         // ---------- ADD MORE ----------
+//         amountTextEditingControllerBlank(); // Clear fields & uniqueId
+//         scaffoldMessageValidationBar(Get.context!, "Ledger Added", isError: false);
+
+//       } else {
+//         // ---------- DONE ----------
+//         await getReceiptData(); // Refresh receipt data before closing
+
+//         // Keep uniqueId in case user wants to edit later
+//         amountTextEditingControllerBlank();
+
+//         // Close Add Ledger screen
+//         Get.back();
+
+//         // Show snackbar AFTER navigation
+//         Future.delayed(const Duration(milliseconds: 200), () {
+//           scaffoldMessageValidationBar(Get.context!, "Ledger Added", isError: false);
+//         });
+//       }
+//     } else {
+//       // ---------- API ERROR ----------
+//       await Utility.showAlert(
+//         icons: Icons.close,
+//         iconcolor: Colors.red,
+//         title: 'Error',
+//         msg: billResponse.toString(),
+//       );
+//     }
+//   } catch (e) {
+//     // ---------- CATCH ERROR ----------
+//     if (Get.isDialogOpen ?? false) Get.back();
+
+//     await Utility.showAlert(
+//       icons: Icons.close,
+//       iconcolor: Colors.red,
+//       title: 'Error',
+//       msg: e.toString(),
+//     );
+//   }
+// }
+
+Future<void> postLedgerDataApi({
+  required String partyId,
+  required String ledgerId,
+  required String amount,
+  required String type,
+}) async {
+  // ---------- VALIDATION ----------
+  bool isValid = await isLedgerValid(type: type, amount: amount);
+  if (!isValid) return;
+
+  // ---------- PREPARE ENTITY ----------
+  final billEntity = ReceiptLedgerEntity()
+    ..companyId = Utility.companyId
+    ..hedUniqueId = recUniqueId.value
+    ..uniqueId = detailUniqueId.value
+    ..partyId = partyId
+    ..ledgerId = ledgerId
+    ..type = type
+    ..amount = amount;
+
+  final purchaseTransDetMapList = [billEntity.toJson()];
+
+  // ---------- SHOW LOADER ----------
+  // Utility.showCircularLoadingWid(Get.context!);
+
+  try {
     final billResponse = await ApiCall.collectionLedPostApi(
       purchaseTransDetListMap: purchaseTransDetMapList,
     );
 
-    // ---------- RESPONSE HANDLING ----------
+    // ---------- CLOSE LOADER ----------
+    if (Get.isDialogOpen ?? false) Get.back();
+
     if (billResponse == 'Data Inserted Successfully') {
-      // close loader
-      // Get.back();
-
-      // // close dialog
-      // Get.back();
-      // Close loader
-  // if (Get.isDialogOpen ?? false) Get.back();
-
-if (!isAddMoreClk.value) {
-        Get.back();
-      }      // refresh receipt data
-      await getReceiptData();
+      if (isAddMoreClk.value) {
+        // ---------- ADD MORE ----------
+        amountTextEditingControllerBlank(); // Clear fields & uniqueId
+        scaffoldMessageValidationBar(Get.context!, "Ledger Added", isError: false);
+      } else {
+        // ---------- DONE ----------
+        await getReceiptData(); // Refresh receipt data
+        amountTextEditingControllerBlank();
+        Get.back(); // Close Add Ledger screen
+        Future.delayed(const Duration(milliseconds: 200), () {
+          scaffoldMessageValidationBar(Get.context!, "Ledger Added", isError: false);
+        });
+      }
     } else {
-      // Get.back(); // close loader
       await Utility.showAlert(
         icons: Icons.close,
         iconcolor: Colors.red,
         title: 'Error',
-        msg: 'Oops there is an error!',
+        msg: billResponse.toString(),
       );
     }
+  } catch (e) {
+    if (Get.isDialogOpen ?? false) Get.back();
+    await Utility.showAlert(
+      icons: Icons.close,
+      iconcolor: Colors.red,
+      title: 'Error',
+      msg: e.toString(),
+    );
   }
 }
-
-
-
-
+}

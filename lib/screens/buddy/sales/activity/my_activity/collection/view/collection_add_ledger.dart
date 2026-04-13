@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sysconn_sfa/Utility/systemxs_global.dart';
 import 'package:sysconn_sfa/Utility/textFormField.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
-import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/collection/controller/collection_create_controller.dart';
 import 'package:sysconn_sfa/widgets/customautocompletefield.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
@@ -210,58 +208,84 @@ class _CollectionAddLedgerState extends State<CollectionAddLedger> {
             child: Row(
               children: <Widget>[
                 // widget.title == 'Create Ledger'?
-                Expanded(
-                  child: ElevatedButton(
-                    child: Text("Add More", style: kTxtStl16B),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      padding: EdgeInsets.all(9.0),
-                      elevation: 6.0,
-                      backgroundColor: Colors.lightGreen.shade400,
-                    ),
-                    onPressed: () async {
-                      widget.controller.isAddMoreClk.value = false;
-                      // Utility.showCircularLoadingWid(context);
-                      await widget.controller.postLedgerDataApi(
-                        partyId: widget.controller.partyIdSelected.value,
-                        ledgerId: widget.controller.ledgerIdSelected.value,
-                        amount: widget.controller.amtController.text,
-                        type: widget.type == 'Party' ? 'P' : 'L',
-                      );
-                      scaffoldMessageValidationBar(Get.context!,'Ledger Added.', isError: false);
-                      // widget.controller.amountTextEditingControllerBlank();
-                    },
-                  ),
-                ),
-                // : Container(),
-                SizedBox(width: size.width * 0.02),
-                Expanded(
-                  child: ElevatedButton(
-                    child: Text("Done", style: kTxtStl16B),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      padding: EdgeInsets.all(9.0),
-                      elevation: 6.0,
-                      backgroundColor: Colors.cyan.shade300,
-                    ),
-                    onPressed: () {
-                      widget.controller.isAddMoreClk.value = false;
-                      Utility.showCircularLoadingWid(context);
-                      widget.controller.postLedgerDataApi(
-                        partyId: widget.controller.partyIdSelected.value,
-                        ledgerId: widget.controller.ledgerIdSelected.value,
-                        amount: widget.controller.amtController.text,
-                        type: widget.type == 'Party' ? 'P' : 'L',
-                      );
-                    },
-                  ),
-                ),
+                // Expanded(
+                //   child: ElevatedButton(
+                //     child: Text("Add More", style: kTxtStl16B),
+                //     style: ElevatedButton.styleFrom(
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(30),
+                //       ),
+                //       padding: EdgeInsets.all(9.0),
+                //       elevation: 6.0,
+                //       backgroundColor: Colors.lightGreen.shade400,
+                //     ),
+                //     onPressed: () async {
+                //       widget.controller.isAddMoreClk.value = true;
+                //       // Utility.showCircularLoadingWid(context);
+                //       await widget.controller.postLedgerDataApi(
+                //         partyId: widget.controller.partyIdSelected.value,
+                //         ledgerId: widget.controller.ledgerIdSelected.value,
+                //         amount: widget.controller.amtController.text,
+                //         type: widget.type == 'Party' ? 'P' : 'L',
+                //       );
+                //       scaffoldMessageValidationBar(Get.context!,'Ledger Added.', isError: false);
+                //       widget.controller.amountTextEditingControllerBlank();
+                //     },
+                //   ),
+                // ),
+                // // : Container(),
+                // SizedBox(width: size.width * 0.02),
+                // Expanded(
+                //   child: ElevatedButton(
+                //     child: Text("Done", style: kTxtStl16B),
+                //     style: ElevatedButton.styleFrom(
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(30),
+                //       ),
+                //       padding: EdgeInsets.all(9.0),
+                //       elevation: 6.0,
+                //       backgroundColor: Colors.cyan.shade300,
+     
+                //     ),
+                //     onPressed: () {
+                //       widget.controller.isAddMoreClk.value = false;
+                //       Utility.showCircularLoadingWid(context);
+                //       widget.controller.postLedgerDataApi(
+                //         partyId: widget.controller.partyIdSelected.value,
+                //         ledgerId: widget.controller.ledgerIdSelected.value,
+                //         amount: widget.controller.amtController.text,
+                //         type: widget.type == 'Party' ? 'P' : 'L',
+                //       );
+                //     },
+                //   ),
+                // ),
 
-             
+                Expanded(
+  child: ElevatedButton(
+    child: Text("Add More", style: kTxtStl16B),
+    style: ElevatedButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
+      padding: EdgeInsets.all(9.0),
+      elevation: 6.0,
+      backgroundColor: Colors.lightGreen.shade400,
+    ),
+    onPressed: () async {
+      widget.controller.isAddMoreClk.value = true;
+
+      await widget.controller.postLedgerDataApi(
+        partyId: widget.controller.partyIdSelected.value,
+        ledgerId: widget.controller.ledgerIdSelected.value,
+        amount: widget.controller.amtController.text,
+        type: widget.type == 'Party' ? 'P' : 'L',
+      );
+
+   
+    },
+  ),
+),
+
 Expanded(
   child: ElevatedButton(
     child: Text("Done", style: kTxtStl16B),
@@ -276,7 +300,7 @@ Expanded(
     onPressed: () async {
       widget.controller.isAddMoreClk.value = false;
 
-      // Await API call to finish and handle loader inside postLedgerDataApi
+    
       await widget.controller.postLedgerDataApi(
         partyId: widget.controller.partyIdSelected.value,
         ledgerId: widget.controller.ledgerIdSelected.value,
@@ -284,7 +308,7 @@ Expanded(
         type: widget.type == 'Party' ? 'P' : 'L',
       );
 
-      // After successful Done, navigate back to previous screen automatically handled in controller
+     
     },
   ),
 ),
