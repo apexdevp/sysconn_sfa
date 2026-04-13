@@ -12,6 +12,7 @@ import 'package:sysconn_sfa/api/entity/company/party_contact_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/party_contact_response_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/party_designation_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/persona_entity.dart';
+import 'package:sysconn_sfa/api/entity/company/product_%20master_data_entity.dart';
 import 'package:sysconn_sfa/api/entity/sales/retailer_complaint_entity.dart';
 import 'package:sysconn_sfa/api/entity/sales/unbilled_item_entity.dart';
 import 'package:sysconn_sfa/api/entity/taskboard/audit_log_model.dart';
@@ -2901,6 +2902,39 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     }
     return expenseHedEntity;
   }
+   //=============================Product====================
+  //shweta 24-02-2026
+  static Future<ProductMasterDataEntity> getProdMasterData() async {
+    try {
+      var masterDataUrl =
+          '${ApiUrl.productMasterGetUrl}company_id=${Utility.companyId}&db_nm=${Utility.sysDbName}';
+
+
+      final response = await http
+          .get(
+            Uri.parse(masterDataUrl),
+            headers: Utility.getSystemxsDmsHeaders(
+              token: Utility.loginDmsToken,
+            ),
+          )
+          .timeout(const Duration(seconds: Utility.tIMEOUTDURATION));
+
+      print("STATUS CODE: ${response.statusCode}");
+      //print("RESPONSE BODY:");
+      //print(response.body);
+
+      if (response.statusCode == 200) {
+        final jsonData = convert.jsonDecode(response.body);
+        print("JSON DECODE SUCCESS");
+        return ProductMasterDataEntity.fromJson(jsonData);
+      } else {
+        throw Exception('Failed to load master data');
+      }
+    } catch (e) {
+      print("API ERROR: $e");
+      rethrow;
+    }
+  }
 
   //======================================================================================================================
   //Snehal 24-12-2025 add
@@ -4630,6 +4664,99 @@ static Future<String> postCustomerContactApi(
       return 'Oops there is an error!';
     }
   }
+
+  //===========================Product===================================
+
+    //Sakshi 14/02/2026
+
+  static Future<String> deleteStockItemApi(
+    List<Map<String, dynamic>> itemMasterListMap,
+  ) async {
+    var deleteItemMasterUrl =
+        '${ApiUrl.itemMasterDeleteUrl}db_nm=${Utility.sysDbName}';
+
+    if (kDebugMode) {
+      print(deleteItemMasterUrl);
+      print(convert.jsonEncode({'data': itemMasterListMap}));
+    }
+
+    final response = await http.post(
+      Uri.parse(deleteItemMasterUrl),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+      body: convert.jsonEncode({'data': itemMasterListMap}),
+    );
+
+    if (response.statusCode == 200) {
+      return convert.jsonDecode(response.body)['message'];
+    } else {
+      return 'Oops there is an error!';
+    }
+  }
+
+   static Future<String> postItemMaster(
+    List<Map<String, dynamic>> itemMasterListMap,
+  ) async {
+    var itemMasterUrl =
+        '${ApiUrl.itemMasterCreateUrl}db_nm=${Utility.sysDbName}';
+    if (kDebugMode) {
+      print(itemMasterUrl);
+      print(convert.jsonEncode({'data': itemMasterListMap}));
+    }
+    final response = await http.post(
+      Uri.parse(itemMasterUrl),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+      body: convert.jsonEncode({'data': itemMasterListMap}),
+    );
+    if (response.statusCode == 200) {
+      return convert.jsonDecode(response.body)['message'];
+    } else {
+      return 'Oops there is an error!';
+    }
+  }
+
+  //Sakshi 07/04/2026
+  static Future<String> postProductImage(
+  String companyId,
+  String productCode,
+  Uint8List imageBytes,
+  String fileName,
+) async {
+  var url =
+      '${ApiUrl.productImageUrl}db_nm=${Utility.sysDbName}';
+
+  print("URL: $url");
+
+  var request = http.MultipartRequest('POST', Uri.parse(url));
+
+  request.headers.addAll({
+    'Authorization': 'Bearer ${Utility.loginDmsToken}',
+  });
+  request.fields['COMPANY_ID'] = companyId;
+  request.fields['PRODUCT_CODE'] = productCode;
+
+  request.files.add(
+    http.MultipartFile.fromBytes(
+      'file',
+      imageBytes,
+      filename: fileName,
+    ),
+  );
+
+  request.fields.forEach((k, v) => print("$k : $v"));
+  print("File: $fileName");
+
+  var response = await request.send();
+  var responseData = await response.stream.bytesToString();
+  print(responseData);
+
+  if (response.statusCode == 200) {
+    final resJson = convert.json.decode(responseData);
+    return resJson['message'];
+  } else {
+    return 'Oops there is an error!';
+  }
+}
+
 
 
 }

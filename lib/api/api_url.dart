@@ -196,7 +196,12 @@ class ApiUrl {
       'https://${Utility.getApiHostUrlDms}/Sales_Order/SO_Approval_Status_Report/GetSOApprovalData?';
   static String soPartyRegisterUrl =
       'https://${Utility.getApiHostUrlDms}/Sales_Order/SO_Partywise_Report/party_details_func?';
+
+
   //===================================================================
+    //===========Product =========================================================
+   static String productMasterGetUrl =
+      'https://${Utility.getApiHostUrlDms}/Product/Product_Dropdown_Category/GetProductData?'; //shweta 24-02-2026 added
 
   //////////////////////////////////visit//////////////////////////////////
   static String osreceivableGet =
@@ -367,4 +372,13 @@ class ApiUrl {
 
   // static String advexpenseDeleteUrl =
   //     'https://${Utility.postApiHostUrlDms}/Expenses/Advance_Expense_Delete/Advance_Expense_Delete_Func?';
+
+   //===========Product =========================================================
+
+   static String itemMasterDeleteUrl =
+      'https://${Utility.postApiHostUrlDms}/Company/Item_Master_Del/itemmasterdelFun?'; // Sakshi 10/02/2026
+    static String itemMasterCreateUrl =
+      'https://${Utility.postApiHostUrlDms}/Company/Product_Master/ProductAdd?'; //shweta 24-02-2026 added
+     static String productImageUrl =
+      'https://${Utility.postApiHostUrlDms}/Company/Product_Image/Product_Img_Func?'; //Sakshi 07/04/2026
 }

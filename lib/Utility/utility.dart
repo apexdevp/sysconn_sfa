@@ -1310,4 +1310,21 @@ class Utility {
       });
     }
   }
+
+   // Manoj 23-06-2026 Add Custom getx snackbar
+  static void showErrorSnackBar(String message, {Color bgColor = Colors.red}) {
+    Get.snackbar(
+      'Error', // no title
+      message,
+      backgroundColor: bgColor,
+      colorText: Colors.white,
+      snackPosition: SnackPosition.BOTTOM,
+      margin: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+      borderRadius: 10,
+      maxWidth: 300,
+      duration: const Duration(seconds: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      animationDuration: const Duration(milliseconds: 300),
+    );
+  }
 }

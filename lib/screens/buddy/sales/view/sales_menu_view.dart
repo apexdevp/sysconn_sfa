@@ -14,6 +14,7 @@ import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/my_customer
 import 'package:sysconn_sfa/screens/buddy/sales/reports/daily_performance_report/view/daily_performance_rpt.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/reports/inactive_customer_report/view/inactive_customer_rpt.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/reports/inactive_item_report/view/inactive_item_rpt.dart';
+import 'package:sysconn_sfa/screens/buddy/sales/reports/product_master_report/view/product_master_report.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/reports/sales_order_rpt/view/itemwise_so_pending_rpt.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/reports/sales_order_rpt/view/sales_order_register.dart';
 import 'package:sysconn_sfa/screens/expenses/controllers/expenses_menu_controller.dart';
@@ -191,6 +192,13 @@ class SalesMenuView extends StatelessWidget {
               Get.to(() => InactiveItemReport());
             },
           ),
+           // Sakshi 11/04/2026
+           ReportMenu(
+            title: 'Product Master Report',
+            function: () {
+              Get.to(() => ProductMasterReport());
+            },
+           ),
         ],
       ),
     );

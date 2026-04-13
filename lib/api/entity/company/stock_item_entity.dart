@@ -43,6 +43,14 @@ class StockItemEntity {
   String? stockgroupid;//snehal 3-12-2024 add
   // Manisha 13-12-2024 add column
   String? tallystatus;
+    String? classification; // Sakshi 10/02/2025
+  String? description; // Sakshi 10/02/2025
+  String? category; // // Sakshi 12/02/2025
+  String? subcategory; // Sakshi 12/02/2025
+  String? groupname; // Sakshi 12/02/2025
+  String? existingid; //Shweta 09-03-26
+  String? groupid;
+  String? productSubCatCode;
 
   StockItemEntity();
 
@@ -74,6 +82,15 @@ class StockItemEntity {
     schemeDiscount = json['scheme_discount'];
      stockgroupname=json['stock_group_name'];//snehal  3-12-2024 add
      tallystatus = json['tally_status']; // Manisha 13-12-2024 add column
+     classification = json['classification']; // Sakshi 10/02/2025
+    description = json['description']; // Sakshi 10/02/2025
+    category = json['category_name']; // Sakshi 12/02/2025
+    subcategory = json['subcategory_name']; // Sakshi 12/02/2025
+    groupname = json['group_name']; // Sakshi 12/02/2025
+    existingid = json['existing_id']; //Shweta 09-03-26
+    groupid = json['stk_group_id'];
+    productSubCatCode = json['product_sub_category_code'];
+    activestatus = json['active_status'];  // Sakshi 13/03/2026
   }
 
   StockItemEntity.brandMap(Map<String,dynamic> map){
@@ -232,6 +249,30 @@ class StockItemEntity {
       if (stockgroupid != null) {
       map['stk_group_id'] = stockgroupid;
     }
+     if (classification != null) {
+        map['CLASSIFICATION'] = classification; // Sakshi 10/02/2025
+      }
+      if (description != null) {
+        map['DESCRIPTION'] = description; // Sakshi 10/02/2025
+      }
+       if (category != null) {
+        map['category_name'] = category; // Sakshi 12/02/2025
+      }
+      if (subcategory != null) {
+        map['subcategory_name'] = subcategory; // Sakshi 12/02/2025
+      }
+       if (groupname != null) {
+        map['group_name'] = groupname; // Sakshi 12/02/2025
+      }
+        if (existingid != null) {
+        map['existing_id'] = existingid; //shweta 09-03-26
+      }
+         if (groupid != null) {
+        map['stk_group_id'] = groupid; // Sakshi 12/02/2025
+      }
+        if (productSubCatCode != null) {
+        map['PRODUCT_SUB_CATEGORY_CODE'] = productSubCatCode;
+      }
 
 
 
