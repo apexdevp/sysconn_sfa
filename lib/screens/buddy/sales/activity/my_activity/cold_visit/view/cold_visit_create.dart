@@ -3,14 +3,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:sysconn_sfa/Utility/image_list.dart';
 import 'package:sysconn_sfa/Utility/systemxs_global.dart';
-import 'package:sysconn_sfa/Utility/textFormField.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/api/entity/buddy/visitAttendanceEntity.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/cold_visit/controller/clod_visit_create_controller.dart';
-
 import 'package:sysconn_sfa/widgets/customautocompletefield.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
+import 'package:sysconn_sfa/widgetscustome/custom_textfield.dart';
 
 class CreateColdVisit extends StatelessWidget {
   final VisitAttendanceEntity? visitAttendanceList;
@@ -20,30 +19,38 @@ class CreateColdVisit extends StatelessWidget {
   Widget build(BuildContext context) {
     // final controller = Get.put(CreateColdVisitController());
     final controller = Get.put(
-  CreateColdVisitController(visitAttendanceList: visitAttendanceList),
-);
+      CreateColdVisitController(visitAttendanceList: visitAttendanceList),
+    );
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: SfaCustomAppbar(
-         showDefaultActions:false,
+        showDefaultActions: false,
         title: visitAttendanceList == null
             ? 'Create Cold Visit'
             : 'Update Cold Visit',
-           actions: [  visitAttendanceList != null?
-              IconButton(
-                icon: Icon(Icons.delete,),
-                onPressed: () {
-                  Utility.showAlertYesNo(iconData: Icons.help_outline_rounded,iconcolor: Colors.blueAccent,title: 'Alert',msg: 'Do you want to delete this ?',
-                  yesBtnFun: (){
-                  controller.deleteHeaderDet().then((value) {
-                    Get.back();
-                    });
+        actions: [
+          visitAttendanceList != null
+              ? IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    Utility.showAlertYesNo(
+                      iconData: Icons.help_outline_rounded,
+                      iconcolor: Colors.blueAccent,
+                      title: 'Alert',
+                      msg: 'Do you want to delete this ?',
+                      yesBtnFun: () {
+                        controller.deleteHeaderDet().then((value) {
+                          Get.back();
+                        });
+                      },
+                      noBtnFun: () {
+                        Get.back();
+                      },
+                    );
                   },
-                  noBtnFun: (){
-                 Get.back();
-                  });
-                },
-              ): Container(),],
+                )
+              : Container(),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
@@ -250,7 +257,7 @@ class CreateColdVisit extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: size.height * 0.02),
+                                SizedBox(height: size.height * 0.01),
                               ],
                             ),
                           ),
@@ -279,7 +286,7 @@ class CreateColdVisit extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: size.height * 0.02),
+                                SizedBox(height: size.height * 0.01),
 
                                 Row(
                                   children: [
@@ -289,7 +296,7 @@ class CreateColdVisit extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: size.height * 0.02),
+                                SizedBox(height: size.height * 0.01),
                                 Row(
                                   children: [
                                     CustomTextFormFieldView(
@@ -298,7 +305,7 @@ class CreateColdVisit extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: size.height * 0.02),
+                                SizedBox(height: size.height * 0.01),
                                 Row(
                                   children: [
                                     CustomTextFormFieldView(
@@ -313,13 +320,10 @@ class CreateColdVisit extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: size.height * 0.02),
-
+                                SizedBox(height: size.height * 0.01),
                                 Row(
                                   children: [
-                                    // Flexible(
-                                    //   flex: 2,
-                                    //   child:
+                                   
                                     Obx(() {
                                       // reference dummy reactive variable to trigger rebuild
                                       controller.stateRebuild.value;
@@ -353,35 +357,11 @@ class CreateColdVisit extends StatelessWidget {
                                         },
                                       );
                                     }),
-                                    // CustomAutoCompleteFieldView(
-                                    //   optionsBuilder: (TextEditingValue value) {
-                                    //     return Utility.stateDropdownlist
-                                    //         .where(
-                                    //           (element) => element
-                                    //               .toLowerCase()
-                                    //               .contains(
-                                    //                 value.text.toLowerCase(),
-                                    //               ),
-                                    //         )
-                                    //         .toList();
-                                    //   },
-                                    //   title: 'State',
-                                    //   controllerValue:
-                                    //       controller.stateController.text,
-                                    //   isCompulsory: true,
-                                    //   closeControllerFun: () {
-                                    //     // setState(() {
-                                    //     controller.stateController.text = '';
-                                    //     // });
-                                    //   },
-                                    //   onSelected: (text) {
-                                    //     // setState(() {
-                                    //     controller.stateController.text = text;
-                                    //     // });
-                                    //   },
-                                    // ),
-                                    // ),
-                                    SizedBox(width: size.width * 0.02),
+                                  ],
+                                ),
+                                  SizedBox(height: size.height * 0.01),
+                                Row(
+                                  children: [
                                     CustomTextFormFieldView(
                                       controller: controller.gstnoController,
                                       title: 'Gst no',
@@ -414,7 +394,7 @@ class CreateColdVisit extends StatelessWidget {
                                           controller.conPersonController,
                                       title: 'Contact Person',
                                     ),
-                                    SizedBox(width: size.width * 0.02),
+                                    SizedBox(width: size.width * 0.01),
                                     CustomTextFormFieldView(
                                       controller:
                                           controller.designationController,
@@ -422,7 +402,7 @@ class CreateColdVisit extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: size.height * 0.02),
+                                SizedBox(height: size.height * 0.01),
                                 Row(
                                   children: [
                                     CustomTextFormFieldView(
@@ -434,7 +414,7 @@ class CreateColdVisit extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: size.height * 0.02),
+                                // SizedBox(height: size.height * 0.02),
                                 Row(
                                   children: [
                                     CustomTextFormFieldView(

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sysconn_sfa/Utility/custome_dialogbox.dart';
-import 'package:sysconn_sfa/Utility/textFormField.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/api/entity/company/persona_entity.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/my_customers/controller/customer_view_controller.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/my_customers/view/customer_edit.dart';
 import 'package:sysconn_sfa/widgets/nodatafoundwidget.dart';
-import 'package:sysconn_sfa/widgets/responsive_button.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
+import 'package:sysconn_sfa/widgetscustome/custom_textfield.dart' show CustomTextFormFieldView;
+import 'package:sysconn_sfa/widgetscustome/responsive_button.dart';
 
 class OverviewView extends StatelessWidget {
   const OverviewView({super.key});
@@ -211,7 +211,7 @@ class OverviewView extends StatelessWidget {
                           Text('Company Profile', style: kTxtStl13B),
                           TextButton(
                             onPressed: () {
-                              showcompanyeditDialog(controller);
+                              showcompanyeditDialog(controller,size);
                             },
                             child: const Text(
                               "Edit",
@@ -424,9 +424,11 @@ class OverviewView extends StatelessWidget {
                   ),
                 ),
 
-                ResponsiveButton(title: 'Update', function: ()async {
-                     await controller.updatePersona();
-                }),
+                Container(
+                  child: ResponsiveButton(title: 'Update', function: ()async {
+                       await controller.updatePersona();
+                  }),
+                ),
               ],
             ),
           ),
@@ -708,7 +710,7 @@ class OverviewView extends StatelessWidget {
     );
   }
 
-  Future<dynamic> showcompanyeditDialog(OverviewController controller) {
+  Future<dynamic> showcompanyeditDialog(OverviewController controller,size) {
     return Get.dialog(
       AlertDialog(
         title: Row(
@@ -749,12 +751,15 @@ class OverviewView extends StatelessWidget {
           ),
         ),
         actions: [
-          ResponsiveButton(
-            title: 'Update',
-            function: () async {
-              Utility.showCircularLoadingWid(Get.context!);
-               await controller.updateCompanyProfile(); //Sakshi 20/03/2026
-          Get.back();           },
+          Container(width: size.width * 0.6,
+              padding: EdgeInsets.all(4),
+            child: ResponsiveButton(
+              title: 'Update',
+              function: () async {
+                Utility.showCircularLoadingWid(Get.context!);
+                 await controller.updateCompanyProfile(); //Sakshi 20/03/2026
+            Get.back();           },
+            ),
           ),
         ],
       ),

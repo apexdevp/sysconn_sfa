@@ -274,6 +274,7 @@ class CustomeDialogbox extends StatelessWidget {
                       if (buttontitle.isNotEmpty)
                         Padding(
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+
                           child: Align(
                             alignment: Alignment.bottomLeft,
                             child: SizedBox(

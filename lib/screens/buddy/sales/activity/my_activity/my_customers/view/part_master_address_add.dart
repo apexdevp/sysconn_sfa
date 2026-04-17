@@ -1,15 +1,20 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sysconn_sfa/Utility/app_colors.dart';
-import 'package:sysconn_sfa/Utility/textFormField.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/api/entity/company/customer_city_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/party_address_entity.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/my_customers/controller/party_master_address_controller.dart';
-import 'package:sysconn_sfa/widgets/dropdownlist.dart';
-import 'package:sysconn_sfa/widgets/responsive_button.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
+import 'package:sysconn_sfa/widgetscustome/custom_textfield.dart'
+    show CustomTextFormFieldView;
+import 'package:sysconn_sfa/widgetscustome/dropdowncontroller.dart'
+    show DropdownCustomList;
+import 'package:sysconn_sfa/widgetscustome/responsive_button.dart'
+    show ResponsiveButton;
 
 class PartyMasterAddressAdd extends StatelessWidget {
   final PartyAddressEntity? addressData;
@@ -22,20 +27,19 @@ class PartyMasterAddressAdd extends StatelessWidget {
     if (addressData != null) {
       controller.addressData = addressData; // pass object
       controller.setRowsEdit(addressData!); // fill UI
-   controller.isPrimaryEditable.value = true;
+      controller.isPrimaryEditable.value = true;
     } else {
       // addressId.value = '';
 
-    bool isFirst = controller.partyAddressesListData.isEmpty;
+      bool isFirst = controller.partyAddressesListData.isEmpty;
 
-    if (isFirst) {
-      controller.isPrimary.value = true;
-      controller.isPrimaryEditable.value = false;
-    } else {
-      controller.isPrimary.value = false;
-      controller.isPrimaryEditable.value = false;
-    }
-  
+      if (isFirst) {
+        controller.isPrimary.value = true;
+        controller.isPrimaryEditable.value = false;
+      } else {
+        controller.isPrimary.value = false;
+        controller.isPrimaryEditable.value = false;
+      }
     }
     return Scaffold(
       appBar: SfaCustomAppbar(title: 'Address Add'),
@@ -48,110 +52,121 @@ class PartyMasterAddressAdd extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Obx(
-                        () => DropdownCustomList<CountryEntity>(
-                          title: "Country",
-                          hint: "Select Country",
-                          isCompulsory: true,
-                          items: controller.countryList
-                              .map(
-                                (c) => DropdownMenuItem(
-                                  value: c,
-                                  child: Text(c.name),
-                                ),
-                              )
-                              .toList(),
-                          value: controller.selectedCountry.value,
-                          onChanged: (value) =>
-                              controller.selectedCountry.value = value,
+                      Expanded(
+                        child: Obx(
+                          () => DropdownCustomList<CountryEntity>(
+                            title: "Country",
+                            hint: "Select Country",
+                            isCompulsory: true,
+                            items: controller.countryList
+                                .map(
+                                  (c) => DropdownMenuItem(
+                                    value: c,
+                                    child: Text(c.name),
+                                  ),
+                                )
+                                .toList(),
+                            selectedValue: controller.selectedCountry,
+                            onChanged: (value) =>
+                                controller.selectedCountry.value = value,
+                          ),
                         ),
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      Obx(
-                        () => DropdownCustomList<StateEntity>(
-                          title: "State",
-                          hint: "Select State",
-                          isCompulsory: true,
-                          items: controller.filteredStateList
-                              .map(
-                                (c) => DropdownMenuItem(
-                                  value: c,
-                                  child: Text(c.name),
-                                ),
-                              )
-                              .toList(),
-                          value: controller.selectedState.value,
-                          onChanged: (value) =>
-                              controller.selectedState.value = value,
+                      Expanded(
+                        child: Obx(
+                          () => DropdownCustomList<StateEntity>(
+                            title: "State",
+                            hint: "Select State",
+                            isCompulsory: true,
+                            items: controller.filteredStateList
+                                .map(
+                                  (c) => DropdownMenuItem(
+                                    value: c,
+                                    child: Text(c.name),
+                                  ),
+                                )
+                                .toList(),
+                            selectedValue: controller.selectedState,
+                            onChanged: (value) =>
+                                controller.selectedState.value = value,
+                          ),
                         ),
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      Obx(
-                        () => DropdownCustomList<CustomerCityEntity>(
-                          title: "City",
-                          hint: "Select City",
-                          isCompulsory: true,
-                          items: controller.filteredCityList
-                              .map(
-                                (item) => DropdownMenuItem<CustomerCityEntity>(
-                                  value: item,
-                                  child: Text(item.name),
-                                ),
-                              )
-                              .toList(),
-                          value: controller.selectedCity.value,
-                          onChanged: (value) =>
-                              controller.selectedCity.value = value,
+                      Expanded(
+                        child: Obx(
+                          () => DropdownCustomList<CustomerCityEntity>(
+                            title: "City",
+                            hint: "Select City",
+                            isCompulsory: true,
+                            items: controller.filteredCityList
+                                .map(
+                                  (item) =>
+                                      DropdownMenuItem<CustomerCityEntity>(
+                                        value: item,
+                                        child: Text(item.name),
+                                      ),
+                                )
+                                .toList(),
+                            selectedValue: controller.selectedCity,
+                            onChanged: (value) =>
+                                controller.selectedCity.value = value,
+                          ),
                         ),
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      Obx(
-                        () => DropdownCustomList<AreaEntity>(
-                          title: "Area",
-                          hint: "Select Area",
-                          isCompulsory: true,
-                          items: controller.filteredAreaList
-                              .map(
-                                (item) => DropdownMenuItem<AreaEntity>(
-                                  value: item,
-                                  child: Text(item.name),
-                                ),
-                              )
-                              .toList(),
-                          value: controller.selectedArea.value,
-                          onChanged: (value) =>
-                              controller.selectedArea.value = value,
+                      Expanded(
+                        child: Obx(
+                          () => DropdownCustomList<AreaEntity>(
+                            title: "Area",
+                            hint: "Select Area",
+                            isCompulsory: true,
+                            items: controller.filteredAreaList
+                                .map(
+                                  (item) => DropdownMenuItem<AreaEntity>(
+                                    value: item,
+                                    child: Text(item.name),
+                                  ),
+                                )
+                                .toList(),
+                            selectedValue: controller.selectedArea,
+                            onChanged: (value) =>
+                                controller.selectedArea.value = value,
+                          ),
                         ),
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      Obx(
-                        () => DropdownCustomList<LocalityEntity>(
-                          title: "Locality",
-                          hint: "Select Locality",
-                          isCompulsory: true,
-                          items: controller.filteredLocalityList
-                              .map(
-                                (item) => DropdownMenuItem<LocalityEntity>(
-                                  value: item,
-                                  child: Text(item.name),
-                                ),
-                              )
-                              .toList(),
-                          value: controller.selectedLocality.value,
-                          onChanged: (value) =>
-                              controller.selectedLocality.value = value,
+                      Expanded(
+                        child: Obx(
+                          () => DropdownCustomList<LocalityEntity>(
+                            title: "Locality",
+                            hint: "Select Locality",
+                            isCompulsory: true,
+                            items: controller.filteredLocalityList
+                                .map(
+                                  (item) => DropdownMenuItem<LocalityEntity>(
+                                    value: item,
+                                    child: Text(item.name),
+                                  ),
+                                )
+                                .toList(),
+                            selectedValue: controller.selectedLocality,
+                            onChanged: (value) =>
+                                controller.selectedLocality.value = value,
+                          ),
                         ),
                       ),
                     ],
@@ -301,13 +316,16 @@ class PartyMasterAddressAdd extends StatelessWidget {
                 ],
               ),
             ),
-            
-            ResponsiveButton(
-              title: addressData != null ? 'Update' : 'Save',
-              function: () async {
-                Utility.showCircularLoadingWid(context);
-                await controller.customerAddressesPostApi();
-              },
+            Container(
+              width: size.width * 0.6,
+              padding: EdgeInsets.all(4),
+              child: ResponsiveButton(
+                title: addressData != null ? 'Update' : 'Save',
+                function: () async {
+                  Utility.showCircularLoadingWid(context);
+                  await controller.customerAddressesPostApi();
+                },
+              ),
             ),
           ],
         ),

@@ -14,41 +14,39 @@ class SOInvReportEntity {
   // String? issueSlipNo;
   String? invId;
   String? itemId;
-  String? itemName; //snehal add 06-07-2022 itemName
-  String? quantity; //snehal add 06-07-2022 quantity
-  String? rate; //snehal add 06-07-2022 rate
-  String? gstRate; //pooja/25/08/2022 add party_mobile_no
+  String? itemName; 
+  String? quantity; //only for so tracking
+  String? qty; 
+  String? rate; 
+  String? gstRate; 
   String? cessRate;
   String? gstValue;
   String? cessValue;
   String? netValue;
-  String? value; //snehal add 06-07-2022 value
-  String? discount; //snehal add 06-07-2022 discount
-  String? hedUniqueId; //snehal add 13-07-2022 hedUniqueId
+  String? value; 
+  String? discount; 
+  String? hedUniqueId;
   String? returnQty;
-  String? vchtypeName; //pooja/25/08/2022 add vchtype_name
-  String? parent; //pooja/25/08/2022 add parent
-  String? partyMobileNumber; //pooja/25/08/2022 add party_mobile_no
+  String? vchtypeName; 
+  String? parent; 
+  String? partyMobileNumber; 
   String? totalAmount;
   String? salesPerson;
   String? tallyStatus;
-  String? approver; //snehal 17-11-2022
-  String? approverName; //snehal 17-11-2022
-  String? approvalStatus; //snehal 17-11-2022
-  String? approvalReason; //snehal 17-11-2022
-  String? approvalRemark; //snehal 17-11-2022
-  String? userReason; //snehal 17-11-2022
-  String? userRemark; //snehal 17-11-2022    // komal // 12-6-2023 // commented bcze it's removed
-  String? narration;    // komal // 15-6-2023 // new node added as remark in so report
+  String? approver; 
+  String? approverName; 
+  String? approvalStatus; 
+  String? approvalReason; 
+  String? approvalRemark; 
+  String? userReason; 
+  String? userRemark;    
+  String? narration;    
   String? remark; //pratiksha p 07-08-2023 add remark in item so report
+  String? unitname;
+  String? hsncode;
   TextEditingController? salesQtyController;
-  String? productremark;
-  String?productremark2;
-  String?productremark3;
-  String? leadpriority;
-  String? nextfollowupdate;
 
-  SOInvReportEntity();
+  SOInvReportEntity({ this.netValue,this.gstValue,this.value});
 
   SOInvReportEntity.fromMap(Map<String, dynamic> json) {
     companyId = json['company_id'];
@@ -64,33 +62,36 @@ class SOInvReportEntity {
     itemId = json['item_id'];
     itemName = json['item_name'];
     quantity = json['quantity'];
+    qty = json['qty']; //pratiksha p 25-10-2025 
     rate = json['rate'];
     discount = json['discount'];
-    gstRate = json['gst_rate']; //pooja/25/08/2022 add gst
-    cessRate = json['cess_rate']; //pooja/25/08/2022 add gst
-    gstValue = json['gst_value']; //pooja/25/08/2022 add gst
-    cessValue = json['cess_value']; //pooja/25/08/2022 add gst
-    netValue = json['net_value']; //pooja/25/08/2022 add gst
+    gstRate = json['gst_rate']; 
+    cessRate = json['cess_rate']; 
+    gstValue = json['gst_value']; 
+    cessValue = json['cess_value']; 
+    netValue = json['net_value']; 
     value = json['value'];
     partyName = json['party_name'];
     hedUniqueId = json['hed_unique_id'];
     returnQty = json['return_quantity'];
-    vchtypeName = json['vchtype_name']; //pooja/25/08/2022 add vchtype_name
-    parent = json['parent']; //pooja/25/08/2022 add parent
-    partyMobileNumber = json['party_mobile_number']; //pooja/25/08/2022 add party_mobile_no
+    vchtypeName = json['vchtype_name']; 
+    parent = json['parent'];
+    partyMobileNumber = json['party_mobile_number'];
     totalAmount = json['total_amount'];
     salesPerson = json['sales_person'];
-    tallyStatus = json['tally_status']; // Manoj 10-12-2022 Add Tally Status
-    approver = json['approver']; //snehal 17-11-2022 add approver
-    approverName = json['approver_name']; //snehal 17-11-2022 add approver_name
-    approvalStatus = json['approval_status']; //snehal 17-11-2022 add approval_status
-    approvalReason = json['approval_reason']; //snehal 17-11-2022 add approval_reason
-    approvalRemark = json['approval_remark']; //snehal 17-11-2022 add approval_remark
-    userReason = json['user_reason']; //snehal 17-11-2022 add user_reason
-    userRemark = json['user_remark']; //snehal 17-11-2022 add user_remark    // komal // 12-6-2023 // commented bcze it's removed
-    narration = json['narration'];    // komal // 12-6-2023 // new node added as remark in so report
+    tallyStatus = json['tally_status'];
+    approver = json['approver']; 
+    approverName = json['approver_name']; 
+    approvalStatus = json['approval_status']; 
+    approvalReason = json['approval_reason']; 
+    approvalRemark = json['approval_remark']; 
+    userReason = json['user_reason'];
+    userRemark = json['user_remark']; 
+    narration = json['narration'];  
     remark = json['remark']; //pratiksha p 07-08-2023 add remark in item so report
     salesQtyController = TextEditingController(text: json['quantity']);
+    unitname=json['unit'];//pratiksha p 23-01-2026 add this 
+    hsncode=json['hsn_code'];//pratiksha p 23-01-2026 add this 
   }
 
   Map<String, dynamic> toMap() {
@@ -116,41 +117,25 @@ class SOInvReportEntity {
      if (remark != null) {
       map['remark'] = remark;
     }
-     if (productremark2 != null) {
-      map['product_remark_two'] = productremark2;
+     if (invId != null) {
+      map['inv_id'] = invId;
     }
-     if (productremark3 != null) {
-      map['product_remark_three'] = productremark3;
-    }
-    if (leadpriority != null) {
-      map['lead_priority'] = leadpriority;
-    }
-    if (nextfollowupdate != null) {
-      map['next_followup_date'] = nextfollowupdate;
-    }
-    if (nextfollowupdate != null) {
-      map['next_followup_date'] = nextfollowupdate;
-    }
-    if (quantity != null) {
-      map['quantity'] = quantity;
-    }
-    if (rate != null) {
-      map['rate'] = rate;
-    }
-    if (discount != null) {
-      map['discount'] = discount;
-    }
-    if (hedUniqueId != null) {
-      map['hed_unique_id'] = hedUniqueId;
-    }
-    if (itemId != null) {
-      map['item_id'] = itemId;
-    }
-    if (value != null) {
-      map['value'] = value;
-    }
-
     
+    // if (issueSlipNo != null) {
+    //   map['issue_slip_no'] = issueSlipNo;
+    // }
     return map;
   }
+
+  // Map<String, dynamic> toSOJson() {
+  //   final Map<String, dynamic> data = <String, dynamic>{};
+  //   data['company_id'] = companyId;
+  //   data['approval_status'] = approvalStatus;
+  //   data['approval_reason'] = approvalReason;
+  //   data['approval_remark'] = approvalRemark;
+  //   data['approver'] = approver;
+  //   data['user_remark'] = userRemark;    // komal // 12-6-2023 // commented bcze it's removed
+  //   data['user_reason'] = userReason;
+  //   return data;
+  // }
 }

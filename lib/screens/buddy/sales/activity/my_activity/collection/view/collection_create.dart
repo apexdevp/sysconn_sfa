@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sysconn_sfa/Utility/systemxs_global.dart';
-import 'package:sysconn_sfa/Utility/textFormField.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/api/entity/company/voucherentity.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/collection/controller/collection_create_controller.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/collection/view/collection_add_ledger.dart';
 import 'package:sysconn_sfa/widgets/customautocompletefield.dart';
-import 'package:sysconn_sfa/widgets/responsive_button.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
+import 'package:sysconn_sfa/widgetscustome/custom_textfield.dart';
+import 'package:sysconn_sfa/widgetscustome/responsive_button.dart';
 
 class CollectionCreate extends StatelessWidget {
   final String? hedId;
@@ -398,7 +398,8 @@ class CollectionCreate extends StatelessWidget {
                                 ((hedId == null || hedId == '') &&
                                         !controller.isHeaderSaved.value)
                                     ? Container(
-                                        // width: size.width * 0.6,
+                                        width: size.width * 0.6,
+                                        padding: EdgeInsets.all(4),
                                         child: ResponsiveButton(
                                           title: 'Next',
                                           function: () async {
@@ -727,7 +728,8 @@ class CollectionCreate extends StatelessWidget {
                                                                       : item.ledgerId,
                                                                   initialAmount:
                                                                       item.amount,
-                                                                      initialuniqueid:item.uniqueId
+                                                                  initialuniqueid:
+                                                                      item.uniqueId,
                                                                 ),
                                                               );
                                                             },
@@ -766,11 +768,15 @@ class CollectionCreate extends StatelessWidget {
                       }),
                 ),
                 controller.isHeaderSaved.value
-                    ? ResponsiveButton(
-                        title: 'Save',
-                        function: () async {
-                          await controller.collectionPostApi();
-                        },
+                    ? Container(
+                        width: size.width * 0.6,
+                        padding: EdgeInsets.all(4),
+                        child: ResponsiveButton(
+                          title: 'Save',
+                          function: () async {
+                            await controller.collectionPostApi();
+                          },
+                        ),
                       )
                     : Container(),
               ],

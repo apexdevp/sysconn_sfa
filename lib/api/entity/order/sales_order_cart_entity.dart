@@ -1,4 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
 class SOAddToCartEntity {
+  String? groupId;
   String? companyId;
   String? mobileNo;
   String? hedUniqueId;
@@ -20,13 +24,65 @@ class SOAddToCartEntity {
   String? returnQty;
   String? hsnCode;
   String? unitName;
-  String? remark; //pratiksha p 01-07-2023 add remark
-  String? totalPoints; //snehal 29-04-2023 add for scheme module
-  String? pointsPerUnit; //snehal 29-04-2023 add for scheme module
-  String? approvalstatus; //pratiksha p 06-02-2025 add
-  SOAddToCartEntity();
+  String? remark;
+  String? totalPoints;
+  String? pointsPerUnit;
+  String? itemapprovalstatus;
+  String? invid;
+  String? balancequantity;
+  String? soinvapprovalstatus;
+  String? approvalRemark;
+  String? soinvapprovalRemark;
+  String? headerstatus;
+  String? businessOpportunityId;
+  String? soinvno;
+
+  // ===============================
+  //  Reactive & Controller fields
+  // ===============================
+  late RxString itemapprovalstatusRx;
+  late TextEditingController preCloseCtrl;
+  late TextEditingController freeQtyCtrl;
+
+  SOAddToCartEntity({
+    this.companyId,
+    this.mobileNo,
+    this.hedUniqueId,
+    this.partyName,
+    this.date,
+    this.issueSlipNo,
+    this.itemId,
+    this.quantity,
+    this.rate,
+    this.discount,
+    this.value,
+    this.imagePath,
+    this.itemName,
+    this.gstRate,
+    this.cessRate,
+    this.gstValue,
+    this.cessValue,
+    this.netValue,
+    this.returnQty,
+    this.hsnCode,
+    this.unitName,
+    this.remark,
+    this.totalPoints,
+    this.pointsPerUnit,
+    this.itemapprovalstatus,
+    this.approvalRemark,
+    this.headerstatus,
+    this.businessOpportunityId,
+    this.soinvno,
+  }) {
+    // Initialize reactive & controllers properly
+    itemapprovalstatusRx = (itemapprovalstatus ?? "").obs;
+    preCloseCtrl = TextEditingController();
+    freeQtyCtrl = TextEditingController();
+  }
 
   SOAddToCartEntity.fromMap(Map<String, dynamic> json) {
+    groupId = json['group_id'];
     companyId = json['Company_Id'];
     mobileNo = json['Mobile_No'];
     hedUniqueId = json['hed_unique_id'];
@@ -46,76 +102,59 @@ class SOAddToCartEntity {
     cessValue = json['cess_value'];
     netValue = json['net_value'];
     returnQty = json['return_quantity'];
-    // rateController = new TextEditingController();
-    // discountController = new TextEditingController();
-    // quantityController = new TextEditingController();
-    hsnCode = json['hsn_code']; //snehal 06-08-2022 add hsncode
-    unitName = json['unit_name']; //snehal 06-08-2022 add unit_name
-    remark = json['remark']; //pratiksha p 01-07-2023 add remark
-    pointsPerUnit =
-        json['points_per_unit']; //snehal 29-04-2023  add for scheme module
-    totalPoints = json['total_points']; //snehal 29-04-2023
-    approvalstatus =
-        json['so_inv_approval_status']; //pratiksha p 06-02-2025 add
+    hsnCode = json['hsn_code'];
+    unitName = json['unit_name'];
+    remark = json['remark'];
+    pointsPerUnit = json['points_per_unit'];
+    totalPoints = json['total_points'];
+
+    itemapprovalstatus = json['so_inv_approval_status'];
+
+    invid = json['inv_id']?.toString();
+    balancequantity = json['balance_qty']?.toString();
+    // balancequantity = json['balancequantity']?.toString();
+    soinvapprovalstatus = json['soinvapprovalstatus']?.toString();
+    approvalRemark = json['approval_remark']?.toString();
+    soinvapprovalRemark = json['so_approval_remark'].toString();
+    headerstatus = json['header_approval_status'].toString();
+    // Reactive & controllers
+    itemapprovalstatusRx = (itemapprovalstatus ?? "").obs;
+
+    preCloseCtrl = TextEditingController(
+      text: json['pre_close']?.toString() ?? "",
+    );
+    freeQtyCtrl = TextEditingController(
+      text: json['free_qty']?.toString() ?? "",
+    );
   }
 
   Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{};
-    if (companyId != null) {
-      map['company_id'] = companyId;
-    }
-    if (mobileNo != null) {
-      map['mobile_no'] = mobileNo;
-    }
-    if (hedUniqueId != null) {
-      map['hed_unique_id'] = hedUniqueId;
-    }
-    if (itemId != null) {
-      map['item_id'] = itemId;
-    }
-    if (quantity != null) {
-      map['quantity'] = quantity;
-    }
-    if (rate != null) {
-      map['rate'] = rate;
-    }
-    if (discount != null) {
-      map['discount'] = discount;
-    }
-    if (value != null) {
-      map['value'] = value;
-    }
-    if (gstRate != null) {
-      map['gst_rate'] = gstRate;
-    }
-    if (cessRate != null) {
-      map['cess_rate'] = cessRate;
-    }
-    if (gstValue != null) {
-      map['gst_value'] = gstValue;
-    }
-    if (cessValue != null) {
-      map['cess_value'] = cessValue;
-    }
-    if (netValue != null) {
-      map['net_value'] = netValue;
-    }
-    if (returnQty != null) {
-      map['return_quantity'] = returnQty;
-    }
-    if (remark != null) {
-      //pratiksha p 01-07-2023
-      map['remark'] = remark;
-    }
-    if (approvalstatus != null) {//pratiksha p 06-02-2025 add
-      map['so_approval_status'] = approvalstatus;
-    }
-    if (pointsPerUnit != null) {
-      map['points_per_unit'] = pointsPerUnit;
-    }
-    if (totalPoints != null) {
-      map['total_points'] = totalPoints;
-    }
-    return map;
+    return {
+      'group_id': groupId,
+      'company_id': companyId,
+      'mobile_no': mobileNo,
+      'hed_unique_id': hedUniqueId,
+      'item_id': itemId,
+      'quantity': quantity,
+      'rate': rate,
+      'discount': discount,
+      'value': value,
+      'gst_rate': gstRate,
+      'cess_rate': cessRate,
+      'gst_value': gstValue,
+      'cess_value': cessValue,
+      'net_value': netValue,
+      'return_quantity': returnQty,
+      'remark': remark,
+      'so_approval_status': itemapprovalstatus,
+      'pre_close': preCloseCtrl.text,
+      'free_qty': freeQtyCtrl.text,
+      'inv_id': invid,
+      'balancequantity': balancequantity,
+      'soinvapprovalstatus': soinvapprovalstatus,
+      'approval_remark': approvalRemark,
+      'header_approval_status': headerstatus,
+      'so_inv_no':soinvno//pratiksha p 28-03-2026
+    };
   }
 }

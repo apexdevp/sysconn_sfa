@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:sysconn_sfa/api/api_url.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/Utility/date_list_view.dart';
+import 'package:sysconn_sfa/api/entity/business_opportunity/opportunities_deals_rep_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/categoty_type_enity.dart';
 import 'package:sysconn_sfa/api/entity/company/company_profile_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/party_address_entity.dart';
@@ -1660,8 +1661,9 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     required String type,
   }) async {
     List<SalesRegisterReportEntity> collectionReportList = [];
-    var collectionUrl ='https://sysconnoms-get.sysconn.ai/Collection/Collection_Report/GetCollectionRegisterData?company_id=211225225411003&from_date=2025-04-01 00:00:00.000&to_date=2027-03-31 00:00:00.000&type=Receipt&db_nm=Sysconn_OMS';
-        // '${ApiUrl.collectionReport}company_id=${Utility.companyId}&from_date=${Utility.selectedFromDateOfDateController}&to_date=${Utility.selectedToDateOfDateController}&type=$type&db_nm=${Utility.sysDbName}';
+    var collectionUrl =
+    // 'https://sysconnoms-get.sysconn.ai/Collection/Collection_Report/GetCollectionRegisterData?company_id=211225225411003&from_date=2025-04-01 00:00:00.000&to_date=2027-03-31 00:00:00.000&type=Receipt&db_nm=Sysconn_OMS';
+        '${ApiUrl.collectionReport}company_id=${Utility.companyId}&from_date=${Utility.selectedFromDateOfDateController}&to_date=${Utility.selectedToDateOfDateController}&type=$type&db_nm=${Utility.sysDbName}';
     if (kDebugMode) {
       print(collectionUrl);
     }
@@ -1812,144 +1814,167 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
 
   // sales order
 
-  static Future<List<SOAddToCartEntity>> getSOCartDetailsAPI(
-    String hedUniqueId,
-  ) async {
-    List<SOAddToCartEntity> cartSODetList = [];
-    var cartDetailsUrl =
-        '${ApiUrl.soCartDataUrl}company_id=${Utility.companyId}&mobile_no=${Utility.cmpmobileno}&hed_unique_id=$hedUniqueId&db_nm=${Utility.sysDbName}'; //Rupali 17-11-2025// &partner_code=${Utility.partnerCode}
+   static Future<SalesOrderHeaderEntity?> getSalesOrderMasterDataAPI({
+    required String uniqueId,
+  }) async {
+    SalesOrderHeaderEntity? salesHedEntity;
+    var soDataUrl =
+        '${ApiUrl.getAllSalesOrder}company_id=${Utility.companyId}&unique_id=$uniqueId&db_nm=${Utility.sysDbName}';
     if (kDebugMode) {
-      print(cartDetailsUrl);
+      print(soDataUrl);
     }
-    final cartDetailsResponse = await http.get(
-      Uri.parse(cartDetailsUrl),
+    final soResponse = await http.get(
+      Uri.parse(soDataUrl),
       headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
     );
-    if (cartDetailsResponse.statusCode == 200) {
-      var cartDetailsValue = convert.jsonDecode(
-        cartDetailsResponse.body,
-      )['data'];
-      if (cartDetailsValue.isNotEmpty) {
-        for (int i = 0; i < cartDetailsValue.length; i++) {
-          SOAddToCartEntity cartEntity = SOAddToCartEntity.fromMap(
-            cartDetailsValue[i],
-          );
-          cartSODetList.add(cartEntity);
-        }
+    if (soResponse.statusCode == 200) {
+      var soValue = convert.jsonDecode(soResponse.body)['data'];
+      if (soValue.isNotEmpty) {
+        salesHedEntity = SalesOrderHeaderEntity.fromALLJson(soValue[0]);
       }
     }
-    return cartSODetList;
+    return salesHedEntity;
   }
 
-  static Future<SalesOrderHeaderEntity> getSalesOrderPDFApi(
-    String salesOrderID,
-  ) async {
-    SalesOrderHeaderEntity salesOrderHeaderEntity = SalesOrderHeaderEntity();
-    var delivaryNoteUrl =
-        '${ApiUrl.soPrintUrl}company_id=${Utility.companyId}&unique_id=$salesOrderID&db_nm=${Utility.sysDbName}'; //Rupali 17-11-2025// &partner_code=${Utility.partnerCode}
-    if (kDebugMode) {
-      print(delivaryNoteUrl);
-    }
-    final delivaryNoteResponse = await http.get(
-      Uri.parse(delivaryNoteUrl),
-      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
-    );
-    if (delivaryNoteResponse.statusCode == 200) {
-      var delivaryNoteData = convert.jsonDecode(
-        delivaryNoteResponse.body,
-      )['data'];
-      if (kDebugMode) {
-        print(delivaryNoteData);
-      }
-      salesOrderHeaderEntity = SalesOrderHeaderEntity.fromAllMap(
-        delivaryNoteData[0],
-      );
-    }
-    return salesOrderHeaderEntity;
-  }
 
-  static Future<List<SOReportEntity>> getSORegisterPartywiseAPI(
-    String fromDate,
-    String toDate,
-    String parent,
-  ) async {
-    List<SOReportEntity> salesOrderWiseValue = [];
-    var soRegisterUrl =
-        '${ApiUrl.soPartyRegisterUrl}company_id=${Utility.companyId}&party_id=${Utility.partyId}&from_date=$fromDate&to_date=$toDate&parent=$parent&db_nm=${Utility.sysDbName}'; //Rupali 17-11-2025// &partner_code=${Utility.partnerCode}
-    if (kDebugMode) {
-      print(soRegisterUrl);
-    }
-    var soRegisterResponse = await http.get(
-      Uri.parse(soRegisterUrl),
-      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
-    );
-    if (soRegisterResponse.statusCode == 200) {
-      var soRegisterData = convert.jsonDecode(soRegisterResponse.body)['data'];
-      if (soRegisterData.isNotEmpty) {
-        for (int i = 0; i < soRegisterData.length; i++) {
-          salesOrderWiseValue.add(SOReportEntity.fromMap(soRegisterData[i]));
-        }
-      }
-    }
-    return salesOrderWiseValue;
-  }
+  // static Future<List<SOAddToCartEntity>> getSOCartDetailsAPI(
+  //   String hedUniqueId,
+  // ) async {
+  //   List<SOAddToCartEntity> cartSODetList = [];
+  //   var cartDetailsUrl =
+  //       '${ApiUrl.soCartDataUrl}company_id=${Utility.companyId}&mobile_no=${Utility.cmpmobileno}&hed_unique_id=$hedUniqueId&db_nm=${Utility.sysDbName}'; //Rupali 17-11-2025// &partner_code=${Utility.partnerCode}
+  //   if (kDebugMode) {
+  //     print(cartDetailsUrl);
+  //   }
+  //   final cartDetailsResponse = await http.get(
+  //     Uri.parse(cartDetailsUrl),
+  //     headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+  //   );
+  //   if (cartDetailsResponse.statusCode == 200) {
+  //     var cartDetailsValue = convert.jsonDecode(
+  //       cartDetailsResponse.body,
+  //     )['data'];
+  //     if (cartDetailsValue.isNotEmpty) {
+  //       for (int i = 0; i < cartDetailsValue.length; i++) {
+  //         SOAddToCartEntity cartEntity = SOAddToCartEntity.fromMap(
+  //           cartDetailsValue[i],
+  //         );
+  //         cartSODetList.add(cartEntity);
+  //       }
+  //     }
+  //   }
+  //   return cartSODetList;
+  // }
 
-  static Future<List<StockItemEntity>> getBrandDataAPI() async {
-    List<StockItemEntity> brandList = [];
-    var divisionUrl =
-        '${ApiUrl.stkBrandUrl}company_id=${Utility.companyId}&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
-    if (kDebugMode) {
-      print(divisionUrl);
-    }
-    final divisionResponse = await http.get(
-      Uri.parse(divisionUrl),
-      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
-    );
-    if (divisionResponse.statusCode == 200) {
-      brandList.clear();
-      var divisionValue = convert.jsonDecode(divisionResponse.body)['data'];
-      //print(divisionResponse.body.toString());
-      if (divisionValue.isNotEmpty) {
-        for (int i = 0; i < divisionValue.length; i++) {
-          StockItemEntity brandListEntity = StockItemEntity.brandMap(
-            divisionValue[i],
-          );
-          brandList.add(brandListEntity);
-        }
-      }
-    }
-    return brandList;
-  }
+  // static Future<SalesOrderHeaderEntity> getSalesOrderPDFApi(
+  //   String salesOrderID,
+  // ) async {
+  //   SalesOrderHeaderEntity salesOrderHeaderEntity = SalesOrderHeaderEntity();
+  //   var delivaryNoteUrl =
+  //       '${ApiUrl.soPrintUrl}company_id=${Utility.companyId}&unique_id=$salesOrderID&db_nm=${Utility.sysDbName}'; //Rupali 17-11-2025// &partner_code=${Utility.partnerCode}
+  //   if (kDebugMode) {
+  //     print(delivaryNoteUrl);
+  //   }
+  //   final delivaryNoteResponse = await http.get(
+  //     Uri.parse(delivaryNoteUrl),
+  //     headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+  //   );
+  //   if (delivaryNoteResponse.statusCode == 200) {
+  //     var delivaryNoteData = convert.jsonDecode(
+  //       delivaryNoteResponse.body,
+  //     )['data'];
+  //     if (kDebugMode) {
+  //       print(delivaryNoteData);
+  //     }
+  //     salesOrderHeaderEntity = SalesOrderHeaderEntity.fromAllMap(
+  //       delivaryNoteData[0],
+  //     );
+  //   }
+  //   return salesOrderHeaderEntity;
+  // }
 
-  static Future<List<StockItemEntity>> getItemDataAPI(
-    String? partyId,
-    String itemName,
-    String divisionIdSelected,
-  ) async {
-    List<StockItemEntity> soGetItemList = [];
-    var soItemUrl =
-        '${ApiUrl.soItemListUrl}company_id=${Utility.companyId}&brand=$divisionIdSelected&party_id=$partyId&issue_slip_no=&item_name=$itemName&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
-    if (kDebugMode) {
-      print(soItemUrl);
-    }
-    final soItemResponse = await http.get(
-      Uri.parse(soItemUrl),
-      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
-    );
-    if (soItemResponse.statusCode == 200) {
-      soGetItemList.clear();
-      var soItemValue = convert.jsonDecode(soItemResponse.body)['data'];
-      if (soItemValue.isNotEmpty) {
-        for (int i = 0; i < soItemValue.length; i++) {
-          StockItemEntity soGetItemEntity = StockItemEntity.fromMap(
-            soItemValue[i],
-          );
-          soGetItemList.add(soGetItemEntity);
-        }
-      }
-    }
-    return soGetItemList;
-  }
+  // static Future<List<SOReportEntity>> getSORegisterPartywiseAPI(
+  //   String fromDate,
+  //   String toDate,
+  //   String parent,
+  // ) async {
+  //   List<SOReportEntity> salesOrderWiseValue = [];
+  //   var soRegisterUrl =
+  //       '${ApiUrl.soPartyRegisterUrl}company_id=${Utility.companyId}&party_id=${Utility.partyId}&from_date=$fromDate&to_date=$toDate&parent=$parent&db_nm=${Utility.sysDbName}'; //Rupali 17-11-2025// &partner_code=${Utility.partnerCode}
+  //   if (kDebugMode) {
+  //     print(soRegisterUrl);
+  //   }
+  //   var soRegisterResponse = await http.get(
+  //     Uri.parse(soRegisterUrl),
+  //     headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+  //   );
+  //   if (soRegisterResponse.statusCode == 200) {
+  //     var soRegisterData = convert.jsonDecode(soRegisterResponse.body)['data'];
+  //     if (soRegisterData.isNotEmpty) {
+  //       for (int i = 0; i < soRegisterData.length; i++) {
+  //         salesOrderWiseValue.add(SOReportEntity.fromMap(soRegisterData[i]));
+  //       }
+  //     }
+  //   }
+  //   return salesOrderWiseValue;
+  // }
+
+  // static Future<List<StockItemEntity>> getBrandDataAPI() async {
+  //   List<StockItemEntity> brandList = [];
+  //   var divisionUrl =
+  //       '${ApiUrl.stkBrandUrl}company_id=${Utility.companyId}&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
+  //   if (kDebugMode) {
+  //     print(divisionUrl);
+  //   }
+  //   final divisionResponse = await http.get(
+  //     Uri.parse(divisionUrl),
+  //     headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+  //   );
+  //   if (divisionResponse.statusCode == 200) {
+  //     brandList.clear();
+  //     var divisionValue = convert.jsonDecode(divisionResponse.body)['data'];
+  //     //print(divisionResponse.body.toString());
+  //     if (divisionValue.isNotEmpty) {
+  //       for (int i = 0; i < divisionValue.length; i++) {
+  //         StockItemEntity brandListEntity = StockItemEntity.brandMap(
+  //           divisionValue[i],
+  //         );
+  //         brandList.add(brandListEntity);
+  //       }
+  //     }
+  //   }
+  //   return brandList;
+  // }
+
+  // static Future<List<StockItemEntity>> getItemDataAPI(
+  //   String? partyId,
+  //   String itemName,
+  //   String divisionIdSelected,
+  // ) async {
+  //   List<StockItemEntity> soGetItemList = [];
+  //   var soItemUrl =
+  //       '${ApiUrl.soItemListUrl}company_id=${Utility.companyId}&brand=$divisionIdSelected&party_id=$partyId&issue_slip_no=&item_name=$itemName&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
+  //   if (kDebugMode) {
+  //     print(soItemUrl);
+  //   }
+  //   final soItemResponse = await http.get(
+  //     Uri.parse(soItemUrl),
+  //     headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+  //   );
+  //   if (soItemResponse.statusCode == 200) {
+  //     soGetItemList.clear();
+  //     var soItemValue = convert.jsonDecode(soItemResponse.body)['data'];
+  //     if (soItemValue.isNotEmpty) {
+  //       for (int i = 0; i < soItemValue.length; i++) {
+  //         StockItemEntity soGetItemEntity = StockItemEntity.fromMap(
+  //           soItemValue[i],
+  //         );
+  //         soGetItemList.add(soGetItemEntity);
+  //       }
+  //     }
+  //   }
+  //   return soGetItemList;
+  // }
 
   //
 
@@ -2965,6 +2990,37 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     return ledgerMstDataVal;
   }
 
+  static Future<List<OpportunitiesDealsRepEntity>>
+  getOpportunitiesDealsTrackingApi({String? customerid}) async {
+    List<OpportunitiesDealsRepEntity> opportunitiesEntityList = [];
+    var opportunitiesUrl =
+        '${ApiUrl.opportunitiesTrackUrl}company_id=${Utility.companyId}&from_date=${Utility.selectedFromDateOfDateController}&to_date=${Utility.selectedToDateOfDateController}&customer_id=$customerid&db_nm=${Utility.sysDbName}';
+    if (kDebugMode) {
+      print(opportunitiesUrl);
+    }
+    var opportunitiesResponse = await http.get(
+      Uri.parse(opportunitiesUrl),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+    );
+    if (opportunitiesResponse.statusCode == 200) {
+      var opportunitiesData = await convert.jsonDecode(
+        opportunitiesResponse.body,
+      )['data'];
+      if (opportunitiesData.isNotEmpty) {
+        for (int i = 0; i < opportunitiesData.length; i++) {
+          OpportunitiesDealsRepEntity entity =
+              OpportunitiesDealsRepEntity.formBoMap(opportunitiesData[i]);
+          opportunitiesEntityList.add(entity);
+          if (kDebugMode) {
+            print('edfvk,${entity.toJson()}');
+          }
+        }
+      }
+    }
+    return opportunitiesEntityList;
+  }
+
+
   ////post//////////////////////
   ///
   ///
@@ -3193,7 +3249,7 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     List<Map<String, dynamic>> reasonListMap = [];
     reasonListMap.add(reasonEntity.toJson());
     var reasonUrl =
-        '${ApiUrl.noorderreasonrl}db_nm=${Utility.sysDbName}'; //Rupali 17-11-2025
+        '${ApiUrl.noorderreasonrl}db_nm=${Utility.sysDbName}'; 
     if (kDebugMode) {
       print(reasonUrl);
       print(convert.jsonEncode({'data': reasonListMap}));
@@ -3236,29 +3292,103 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     }
   }
 
-  static Future<String> postAddtoCardDetAPI(
-    SOAddToCartEntity soCartEntity,
+   static Future<String> salesOrderSavePostApi(
+    List<Map<String, dynamic>> soListMap,
   ) async {
-    List<Map<String, dynamic>> soCartListMap = [];
-    soCartListMap.add(soCartEntity.toMap());
-    var soAddCartUrl = '${ApiUrl.cartAddUrl}db_nm=${Utility.sysDbName}';
+    var paymentPostUrl =
+        '${ApiUrl.salesorderSaveUrl}db_nm=${Utility.sysDbName}';
     if (kDebugMode) {
-      print(soAddCartUrl);
-      print(convert.jsonEncode({'data': soCartListMap}));
+      print(paymentPostUrl);
+      print(convert.jsonEncode({'data': soListMap}));
+    }
+    final response = await http
+        .post(
+          Uri.parse(paymentPostUrl),
+          body: convert.jsonEncode({'data': soListMap}),
+          headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+        )
+        .timeout(const Duration(seconds: Utility.tIMEOUTDURATION));
+    if (response.statusCode == 200) {
+      return convert.jsonDecode(response.body)['message'];
+    } else {
+      return 'Oops there is an Error!';
+    }
+  }
+ static Future<String> deleteSODetAPI(
+    SalesOrderHeaderEntity soHeaderEntity,
+  ) async {
+    List<Map<String, dynamic>> soMapList = [];
+    soMapList.add(soHeaderEntity.toMap());
+    var soDeleteUrl =
+        '${ApiUrl.soDeleteUrl}db_nm=${Utility.sysDbName}'; 
+    if (kDebugMode) {
+      print(soDeleteUrl);
+      print(convert.jsonEncode({'data': soMapList}));
     }
     final response = await http.post(
-      Uri.parse(soAddCartUrl),
+      Uri.parse(soDeleteUrl),
       headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
-      body: convert.jsonEncode({'data': soCartListMap}),
+      body: (convert.jsonEncode({'data': soMapList})),
     );
     if (response.statusCode == 200) {
       return convert.jsonDecode(
         response.body,
-      )['message']; //'Data Inserted Successfully';
+      )['message']; //'Data Deleted Successfully';
     } else {
       return 'Oops there is an error!';
     }
   }
+
+
+
+ static Future<String> deleteSOInventoryDetAPI(
+    SOAddToCartEntity soinvEntity,
+  ) async {
+    List<Map<String, dynamic>> soMapList = [];
+    soMapList.add(soinvEntity.toMap());
+    var soDeleteUrl = '${ApiUrl.soInvDeleteUrl}db_nm=${Utility.sysDbName}';
+    if (kDebugMode) {
+      print(soDeleteUrl);
+      print(convert.jsonEncode({'data': soMapList}));
+    }
+    final response = await http.post(
+      Uri.parse(soDeleteUrl),
+      headers:  Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+      body: (convert.jsonEncode({'data': soMapList})),
+    );
+    if (response.statusCode == 200) {
+      return convert.jsonDecode(
+        response.body,
+      )['message']; 
+    } else {
+      return 'Oops there is an error!';
+    }
+  }
+
+
+  // static Future<String> postAddtoCardDetAPI(
+  //   SOAddToCartEntity soCartEntity,
+  // ) async {
+  //   List<Map<String, dynamic>> soCartListMap = [];
+  //   soCartListMap.add(soCartEntity.toMap());
+  //   var soAddCartUrl = '${ApiUrl.cartAddUrl}db_nm=${Utility.sysDbName}';
+  //   if (kDebugMode) {
+  //     print(soAddCartUrl);
+  //     print(convert.jsonEncode({'data': soCartListMap}));
+  //   }
+  //   final response = await http.post(
+  //     Uri.parse(soAddCartUrl),
+  //     headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+  //     body: convert.jsonEncode({'data': soCartListMap}),
+  //   );
+  //   if (response.statusCode == 200) {
+  //     return convert.jsonDecode(
+  //       response.body,
+  //     )['message']; //'Data Inserted Successfully';
+  //   } else {
+  //     return 'Oops there is an error!';
+  //   }
+  // }
 
   static Future<String> postSOInventoryDetAPI(
     List<Map<String, dynamic>> soInventiryListMap,
@@ -3290,73 +3420,54 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
   //   body: convert.jsonEncode({'data': soPaymentDetailsListMap}));
   // }
 
-  static Future<String> deleteCartItemPostAPI(
-    SOAddToCartEntity cartEntity,
+  // static Future<String> deleteCartItemPostAPI(
+  //   SOAddToCartEntity cartEntity,
+  // ) async {
+  //   List<Map<String, dynamic>> cartEntityList = [];
+  //   cartEntityList.add(cartEntity.toMap());
+  //   var deleteCartItemUrl = '${ApiUrl.cartDeleteUrl}db_nm=${Utility.sysDbName}';
+  //   if (kDebugMode) {
+  //     print(deleteCartItemUrl);
+  //     print(convert.jsonEncode({"data": cartEntityList}));
+  //   }
+  //   final response = await http.post(
+  //     Uri.parse(deleteCartItemUrl),
+  //     headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+  //     body: convert.jsonEncode({"data": cartEntityList}),
+  //   );
+  //   if (response.statusCode == 200) {
+  //     return convert.jsonDecode(response.body)['message'];
+  //   } else {
+  //     return 'Oops there is an error';
+  //   }
+  // }
+
+  static Future<String> postSOHeaderBilledToAPI(
+    SalesOrderHeaderEntity soHeaderEntity,
   ) async {
-    List<Map<String, dynamic>> cartEntityList = [];
-    cartEntityList.add(cartEntity.toMap());
-    var deleteCartItemUrl = '${ApiUrl.cartDeleteUrl}db_nm=${Utility.sysDbName}';
+    List<Map<String, dynamic>> soBiiledToEntityListMap = [];
+    soBiiledToEntityListMap.add(soHeaderEntity.toBilledToMap());
+    String soHeaderBilledToUrl =
+        '${ApiUrl.billedToUpdateUrl}db_nm=${Utility.sysDbName}'; 
     if (kDebugMode) {
-      print(deleteCartItemUrl);
-      print(convert.jsonEncode({"data": cartEntityList}));
+      print('soHeaderBilledToUrl $soHeaderBilledToUrl');
+      print(convert.jsonEncode({'data': soBiiledToEntityListMap}));
     }
     final response = await http.post(
-      Uri.parse(deleteCartItemUrl),
+      Uri.parse(soHeaderBilledToUrl),
       headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
-      body: convert.jsonEncode({"data": cartEntityList}),
+      body: convert.jsonEncode({'data': soBiiledToEntityListMap}),
     );
     if (response.statusCode == 200) {
-      return convert.jsonDecode(response.body)['message'];
+      return convert.jsonDecode(
+        response.body,
+      )['message']; //'Data Updated Successfully';
     } else {
       return 'Oops there is an error';
     }
   }
 
-  static Future<String> postSOHeaderBilledToAPI(
-    SalesOrderHeaderEntity soHeaderEntity,
-    String uniqueId,
-  ) async {
-    List<Map<String, dynamic>> soBiiledToEntityListMap = [];
-    soBiiledToEntityListMap.add(soHeaderEntity.toBilledToMap());
-    String soHeaderBilledToUrl =
-        '${ApiUrl.billedToUpdateUrl}Company_Id=${Utility.companyId}&Mobile_No=${Utility.cmpmobileno}&Unique_Id=$uniqueId&db_nm=${Utility.sysDbName}'; //Rupali 17-11-2025// &Partner_Code=${Utility.partnerCode}
-    if (kDebugMode) {
-      print(soHeaderBilledToUrl);
-      print(convert.jsonEncode({'data': soBiiledToEntityListMap}));
-    }
-    final reponse = await http.post(
-      Uri.parse(soHeaderBilledToUrl),
-      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
-      body: convert.jsonEncode({'data': soBiiledToEntityListMap}),
-    );
-    if (reponse.statusCode == 200) {
-      return convert.jsonDecode(reponse.body)['message'];
-    } else {
-      return 'Oops there is an error!';
-    }
-  }
-
-  static Future<String> deleteSODetAPI(
-    SalesOrderHeaderEntity soHeaderEntity,
-  ) async {
-    List<Map<String, dynamic>> soMapList = [];
-    soMapList.add(soHeaderEntity.toMap());
-    var soDeleteUrl =
-        '${ApiUrl.soDeleteUrl}db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
-    final response = await http.post(
-      Uri.parse(soDeleteUrl),
-      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
-      body: (convert.jsonEncode({'data': soMapList})),
-    );
-    if (response.statusCode == 200) {
-      return convert.jsonDecode(
-        response.body,
-      )['message']; //'Data Deleted Successfully';
-    } else {
-      return 'Oops there is an error!';
-    }
-  }
-
+ 
   static Future<String> soStatusUpdation(SalesOrderHeaderEntity sopost) async {
     List<Map<String, dynamic>> soUpdateDetListMap = [];
     soUpdateDetListMap.add(sopost.toMapApprovalStatus());

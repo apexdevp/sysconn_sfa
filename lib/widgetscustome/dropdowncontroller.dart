@@ -1,10 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
-
 // ignore: must_be_immutable
+
 class DropdownCustomList<T> extends StatefulWidget {
   final String title;
   final List<DropdownMenuItem<T>> items;

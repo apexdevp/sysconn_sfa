@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:sysconn_sfa/Utility/textFormField.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/api/entity/company/customer_category_entity.dart';
@@ -10,9 +8,10 @@ import 'package:sysconn_sfa/api/entity/company/customer_city_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/customer_pricelist_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/customer_refferedby_entity.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/my_customers/controller/customer_edit_controller.dart';
-import 'package:sysconn_sfa/widgets/dropdownlist.dart';
-import 'package:sysconn_sfa/widgets/responsive_button.dart';
+import 'package:sysconn_sfa/widgetscustome/custom_textfield.dart';
+import 'package:sysconn_sfa/widgetscustome/responsive_button.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
+import 'package:sysconn_sfa/widgetscustome/dropdowncontroller.dart';
 
 class CustomerEdit extends StatelessWidget {
   final String? partyId;
@@ -62,47 +61,51 @@ class CustomerEdit extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Obx(
-                        () => DropdownCustomList<CustomerCategoryEntity>(
-                          title: "Constitution",
-                          hint: "Select Constitution",
-                          isCompulsory: true,
-                          items: controller.constitutionList
-                              .map(
-                                (item) =>
-                                    DropdownMenuItem<CustomerCategoryEntity>(
-                                      value: item,
-                                      child: Text(item.name ?? ''),
-                                    ),
-                              )
-                              .toList(),
-                          value: controller.selectedConstitution.value,
-                          onChanged: (value) {
-                            controller.selectedConstitution.value = value;
-                          },
+                      Expanded(
+                        child: Obx(
+                          () => DropdownCustomList<CustomerCategoryEntity>(
+                            title: "Constitution",
+                            hint: "Select Constitution",
+                            isCompulsory: true,
+                            items: controller.constitutionList
+                                .map(
+                                  (item) =>
+                                      DropdownMenuItem<CustomerCategoryEntity>(
+                                        value: item,
+                                        child: Text(item.name ?? ''),
+                                      ),
+                                )
+                                .toList(),
+                            selectedValue: controller.selectedConstitution,
+                            onChanged: (value) {
+                              controller.selectedConstitution.value = value;
+                            },
+                          ),
                         ),
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      Obx(
-                        () => DropdownCustomList<CustomerCategoryEntity>(
-                          title: "Segment",
-                          hint: "Select Segment",
-                          items: controller.segmentList
-                              .map(
-                                (item) =>
-                                    DropdownMenuItem<CustomerCategoryEntity>(
-                                      value: item,
-                                      child: Text(item.name ?? ''),
-                                    ),
-                              )
-                              .toList(),
-                          value: controller.selectedSegment.value,
-                          onChanged: (value) {
-                            controller.selectedSegment.value = value;
-                          },
+                      Expanded(
+                        child: Obx(
+                          () => DropdownCustomList<CustomerCategoryEntity>(
+                            title: "Segment",
+                            hint: "Select Segment",
+                            items: controller.segmentList
+                                .map(
+                                  (item) =>
+                                      DropdownMenuItem<CustomerCategoryEntity>(
+                                        value: item,
+                                        child: Text(item.name ?? ''),
+                                      ),
+                                )
+                                .toList(),
+                            selectedValue: controller.selectedSegment,
+                            onChanged: (value) {
+                              controller.selectedSegment.value = value;
+                            },
+                          ),
                         ),
                       ),
                     ],
@@ -132,144 +135,158 @@ class CustomerEdit extends StatelessWidget {
                   SizedBox(height: size.height * 0.01),
                   Row(
                     children: [
-                      Obx(
-                        () => DropdownCustomList<CustomerCategoryEntity>(
-                          title: "Group",
-                          hint: "Select Group",
-                          isCompulsory: true,
-                          items: controller.groupList
-                              .map(
-                                (item) =>
-                                    DropdownMenuItem<CustomerCategoryEntity>(
-                                      value: item,
-                                      child: Text(item.name ?? ''),
-                                    ),
-                              )
-                              .toList(),
-                          value: controller.selectedGroup.value,
-                          onChanged: (value) {
-                            controller.selectedGroup.value = value;
-                          },
+                      Expanded(
+                        child: Obx(
+                          () => DropdownCustomList<CustomerCategoryEntity>(
+                            title: "Group",
+                            hint: "Select Group",
+                            isCompulsory: true,
+                            items: controller.groupList
+                                .map(
+                                  (item) =>
+                                      DropdownMenuItem<CustomerCategoryEntity>(
+                                        value: item,
+                                        child: Text(item.name ?? ''),
+                                      ),
+                                )
+                                .toList(),
+                            selectedValue: controller.selectedGroup,
+                            onChanged: (value) {
+                              controller.selectedGroup.value = value;
+                            },
+                          ),
                         ),
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      Obx(
-                        () => DropdownCustomList<CustomerPricelistEntity>(
-                          title: "Price List",
-                          hint: "Select Price List",
-                          items: controller.priceList
-                              .map(
-                                (item) =>
-                                    DropdownMenuItem<CustomerPricelistEntity>(
-                                      value: item,
-                                      child: Text(item.priceListName ?? ''),
-                                    ),
-                              )
-                              .toList(),
-                          value: controller.selectedPriceList.value,
-                          onChanged: (value) {
-                            controller.selectedPriceList.value = value;
-                          },
+                      Expanded(
+                        child: Obx(
+                          () => DropdownCustomList<CustomerPricelistEntity>(
+                            title: "Price List",
+                            hint: "Select Price List",
+                            items: controller.priceList
+                                .map(
+                                  (item) =>
+                                      DropdownMenuItem<CustomerPricelistEntity>(
+                                        value: item,
+                                        child: Text(item.priceListName ?? ''),
+                                      ),
+                                )
+                                .toList(),
+                            selectedValue: controller.selectedPriceList,
+                            onChanged: (value) {
+                              controller.selectedPriceList.value = value;
+                            },
+                          ),
                         ),
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      Obx(
-                        () => DropdownCustomList<CustomerCityEntity>(
-                          title: "City",
-                          hint: "Select City",
-                          items: controller.cityList
-                              .map(
-                                (c) => DropdownMenuItem(
-                                  value: c,
-                                  child: Text(c.name),
-                                ),
-                              )
-                              .toList(),
-                          value: controller.selectedCity.value,
-                          onChanged: (value) {
-                            if (value != null) {
-                              controller.filterAreaByCity(value.id);
-                            }
-                          },
+                      Expanded(
+                        child: Obx(
+                          () => DropdownCustomList<CustomerCityEntity>(
+                            title: "City",
+                            hint: "Select City",
+                            items: controller.cityList
+                                .map(
+                                  (c) => DropdownMenuItem(
+                                    value: c,
+                                    child: Text(c.name),
+                                  ),
+                                )
+                                .toList(),
+                            selectedValue: controller.selectedCity,
+                            onChanged: (value) {
+                              if (value != null) {
+                                controller.filterAreaByCity(value.id);
+                              }
+                            },
+                          ),
                         ),
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      Obx(
-                        () => DropdownCustomList<AreaEntity>(
-                          title: "Area",
-                          hint: "Select Area",
-                          items: controller.filteredAreaList
-                              .map(
-                                (a) => DropdownMenuItem(
-                                  value: a,
-                                  child: Text(a.name),
-                                ),
-                              )
-                              .toList(),
-                          value: controller.selectedArea.value,
-                          onChanged: (value) {
-                            if (value != null) {
-                              controller.filterLocalityByArea(value.id);
-                            }
-                          },
+                      Expanded(
+                        child: Obx(
+                          () => DropdownCustomList<AreaEntity>(
+                            title: "Area",
+                            hint: "Select Area",
+                            items: controller.filteredAreaList
+                                .map(
+                                  (a) => DropdownMenuItem(
+                                    value: a,
+                                    child: Text(a.name),
+                                  ),
+                                )
+                                .toList(),
+                            selectedValue: controller.selectedArea,
+                            onChanged: (value) {
+                              if (value != null) {
+                                controller.filterLocalityByArea(value.id);
+                              }
+                            },
+                          ),
                         ),
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      Obx(
-                        () => DropdownCustomList<LocalityEntity>(
-                          title: "Locality",
-                          hint: "Select Locality",
-                          items: controller.filteredLocalityList
-                              .map(
-                                (l) => DropdownMenuItem(
-                                  value: l,
-                                  child: Text(l.name),
-                                ),
-                              )
-                              .toList(),
-                          value: controller.selectedLocality.value,
-                          onChanged: (value) {
-                            if (value != null) {
-                              controller.selectedLocality.value = value;
-                            }
-                          },
+                      Expanded(
+                        child: Obx(
+                          () => DropdownCustomList<LocalityEntity>(
+                            title: "Locality",
+                            hint: "Select Locality",
+                            items: controller.filteredLocalityList
+                                .map(
+                                  (l) => DropdownMenuItem(
+                                    value: l,
+                                    child: Text(l.name),
+                                  ),
+                                )
+                                .toList(),
+                            selectedValue: controller.selectedLocality,
+                            onChanged: (value) {
+                              if (value != null) {
+                                controller.selectedLocality.value = value;
+                              }
+                            },
+                          ),
                         ),
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      Obx(
-                        () => DropdownCustomList<CustomerRefferedbyEntity>(
-                          title: "Reffered By",
-                          hint: "Select Reffered By",
-                          items: controller.refferedList
-                              .map(
-                                (item) =>
-                                    DropdownMenuItem<CustomerRefferedbyEntity>(
-                                      value: item,
-                                      child: Text(item.companyName ?? ''),
-                                    ),
-                              )
-                              .toList(),
-                          value: controller.selectedRefferedList.value,
-                          onChanged: (value) {
-                            if (value != null) {
-                              controller.selectedRefferedList.value = value;
-                            }
-                          },
+                      Expanded(
+                        child: Obx(
+                          () => DropdownCustomList<CustomerRefferedbyEntity>(
+                            title: "Reffered By",
+                            hint: "Select Reffered By",
+                            items: controller.refferedList
+                                .map(
+                                  (item) =>
+                                      DropdownMenuItem<
+                                        CustomerRefferedbyEntity
+                                      >(
+                                        value: item,
+                                        child: Text(item.companyName ?? ''),
+                                      ),
+                                )
+                                .toList(),
+                            selectedValue: controller.selectedRefferedList,
+                            onChanged: (value) {
+                              if (value != null) {
+                                controller.selectedRefferedList.value = value;
+                              }
+                            },
+                          ),
                         ),
                       ),
                     ],
@@ -416,12 +433,16 @@ class CustomerEdit extends StatelessWidget {
                 ],
               ),
             ),
-            ResponsiveButton(
-              title: 'Update',
-              function: () async {
-                Utility.showCircularLoadingWid(context);
-                await controller.partyEditPostApi();
-              },
+            Container(
+              width: size.width * 0.6,
+              padding: EdgeInsets.all(4),
+              child: ResponsiveButton(
+                title: 'Update',
+                function: () async {
+                  Utility.showCircularLoadingWid(context);
+                  await controller.partyEditPostApi();
+                },
+              ),
             ),
           ],
         ),

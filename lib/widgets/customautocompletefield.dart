@@ -66,8 +66,8 @@ class CustomAutoCompleteFieldView<T extends Object> extends StatelessWidget {
                   hintStyle: kTxtStl13N,
                   labelStyle: kTxtStl13N,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      Utility.borderCornerRadious,
+                    borderRadius: BorderRadius.circular(5.0
+                      // Utility.borderCornerRadious,
                     ),
                   ),
                   contentPadding: const EdgeInsets.fromLTRB(14, 14, 0, 0),

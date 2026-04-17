@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sysconn_sfa/Utility/textFormField.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/collection/controller/collection_create_controller.dart';
 import 'package:sysconn_sfa/widgets/customautocompletefield.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
+import 'package:sysconn_sfa/widgetscustome/custom_textfield.dart';
 
 class CollectionAddLedger extends StatefulWidget {
   final String? type;
@@ -265,7 +265,7 @@ class _CollectionAddLedgerState extends State<CollectionAddLedger> {
     child: Text("Add More", style: kTxtStl16B),
     style: ElevatedButton.styleFrom(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(5),
       ),
       padding: EdgeInsets.all(9.0),
       elevation: 6.0,
@@ -285,13 +285,13 @@ class _CollectionAddLedgerState extends State<CollectionAddLedger> {
     },
   ),
 ),
-
+SizedBox(width: size.width*0.02,),
 Expanded(
   child: ElevatedButton(
     child: Text("Done", style: kTxtStl16B),
     style: ElevatedButton.styleFrom(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(5),
       ),
       padding: EdgeInsets.all(9.0),
       elevation: 6.0,

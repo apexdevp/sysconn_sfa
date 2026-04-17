@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sysconn_sfa/Utility/textFormField.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/api/entity/company/party_contact_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/party_designation_entity.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/my_customers/controller/party_master_contact_controller.dart';
-import 'package:sysconn_sfa/widgets/dropdownlist.dart';
 import 'package:sysconn_sfa/widgets/responsive_button.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
+import 'package:sysconn_sfa/widgetscustome/custom_textfield.dart';
+import 'package:sysconn_sfa/widgetscustome/dropdowncontroller.dart';
+
 
 class PartyMasterContactAdd extends StatelessWidget {
   final PartyContactEntity? contactData;
@@ -47,24 +48,26 @@ class PartyMasterContactAdd extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Obx(
-                        () => DropdownCustomList<PartyDesignationEntity>(
-                          title: "Job Title",
-                          hint: "Select Job Title",
-                          isCompulsory: true,
-                          items: controller.jobTitleList
-                              .map(
-                                (item) =>
-                                    DropdownMenuItem<PartyDesignationEntity>(
-                                      value: item,
-                                      child: Text(item.name ?? ''),
-                                    ),
-                              )
-                              .toList(),
-                          value: controller.selectedJobTitle.value,
-                          onChanged: (value) {
-                            controller.selectedJobTitle.value = value;
-                          },
+                      Expanded(
+                        child: Obx(
+                          () => DropdownCustomList<PartyDesignationEntity>(
+                            title: "Job Title",
+                            hint: "Select Job Title",
+                            isCompulsory: true,
+                            items: controller.jobTitleList
+                                .map(
+                                  (item) =>
+                                      DropdownMenuItem<PartyDesignationEntity>(
+                                        value: item,
+                                        child: Text(item.name ?? ''),
+                                      ),
+                                )
+                                .toList(),
+                            selectedValue: controller.selectedJobTitle,
+                            onChanged: (value) {
+                              controller.selectedJobTitle.value = value;
+                            },
+                          ),
                         ),
                       ),
                     ],
@@ -213,12 +216,16 @@ class PartyMasterContactAdd extends StatelessWidget {
                 ],
               ),
             ),
-            ResponsiveButton(
-              title: contactData != null ? 'Update' : 'Save',
-              function: () async {
-                Utility.showCircularLoadingWid(context);
-                await controller.customerContactPostApi();
-              },
+            Container(
+               width: size.width * 0.6,
+              padding: EdgeInsets.all(4),
+              child: ResponsiveButton(
+                title: contactData != null ? 'Update' : 'Save',
+                function: () async {
+                  Utility.showCircularLoadingWid(context);
+                  await controller.customerContactPostApi();
+                },
+              ),
             ),
           ],
         ),

@@ -179,23 +179,26 @@ class ApiUrl {
 
   //===================================================================
   // sales order
+
+   static String getAllSalesOrder =
+      'https://${Utility.getApiHostUrlDms}/Sales_Order/SO_Master/getAllSOData?';
   // static String issueslipRegisterUrl = 'https://${Utility.apiUrl}/Issue_Slip/Issue_Slip_Register/GetIssueSlipFun?';
-  static String stkBrandUrl =
-      'https://${Utility.getApiHostUrlDms}/Company/Stock_Brand_List/Get_ItemDiv_Data?';
-  static String soCartDataUrl =
-      'https://${Utility.getApiHostUrlDms}/Sales_Order/Cart_Data/Get_Cart_Data?';
-  static String soItemListUrl =
-      'https://${Utility.getApiHostUrlDms}/Sales_Order/SO_Item_List/GetAllData?';
-  static String soPrintUrl =
-      'https://${Utility.getApiHostUrlDms}/Sales_Order/SO_Print/Get_SO_Print_Details?';
+  // static String stkBrandUrl =
+  //     'https://${Utility.getApiHostUrlDms}/Company/Stock_Brand_List/Get_ItemDiv_Data?';
+  // static String soCartDataUrl =
+  //     'https://${Utility.getApiHostUrlDms}/Sales_Order/Cart_Data/Get_Cart_Data?';
+  // static String soItemListUrl =
+  //     'https://${Utility.getApiHostUrlDms}/Sales_Order/SO_Item_List/GetAllData?';
+  // static String soPrintUrl =
+  //     'https://${Utility.getApiHostUrlDms}/Sales_Order/SO_Print/Get_SO_Print_Details?';
   static String soReportUrl =
       'https://${Utility.getApiHostUrlDms}/Sales_Order/SO_Report/SalesOrderFunc?';
   static String soDetailsReportUrl =
       'https://${Utility.getApiHostUrlDms}/Sales_Order/SO_Inv_Report/GetSOInvData?';
-  static String soApprovalUrl =
-      'https://${Utility.getApiHostUrlDms}/Sales_Order/SO_Approval_Status_Report/GetSOApprovalData?';
-  static String soPartyRegisterUrl =
-      'https://${Utility.getApiHostUrlDms}/Sales_Order/SO_Partywise_Report/party_details_func?';
+  // static String soApprovalUrl =
+  //     'https://${Utility.getApiHostUrlDms}/Sales_Order/SO_Approval_Status_Report/GetSOApprovalData?';
+  // static String soPartyRegisterUrl =
+  //     'https://${Utility.getApiHostUrlDms}/Sales_Order/SO_Partywise_Report/party_details_func?';
 
 
   //===================================================================
@@ -207,6 +210,12 @@ class ApiUrl {
   static String osreceivableGet =
       'https://${Utility.getApiHostUrlDms}/Sales/Outstanding_Ageing_Summary/GetAllOutstandingData?'; //snehal 28-09-2024 add for os rec report
 
+ //////////business opportunity=================
+ ///
+ static String opportunitiesTrackUrl =
+      'https://${Utility.getApiHostUrlDms}/bizopportunity/BO_Tracking_Report/GetBOData?';
+ 
+ 
   //////////////////////////        post             /////////////////////////////////////////////////////////
   ///
   //pratiksha p /////////////////
@@ -255,12 +264,16 @@ class ApiUrl {
 
   ///
   // sales order
+   static String salesorderSaveUrl =
+      'https://${Utility.postApiHostUrlDms}/Sales_Order/Sales_Order_Save/SO_Save_Func?';
   static String soHeaderInsertUrl =
       'https://${Utility.postApiHostUrlDms}/Sales_Order/Header_Insert/HeaderInsertFun?';
-  static String cartAddUrl =
-      'https://${Utility.postApiHostUrlDms}/Sales_Order/AddToCart/PostDataFun?';
-  static String cartDeleteUrl =
-      'https://${Utility.postApiHostUrlDms}/Sales_Order/DeleteCart/CartDeleteFun?';
+       static String soInvDeleteUrl =
+      'https://${Utility.postApiHostUrlDms}/Sales_Order/Inventory_Delete/invDeleteCall?';
+  // static String cartAddUrl =
+  //     'https://${Utility.postApiHostUrlDms}/Sales_Order/AddToCart/PostDataFun?';
+  // static String cartDeleteUrl =
+  //     'https://${Utility.postApiHostUrlDms}/Sales_Order/DeleteCart/CartDeleteFun?';
   static String billedToUpdateUrl =
       'https://${Utility.postApiHostUrlDms}/Sales_Order/BilledToUpdate/BilledToAdd?';
   static String inventoryAddUrl =
