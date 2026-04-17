@@ -8,6 +8,7 @@ import 'package:sysconn_sfa/Utility/date_calendar.dart';
 import 'package:sysconn_sfa/Utility/floating_point_action_button.dart';
 import 'package:sysconn_sfa/Utility/systemxs_global.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
+import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/reports/outstanding/controller/payment_followup_list_controller.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/reports/outstanding/view/payment_folowup_create.dart';
 import 'package:sysconn_sfa/screens/drawer/drawer_view.dart';
@@ -107,9 +108,7 @@ class PaymentFollowupList extends StatelessWidget {
                 child: Obx(() {
                   if (controller.isDataLoad.value == 0) {
                     return Center(
-                      child: Platform.isIOS
-                          ? CupertinoActivityIndicator()
-                          : CircularProgressIndicator(),
+                      child: Utility.processLoadingWidget()
                     );
                   }
 

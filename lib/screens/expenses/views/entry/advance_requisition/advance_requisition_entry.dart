@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sysconn_sfa/Utility/app_colors.dart';
 import 'package:sysconn_sfa/Utility/systemxs_global.dart';
-import 'package:sysconn_sfa/Utility/textFormField.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/api/entity/expense/adv_expenses_entity.dart';
@@ -11,8 +10,9 @@ import 'package:sysconn_sfa/api/entity/user/userentity.dart';
 import 'package:sysconn_sfa/screens/expenses/controllers/advance_requistion_entry_controller.dart';
 import 'package:sysconn_sfa/widgets/custom_appbar.dart';
 import 'package:sysconn_sfa/widgets/customautocompletefield.dart';
-import 'package:sysconn_sfa/widgets/dropdownlist.dart';
 import 'package:sysconn_sfa/widgets/responsive_button.dart';
+import 'package:sysconn_sfa/widgetscustome/custom_textfield.dart';
+import 'package:sysconn_sfa/widgetscustome/dropdowncontroller.dart';
 
 class AdvanceRequisitionEntry extends StatelessWidget {
   final AdvExpensesEntity? expenseData;
@@ -124,32 +124,37 @@ class AdvanceRequisitionEntry extends StatelessWidget {
                         SizedBox(height: size.height * 0.01),
                         Row(
                           children: [
-                            Obx(
-                              () => DropdownCustomList(
-                                title: 'Type of Advance',
-                                items:
-                                    //  controller.categoryItem
-                                    //     .map((e) =>
-                                    //         DropdownMenuItem(value: e, child: Text(e)))
-                                    //     .toList(),
-                                    controller.categoryItem.map((
-                                      categoryValue,
-                                    ) {
-                                      return DropdownMenuItem(
-                                        value: categoryValue,
-                                        child: Text(
-                                          categoryValue,
-                                          style: kTxtStl13N,
-                                        ),
-                                      );
-                                    }).toList(),
-                                value: controller.categorySelected.value,
-                                onChanged: (categorySelectedValue) {
-                                  // setState(() {
-                                  controller.categorySelected.value =
-                                      categorySelectedValue!;
-                                  // });
-                                },
+                            Expanded(
+                              child:
+                              // Obx(
+                              //   () =>
+                                
+                                 DropdownCustomList(
+                                  title: 'Type of Advance',
+                                  items:
+                                      //  controller.categoryItem
+                                      //     .map((e) =>
+                                      //         DropdownMenuItem(value: e, child: Text(e)))
+                                      //     .toList(),
+                                      controller.categoryItem.map((
+                                        categoryValue,
+                                      ) {
+                                        return DropdownMenuItem(
+                                          value: categoryValue,
+                                          child: Text(
+                                            categoryValue,
+                                            style: kTxtStl13N,
+                                          ),
+                                        );
+                                      }).toList(),
+                                  selectedValue: controller.categorySelected,
+                                  onChanged: (categorySelectedValue) {
+                                    // setState(() {
+                                    controller.categorySelected.value =
+                                        categorySelectedValue!;
+                                    // });
+                                  },
+                                // ),
                               ),
                             ),
                           ],

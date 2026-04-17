@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:sysconn_sfa/Utility/floating_point_action_button.dart';
 import 'package:sysconn_sfa/Utility/systemxs_global.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
+import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/collection/controller/collection_report_controller.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/collection/view/collection_create.dart';
 import 'package:sysconn_sfa/widgets/nodatafoundwidget.dart';
@@ -99,9 +100,7 @@ class CollectionReport extends StatelessWidget {
             child: Obx(() {
               if (controller.isDataLoad.value == 0) {
                 return Center(
-                  child: Platform.isIOS
-                      ? CupertinoActivityIndicator()
-                      : CircularProgressIndicator(),
+                  child: Utility.processLoadingWidget()
                 );
               }
 

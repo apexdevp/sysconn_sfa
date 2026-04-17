@@ -261,9 +261,7 @@ class VisitAttendanceSumRpt extends StatelessWidget {
             child: Obx(() {
               if (controller.isDataLoad.value == 0) {
                 return Center(
-                  child: Platform.isIOS
-                      ? CupertinoActivityIndicator()
-                      : CircularProgressIndicator(),
+                  child: Utility.processLoadingWidget()
                 );
               }
 

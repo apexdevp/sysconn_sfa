@@ -345,9 +345,7 @@ class OsRecPayDashboard extends StatelessWidget {
           if (controller.isDataLoad.value != 1) {
             return Center(
               child: controller.isDataLoad.value == 0
-                  ? Platform.isIOS
-                        ? CupertinoActivityIndicator()
-                        : CircularProgressIndicator()
+                  ? Utility.processLoadingWidget()
                   : NoDataFound(),
             );
           }
@@ -585,9 +583,7 @@ class OsRecPayDashboard extends StatelessWidget {
                           height: size.height * 0.22, //200,
                           child: Center(
                             child: controller.isGraphDataLoad.value == 0
-                                ? (Platform.isIOS
-                                      ? CupertinoActivityIndicator()
-                                      : CircularProgressIndicator())
+                                ? (Utility.processLoadingWidget())
                                 : const Text("No Data"),
                           ),
                         );
@@ -803,9 +799,7 @@ class OsRecPayDashboard extends StatelessWidget {
                     if (controller.paymentFollowupEntity.value == null) {
                       return Center(
                         child: controller.isDataLoad.value == 0
-                            ? (Platform.isIOS
-                                  ? CupertinoActivityIndicator()
-                                  : CircularProgressIndicator())
+                            ? (Utility.processLoadingWidget())
                             : const Text('No Data'),
                       );
                     }

@@ -76,9 +76,7 @@ class ItemWiseSOPendingReport extends StatelessWidget {
             child: Obx(() {
               if (controller.loadState.value == 0) {
                 return Center(
-                  child: Platform.isIOS
-                      ? CupertinoActivityIndicator()
-                      : CircularProgressIndicator(),
+                  child: Utility.processLoadingWidget()
                 );
               }
               if (controller.loadState.value == 2) {

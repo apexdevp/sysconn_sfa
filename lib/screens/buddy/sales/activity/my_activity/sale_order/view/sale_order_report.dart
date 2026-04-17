@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:sysconn_sfa/Utility/floating_point_action_button.dart';
 import 'package:sysconn_sfa/Utility/systemxs_global.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
+import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/sale_order/controller/sales_order_report_controller.dart';
 import 'package:sysconn_sfa/widgets/nodatafoundwidget.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
@@ -95,9 +96,7 @@ class SalesOrderReport extends StatelessWidget {
             child: Obx(() {
               if (controller.isDataLoad.value == 0) {
                 return Center(
-                  child: Platform.isIOS
-                      ? CupertinoActivityIndicator()
-                      : CircularProgressIndicator(),
+                  child: Utility.processLoadingWidget()
                 );
               }
               if (controller.isDataLoad.value == 2) {

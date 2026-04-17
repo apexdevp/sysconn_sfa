@@ -111,9 +111,7 @@ class DailyPerformanceReport extends StatelessWidget {
         child: Obx(() {
           if (controller.isDataLoad.value == 0) {
             return Center(
-              child: Platform.isIOS
-                  ? CupertinoActivityIndicator()
-                  : CircularProgressIndicator(),
+              child: Utility.processLoadingWidget()
             );
           } else if (controller.isDataLoad.value == 2) {
             return Center(child: Text('No Data'));

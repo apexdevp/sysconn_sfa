@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sysconn_sfa/Utility/systemxs_global.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
+import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/api/entity/company/voucherentity.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/collection/controller/collection_create_controller.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/collection/view/collection_add_ledger.dart';
@@ -88,9 +89,7 @@ class CollectionCreate extends StatelessWidget {
                       Obx(() {
                         if (controller.isDataLoad.value == 0) {
                           return Center(
-                            child: Platform.isIOS
-                                ? CupertinoActivityIndicator()
-                                : CircularProgressIndicator(),
+                            child: Utility.processLoadingWidget()
                           );
                         }
                         return ListView(

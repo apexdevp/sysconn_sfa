@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:sysconn_sfa/Utility/floating_point_action_button.dart';
 import 'package:sysconn_sfa/Utility/systemxs_global.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
+import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/reports/outstanding/controller/os_recpay_bill_controller.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/reports/outstanding/view/payment_followup_list.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
@@ -208,9 +209,7 @@ class OutstandingRecPayBillDetails extends StatelessWidget {
             child: Obx(() {
               if (controller.isDataLoad.value == 0) {
                 return Center(
-                  child: Platform.isIOS
-                      ? CupertinoActivityIndicator()
-                      : CircularProgressIndicator(),
+                  child:Utility.processLoadingWidget()
                 );
               }
 

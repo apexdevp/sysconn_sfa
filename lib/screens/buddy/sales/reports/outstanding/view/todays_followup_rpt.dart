@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sysconn_sfa/Utility/date_calendar.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
+import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/reports/outstanding/controller/todays_followup_controller.dart';
 import 'package:sysconn_sfa/screens/drawer/drawer_view.dart';
 import 'package:sysconn_sfa/widgets/nodatafoundwidget.dart';
@@ -53,9 +54,7 @@ class TodayFollowupReport extends StatelessWidget {
               child: Obx(() {
                 if (controller.isDataLoad.value == 0) {
                   return Center(
-                    child: Platform.isIOS
-                        ? CupertinoActivityIndicator()
-                        : CircularProgressIndicator(),
+                    child: Utility.processLoadingWidget()
                   );
                 }
             

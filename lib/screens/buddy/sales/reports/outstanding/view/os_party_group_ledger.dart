@@ -69,9 +69,7 @@ class OutstandingPartyGroupLedgerDashboard extends StatelessWidget {
                       return controller.isDataLoad.value != 1
                           ? Center(
                               child: controller.isDataLoad.value == 0
-                                  ? Platform.isIOS
-                                        ? CupertinoActivityIndicator()
-                                        : CircularProgressIndicator()
+                                  ? Utility.processLoadingWidget()
                                   : Text('No Data'),
                             )
                           : Container(
@@ -117,9 +115,7 @@ class OutstandingPartyGroupLedgerDashboard extends StatelessWidget {
                   if (controller.isDataLoad.value != 1) {
                     return Center(
                       child: controller.isDataLoad.value == 0
-                          ? Platform.isIOS
-                                ? CupertinoActivityIndicator()
-                                : CircularProgressIndicator()
+                          ? Utility.processLoadingWidget()
                           : NoDataFound(),
                     );
                   }
