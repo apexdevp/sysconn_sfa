@@ -12,6 +12,7 @@ import 'package:sysconn_sfa/screens/expenses/report/admin/exp_approval/view/expe
 import 'package:sysconn_sfa/widgets/custom_appbar.dart';
 import 'package:sysconn_sfa/widgets/nodatafoundwidget.dart';
 import 'package:sysconn_sfa/widgets/search_textfield.dart';
+import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 
 class ExpensesApprovalReport extends StatelessWidget {
   ExpensesApprovalReport({super.key});
@@ -20,8 +21,7 @@ class ExpensesApprovalReport extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: customAppbar(
-        context: context,
+      appBar: SfaCustomAppbar(
         title: 'Team Expense Requests',
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(60.0),

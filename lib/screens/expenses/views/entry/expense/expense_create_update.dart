@@ -11,6 +11,7 @@ import 'package:sysconn_sfa/screens/expenses/controllers/expense_create_update_c
 import 'package:sysconn_sfa/widgets/custom_appbar.dart';
 import 'package:sysconn_sfa/widgets/customautocompletefield.dart';
 import 'package:sysconn_sfa/widgets/responsive_button.dart';
+import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 import 'package:sysconn_sfa/widgetscustome/custom_textfield.dart';
 
 class ExpenseCreateUpdate extends StatelessWidget {
@@ -28,8 +29,7 @@ class ExpenseCreateUpdate extends StatelessWidget {
       canPop: false,
       onPopInvokedWithResult: controller.onWillPop,
       child: Scaffold(
-        appBar: customAppbar(
-          context: context,
+        appBar: SfaCustomAppbar(
           title: 'Expense ${expRptHedId == null ? 'Claim' : 'Update'}',
         ),
         floatingActionButton: Padding(
@@ -485,10 +485,7 @@ class ExpenseCreateUpdate extends StatelessWidget {
                   children: [
                     CustomAutoCompleteFieldView(
                       enabled:
-                          (controller
-                              .expensesHeaderEntityList
-                              .value ==
-                          null),
+                          (controller.expensesHeaderEntityList.value == null),
                       title: 'Voucher Name',
                       optionsBuilder: (value) => controller.vchEntityList
                           .where(

@@ -4,8 +4,7 @@ import 'package:sysconn_sfa/api/entity/order/sales_order_report_entity.dart';
 
 class SalesOrderRegisterController extends GetxController {
   RxInt isDataLoad = 0.obs;
-
-  RxList<SOReportEntity> salesOrderRegisterValue = <SOReportEntity>[].obs;
+ RxList<SOReportEntity> salesOrderRegisterValue = <SOReportEntity>[].obs;
 
   Rx<DateTime> fromDate = DateTime.now().obs;
   Rx<DateTime> toDate = DateTime.now().obs;
@@ -23,6 +22,7 @@ class SalesOrderRegisterController extends GetxController {
     final soValue = await ApiCall.getSalesOrderRegisterAPI(
       fromdate: fromDate.toString(),
       todate: toDate.toString(),
+      
     );
     if (soValue.isNotEmpty) {
       salesOrderRegisterValue.assignAll(soValue);

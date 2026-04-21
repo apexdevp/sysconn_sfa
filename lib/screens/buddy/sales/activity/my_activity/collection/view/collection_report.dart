@@ -42,7 +42,6 @@ class CollectionReport extends StatelessWidget {
       appBar: SfaCustomAppbar(title: 'Collection Register'),
       floatingActionButton: FloatingButton(
         isExtended: false,
-
         icon: Icon(Icons.add),
         function: () async {
           await Get.to(() => CollectionCreate(vchType: type));
@@ -68,8 +67,7 @@ class CollectionReport extends StatelessWidget {
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  
+                children: [                  
                   Icon(
                     FontAwesomeIcons.indianRupeeSign,
                     size: size.height * 0.06,

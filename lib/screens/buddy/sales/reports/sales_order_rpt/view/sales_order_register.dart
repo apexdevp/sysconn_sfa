@@ -63,7 +63,6 @@ class SalesOrderRegister extends StatelessWidget {
                   child:Utility.processLoadingWidget()
                 );
               }
-
               if (controller.isDataLoad.value == 2) {
                 return Center(child: NoDataFound());
               }

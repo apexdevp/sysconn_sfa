@@ -10,6 +10,7 @@ import 'package:sysconn_sfa/screens/expenses/report/admin/adv_exp_approval/contr
 import 'package:sysconn_sfa/screens/expenses/report/admin/adv_exp_approval/view/adv_exp_approval_view.dart';
 import 'package:sysconn_sfa/widgets/custom_appbar.dart';
 import 'package:sysconn_sfa/widgets/nodatafoundwidget.dart';
+import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 
 class AdvExpensesApprovalReport extends StatelessWidget {
   AdvExpensesApprovalReport({super.key});
@@ -18,8 +19,7 @@ class AdvExpensesApprovalReport extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: customAppbar(
-        context: context,
+      appBar: SfaCustomAppbar(
         title: 'Team Advance Requests',
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(60.0),
@@ -30,7 +30,7 @@ class AdvExpensesApprovalReport extends StatelessWidget {
                 children: [
                   CalendarRangeView(
                     function: () async {
-                      // checkApiDet();
+                      controller.getAdvExpensesDataAPI();
                     },
                   ),
                 ],
@@ -44,7 +44,6 @@ class AdvExpensesApprovalReport extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-
             child: TabBar(
               indicatorSize: TabBarIndicatorSize.tab,
 
@@ -90,10 +89,9 @@ class AdvExpensesApprovalReport extends StatelessWidget {
                   final item = controller.expensesApprDataList[i];
                   return InkWell(
                     onTap: () async {
-                      await Get.to(() =>
-                          AdvExpenseApprView(
-                            expenseDetList: item,
-                          ));
+                      await Get.to(
+                        () => AdvExpenseApprView(expenseDetList: item),
+                      );
                       controller.getAdvExpensesDataAPI();
                     },
                     child: Card(

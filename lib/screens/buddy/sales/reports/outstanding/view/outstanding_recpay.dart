@@ -13,11 +13,11 @@ import 'package:sysconn_sfa/screens/buddy/sales/reports/outstanding/view/os_recp
 import 'package:sysconn_sfa/screens/buddy/sales/reports/outstanding/view/todays_followup_rpt.dart';
 import 'package:sysconn_sfa/widgets/fl_barchart.dart';
 import 'package:sysconn_sfa/widgets/nodatafoundwidget.dart';
-import 'package:sysconn_sfa/widgets/sfa_dropdownlist.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 import 'package:sysconn_sfa/screens/drawer/drawer_view.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/reports/outstanding/controller/outstanding_rec_pay_controller.dart';
 import 'package:sysconn_sfa/widgets/trinagrid_rpt_theme.dart';
+import 'package:sysconn_sfa/widgetscustome/dropdowncontroller.dart';
 import 'package:trina_grid/trina_grid.dart';
 
 class OsRecPayDashboard extends StatelessWidget {
@@ -221,56 +221,62 @@ class OsRecPayDashboard extends StatelessWidget {
                   children: [
                     controller.menuIndexSelected.value == 0 &&
                             controller.menuIndexSelected.value != 1
-                        ? DropdownList<String>(
-                            title: 'Type',
-                            items: controller.osTypeItem
-                                .map(
-                                  (val) => DropdownMenuItem<String>(
-                                    value: val,
-                                    child: Text(val),
-                                  ),
-                                )
-                                .toList(),
-                            value: controller.osTypeSelected.value,
-                            onChanged: controller.changeType,
-                          )
+                        ? Expanded(
+                          child: DropdownCustomList<String>(
+                              title: 'Type',
+                              items: controller.osTypeItem
+                                  .map(
+                                    (val) => DropdownMenuItem<String>(
+                                      value: val,
+                                      child: Text(val),
+                                    ),
+                                  )
+                                  .toList(),
+                              selectedValue: controller.osTypeSelected,
+                              onChanged: controller.changeType,
+                            ),
+                        )
                         : Container(),
                     SizedBox(width: size.width * 0.03),
 
                     /// SUB TYPE
                     controller.menuIndexSelected.value == 1
                         ? Container()
-                        : DropdownList<String>(
-                            title: 'Sub Type',
-                            items: controller.osAgeByItem
-                                .map(
-                                  (val) => DropdownMenuItem(
-                                    value: val,
-                                    child: Text(val),
-                                  ),
-                                )
-                                .toList(),
-                            value: controller.osAgeBySelected.value,
-                            onChanged: controller.changeSubType,
-                          ),
+                        : Expanded(
+                          child: DropdownCustomList<String>(
+                              title: 'Sub Type',
+                              items: controller.osAgeByItem
+                                  .map(
+                                    (val) => DropdownMenuItem(
+                                      value: val,
+                                      child: Text(val),
+                                    ),
+                                  )
+                                  .toList(),
+                              selectedValue: controller.osAgeBySelected,
+                              onChanged: controller.changeSubType,
+                            ),
+                        ),
                     SizedBox(width: size.width * 0.03),
 
                     /// AGEING
                     controller.osTypeSelected.value == 'Party' &&
                             controller.menuIndexSelected.value != 1
-                        ? DropdownList<String>(
-                            title: 'Ageing',
-                            items: controller.outAgeingItem
-                                .map(
-                                  (val) => DropdownMenuItem(
-                                    value: val,
-                                    child: Text(val),
-                                  ),
-                                )
-                                .toList(),
-                            value: controller.outAgeingSelected.value,
-                            onChanged: controller.changeAgeing,
-                          )
+                        ? Expanded(
+                          child: DropdownCustomList<String>(
+                              title: 'Ageing',
+                              items: controller.outAgeingItem
+                                  .map(
+                                    (val) => DropdownMenuItem(
+                                      value: val,
+                                      child: Text(val),
+                                    ),
+                                  )
+                                  .toList(),
+                              selectedValue: controller.outAgeingSelected,
+                              onChanged: controller.changeAgeing,
+                            ),
+                        )
                         : Container(),
                   ],
                 ),
@@ -684,15 +690,17 @@ class OsRecPayDashboard extends StatelessWidget {
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               /// SUB TYPE
-              DropdownList<String>(
-                title: 'Sub Type',
-                items: controller.osAgeByItem
-                    .map(
-                      (val) => DropdownMenuItem(value: val, child: Text(val)),
-                    )
-                    .toList(),
-                value: controller.osAgeBySelected.value,
-                onChanged: controller.changeSubType,
+              Expanded(
+                child: DropdownCustomList<String>(
+                  title: 'Sub Type',
+                  items: controller.osAgeByItem
+                      .map(
+                        (val) => DropdownMenuItem(value: val, child: Text(val)),
+                      )
+                      .toList(),
+                  selectedValue: controller.osAgeBySelected,
+                  onChanged: controller.changeSubType,
+                ),
               ),
               SizedBox(width: size.width * 0.05),
               SizedBox(
@@ -701,41 +709,14 @@ class OsRecPayDashboard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text('Date', style: kTxtStl14B),
+               padding:     const EdgeInsets.all(8.0) , //const EdgeInsets.symmetric(vertical: 4),//const EdgeInsets.all(8.0),
+                      child: Text('Date', style: kTxtStl12N),
                     ),
-                    // Container(
-                    //   padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                    //   decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(14.0),
-                    //     border: Border.all(width: 0.8, color: Colors.grey),
-                    //     color: Colors.grey.shade50,
-                    //   ),
-                    //   child: SizedBox(
-                    //        width: size.width * 0.4,
-                    //     child: ListTile(
-                    //         title:  Text(
-                    //           DateFormat('dd-MM-yyyy').format(controller.fromDate),
-                    //           style: kTxtStl12B,
-                    //         ),//Icon(Icons.calendar_today),
-                    //         trailing: Icon(Icons.calendar_today),
-                    //         //  Icon(Icons.arrow_drop_down),
-                    //         onTap: () async{
-                    //       //      await selectDateRange(context, fromDate, toDate)
-                    //       //     .then((selectedDateRange) {
-                    //       //   fromDate = selectedDateRange.start;
-                    //       //   toDate = selectedDateRange.end;
-                    //       //   // setState(() { });
-                    //       //   callInitFun(); // komal // 16-12-2023 // grid api call in int method bcze future builder has been removed
-                    //       // });
-                    //       },
-                    //       ),
-                    //   ),
-                    // ),
+                    
                     Container(
                       padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14.0),
+                        borderRadius: BorderRadius.circular(5.0),
                         border: Border.all(width: 0.8, color: Colors.grey),
                         color: Colors.grey.shade50,
                       ),
@@ -748,7 +729,7 @@ class OsRecPayDashboard extends StatelessWidget {
                               DateFormat(
                                 'dd-MM-yyyy',
                               ).format(controller.fromDate),
-                              style: kTxtStl12B,
+                              style: kTxtStl12N,
                             ),
 
                             SizedBox(width: size.width * 0.06),

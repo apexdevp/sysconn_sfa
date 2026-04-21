@@ -11,6 +11,7 @@ import 'package:sysconn_sfa/screens/expenses/report/user/controller/expense_rpt_
 import 'package:sysconn_sfa/screens/expenses/views/entry/expense/expense_create_update.dart';
 import 'package:sysconn_sfa/widgets/custom_appbar.dart';
 import 'package:sysconn_sfa/widgets/nodatafoundwidget.dart';
+import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 
 class MyExpensesReport extends StatelessWidget {
   MyExpensesReport({super.key});
@@ -42,74 +43,72 @@ class MyExpensesReport extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: customAppbar(
-        context: context,
+      appBar: SfaCustomAppbar(
         title: 'Expense Requests',
-          
-//           bottom: PreferredSize(
-//   // preferredSize: Size.fromHeight(200),
-//    preferredSize: Size.fromHeight(size.height * 0.17),
-//   child: Obx(() {
-//     final model = controller.expenseModel.value;
 
-//     return Column(
-//       mainAxisAlignment: MainAxisAlignment.start,
-//         // mainAxisSize: MainAxisSize.min, 
-//       children: [
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.end,
-//           children: [
-//             CalendarRangeView(
-//               function: () async {
-//                 controller.checkApiDet();
-//               },
-//             ),
-//           ],
-//         ),
-//         SizedBox(height: size.height * 0.01),
-//         Align(
-//           alignment: Alignment.center,
-//           child: Container(
-//             width: size.width * 0.9,
-//             padding: const EdgeInsets.symmetric(vertical: 2.0),
-//             decoration: BoxDecoration(
-//               color: Colors.white,
-//               borderRadius: BorderRadius.circular(8),
-//             ),
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//               children: [
-//                 customeexpensetotalval(
-//                   size: size,
-//                   title: 'Total Expenses',
-//                   value: controller.expTotal.value.toStringAsFixed(2),
-//                 ),
-//                 const VerticalDivider(thickness: 1),
-//                 customeexpensetotalval(
-//                   size: size,
-//                   title: 'Pending',
-//                   value: model?.pending ?? '0.00',
-//                   icon: Icons.circle,
-//                   color: Colors.red,
-//                 ),
-//                 const VerticalDivider(thickness: 1),
-//                 customeexpensetotalval(
-//                   size: size,
-//                   title: 'Approved',
-//                   value: model?.approved ?? '0.00',
-//                   icon: Icons.circle,
-//                   color: Colors.green,
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//         // SizedBox(height: size.height * 0.02),
-//       ],
-//     );
-//   }),
-// ),
+        //           bottom: PreferredSize(
+        //   // preferredSize: Size.fromHeight(200),
+        //    preferredSize: Size.fromHeight(size.height * 0.17),
+        //   child: Obx(() {
+        //     final model = controller.expenseModel.value;
 
+        //     return Column(
+        //       mainAxisAlignment: MainAxisAlignment.start,
+        //         // mainAxisSize: MainAxisSize.min,
+        //       children: [
+        //         Row(
+        //           mainAxisAlignment: MainAxisAlignment.end,
+        //           children: [
+        //             CalendarRangeView(
+        //               function: () async {
+        //                 controller.checkApiDet();
+        //               },
+        //             ),
+        //           ],
+        //         ),
+        //         SizedBox(height: size.height * 0.01),
+        //         Align(
+        //           alignment: Alignment.center,
+        //           child: Container(
+        //             width: size.width * 0.9,
+        //             padding: const EdgeInsets.symmetric(vertical: 2.0),
+        //             decoration: BoxDecoration(
+        //               color: Colors.white,
+        //               borderRadius: BorderRadius.circular(8),
+        //             ),
+        //             child: Row(
+        //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //               children: [
+        //                 customeexpensetotalval(
+        //                   size: size,
+        //                   title: 'Total Expenses',
+        //                   value: controller.expTotal.value.toStringAsFixed(2),
+        //                 ),
+        //                 const VerticalDivider(thickness: 1),
+        //                 customeexpensetotalval(
+        //                   size: size,
+        //                   title: 'Pending',
+        //                   value: model?.pending ?? '0.00',
+        //                   icon: Icons.circle,
+        //                   color: Colors.red,
+        //                 ),
+        //                 const VerticalDivider(thickness: 1),
+        //                 customeexpensetotalval(
+        //                   size: size,
+        //                   title: 'Approved',
+        //                   value: model?.approved ?? '0.00',
+        //                   icon: Icons.circle,
+        //                   color: Colors.green,
+        //                 ),
+        //               ],
+        //             ),
+        //           ),
+        //         ),
+        //         // SizedBox(height: size.height * 0.02),
+        //       ],
+        //     );
+        //   }),
+        // ),
       ),
 
       floatingActionButton: FloatingButton(
@@ -123,40 +122,38 @@ class MyExpensesReport extends StatelessWidget {
       ),
       body: Column(
         children: [
-
-             /// 🔹 Calendar + Summary (MOVED FROM APPBAR)
           Obx(() {
             final model = controller.expenseModel.value;
 
             return Container(
-          decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: <Color>[
-            //
-                        Color(0xffF54749),
-                        
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[
+                    //
+                    Color(0xffF54749),
+
                     //  Color.fromARGB(255, 223, 98, 15),
-                      Color(0xffF54749),
-          ],
-        ),
-      ),
+                    Color(0xffF54749),
+                  ],
+                ),
+              ),
               child: Column(
                 children: [
-                         Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            CalendarRangeView(
-              function: () async {
-                controller.checkApiDet();
-              },
-            ),
-          ],
-        ),
-              
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CalendarRangeView(
+                        function: () async {
+                          controller.checkApiDet();
+                        },
+                      ),
+                    ],
+                  ),
+
                   SizedBox(height: size.height * 0.01),
-              
+
                   Align(
                     alignment: Alignment.center,
                     child: Container(
@@ -172,8 +169,7 @@ class MyExpensesReport extends StatelessWidget {
                           customeexpensetotalval(
                             size: size,
                             title: 'Total Expenses',
-                            value:
-                                controller.expTotal.value.toStringAsFixed(2),
+                            value: controller.expTotal.value.toStringAsFixed(2),
                           ),
                           const VerticalDivider(thickness: 1),
                           customeexpensetotalval(
@@ -195,7 +191,7 @@ class MyExpensesReport extends StatelessWidget {
                       ),
                     ),
                   ),
-                   SizedBox(height: size.height * 0.02),
+                  SizedBox(height: size.height * 0.02),
                 ],
               ),
             );
@@ -251,61 +247,94 @@ class MyExpensesReport extends StatelessWidget {
                             // controller.checkApiDet();
                           }
                         : null,
-                         child: Card(
-                        child: Container(
-                          padding: EdgeInsets.all(4.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                            
-                              DateCalendar(date:item.date!),
-                              SizedBox(
-                                width: size.width * 0.02,
+                    child: Card(
+                      child: Container(
+                        padding: EdgeInsets.all(4.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            DateCalendar(date: item.date!),
+                            SizedBox(width: size.width * 0.02),
+
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${item.vchprefix}${item.maxNo}',
+                                    style: kTxtStl13B,
+                                  ),
+                                  SizedBox(height: size.height * 0.01),
+                                  item.approvalStatus != 'Pending' &&
+                                          item.rejectAmount != 0
+                                      ? IntrinsicHeight(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'Rejected :',
+                                                style: kTxtStl13N,
+                                              ),
+                                              Text(
+                                                indianRupeeFormat(
+                                                  item.rejectAmount!.toDouble(),
+                                                ),
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : Container(),
+                                ],
                               ),
-                             
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text('${item.vchprefix}${item.maxNo}',style: kTxtStl13B,),
-                                    SizedBox(
-                                      height: size.height * 0.01,
-                                    ),
-                                    item.approvalStatus !='Pending' &&item.rejectAmount !=0?
-                                    IntrinsicHeight(
-                                      child: Row(
-                                        mainAxisAlignment:MainAxisAlignment.center,
-                                        children: [
-                                         
-                                          Text('Rejected :',style: kTxtStl13N,),
-                                          Text(indianRupeeFormat(item.rejectAmount!.toDouble()),style: TextStyle(fontSize: 13,color: Colors.red),)
-                                         
-                                        ],
+                            ),
+                            SizedBox(width: size.width * 0.02),
+                            controller
+                                        .expenseModel
+                                        .value!
+                                        .expense![i]
+                                        .approvalStatus ==
+                                    'Approved'
+                                ? Column(
+                                    children: [
+                                      Text('Approved ', style: kTxtStl13GreyN),
+                                      Text(
+                                        indianRupeeFormat(
+                                          controller
+                                              .expenseModel
+                                              .value!
+                                              .expense![i]
+                                              .approvedamt!
+                                              .toDouble(),
+                                        ),
+                                        style: kTxtStl15B,
                                       ),
-                                    ):Container(),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                width: size.width * 0.02,
-                              ),
-                            controller.expenseModel.value!.expense![i].approvalStatus == 'Approved'?
-                              Column(
-                                children: [
-                                  Text('Approved ',style: kTxtStl13GreyN,),
-                                  Text(indianRupeeFormat( controller.expenseModel.value!.expense![i].approvedamt!.toDouble()),style: kTxtStl15B,),
-                                ],
-                              )
-                              :Column(
-                                children: [
-                                  Text('Claimed ',style: kTxtStl13GreyN,),
-                                  Text(indianRupeeFormat( controller.expenseModel.value!.expense![i].claimedAmount!.toDouble()),style: kTxtStl15B,),
-                                ],
-                              )
-                            ],
-                          ),
+                                    ],
+                                  )
+                                : Column(
+                                    children: [
+                                      Text('Claimed ', style: kTxtStl13GreyN),
+                                      Text(
+                                        indianRupeeFormat(
+                                          controller
+                                              .expenseModel
+                                              .value!
+                                              .expense![i]
+                                              .claimedAmount!
+                                              .toDouble(),
+                                        ),
+                                        style: kTxtStl15B,
+                                      ),
+                                    ],
+                                  ),
+                          ],
                         ),
                       ),
+                    ),
                   );
                 },
               );

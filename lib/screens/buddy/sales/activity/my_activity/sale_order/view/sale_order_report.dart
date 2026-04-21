@@ -8,14 +8,13 @@ import 'package:sysconn_sfa/Utility/systemxs_global.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/sale_order/controller/sales_order_report_controller.dart';
+import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/sale_order/view/so_create.dart';
 import 'package:sysconn_sfa/widgets/nodatafoundwidget.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 
 class SalesOrderReport extends StatelessWidget {
-  SalesOrderReport({super.key});
-  final SalesOrderReportController controller = Get.put(
-    SalesOrderReportController(),
-  );
+  final String partyId;
+  SalesOrderReport({super.key, this.partyId = ''});
 
   Row subtitleRow(String title, String value) {
     return Row(
@@ -35,6 +34,9 @@ class SalesOrderReport extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final SalesOrderReportController controller = Get.put(
+      SalesOrderReportController(partyid: partyId),
+    );
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: SfaCustomAppbar(title: 'Sales Order Report'),
@@ -42,7 +44,7 @@ class SalesOrderReport extends StatelessWidget {
         isExtended: false,
         icon: Icon(Icons.add),
         function: () async {
-          // await Get.to(() => SoCreate());
+          await Get.to(() => SoCreate());
         },
       ),
       body: Column(
@@ -95,9 +97,7 @@ class SalesOrderReport extends StatelessWidget {
           Expanded(
             child: Obx(() {
               if (controller.isDataLoad.value == 0) {
-                return Center(
-                  child: Utility.processLoadingWidget()
-                );
+                return Center(child: Utility.processLoadingWidget());
               }
               if (controller.isDataLoad.value == 2) {
                 return Center(child: NoDataFound());
@@ -120,11 +120,13 @@ class SalesOrderReport extends StatelessWidget {
                         indianRupeeFormat(double.parse(item.totalAmount!)),
                         style: kTxtStl13B,
                       ),
-                      onTap: ()async {
-                     
-          //               await Get.to(() => SoCreate(hedId: item.uniqueId))?.then((value)async {
-          // await  controller.getSoDataApi(); 
-          // });
+                      onTap: () async {
+                        // Get.to(() => SoCreate(hedId: item.uniqueId));
+                        await Get.to(
+                          () => SoCreate(hedId: item.uniqueId),
+                        )?.then((value) async {
+                          await controller.getSoDataApi();
+                        });
                       },
                     ),
                   );

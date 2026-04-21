@@ -10,6 +10,7 @@ import 'package:sysconn_sfa/screens/expenses/controllers/expense_add_ledger_cont
 import 'package:sysconn_sfa/widgets/custom_appbar.dart';
 import 'package:sysconn_sfa/widgets/customautocompletefield.dart';
 import 'package:sysconn_sfa/widgets/responsive_button.dart';
+import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 import 'package:sysconn_sfa/widgetscustome/custom_textfield.dart';
 
 class ExpenseAddLedgers extends StatelessWidget {
@@ -66,7 +67,7 @@ class ExpenseAddLedgers extends StatelessWidget {
     // );
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: customAppbar(context: context, title: 'Create Ledger'),
+      appBar: SfaCustomAppbar( title: 'Create Ledger'),
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

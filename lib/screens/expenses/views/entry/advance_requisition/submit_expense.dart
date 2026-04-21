@@ -6,6 +6,7 @@ import 'package:sysconn_sfa/Utility/systemxs_global.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/widgets/custom_appbar.dart';
 import 'package:sysconn_sfa/widgets/responsive_button.dart';
+import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 
 class ExpenseAdvanceSubmitScreen extends StatelessWidget {
   // const ExpenseAdvanceSubmitScreen({super.key});
@@ -27,7 +28,7 @@ class ExpenseAdvanceSubmitScreen extends StatelessWidget {
       canPop: false,
       onPopInvokedWithResult: _onwillpopPress,
       child: Scaffold(
-        appBar: customAppbar(context: context, title: 'Advance Request'),
+        appBar: SfaCustomAppbar(title: 'Advance Request'),
         floatingActionButton: Padding(
           padding: EdgeInsets.fromLTRB(
             size.width * 0.15,

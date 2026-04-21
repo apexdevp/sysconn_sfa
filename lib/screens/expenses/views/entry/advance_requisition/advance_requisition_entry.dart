@@ -11,6 +11,7 @@ import 'package:sysconn_sfa/screens/expenses/controllers/advance_requistion_entr
 import 'package:sysconn_sfa/widgets/custom_appbar.dart';
 import 'package:sysconn_sfa/widgets/customautocompletefield.dart';
 import 'package:sysconn_sfa/widgets/responsive_button.dart';
+import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 import 'package:sysconn_sfa/widgetscustome/custom_textfield.dart';
 import 'package:sysconn_sfa/widgetscustome/dropdowncontroller.dart';
 
@@ -29,7 +30,7 @@ class AdvanceRequisitionEntry extends StatelessWidget {
       controller.setRowEditValues(); // fill UI
     }
     return Scaffold(
-      appBar: customAppbar(context: context, title: 'Advance Request'),
+      appBar: SfaCustomAppbar(title: 'Advance Request'),
       floatingActionButton: Container(
         //width: size.width * 0.4,
         padding: const EdgeInsets.all(8),

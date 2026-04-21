@@ -213,7 +213,7 @@ class VisitAttendanceDetRpt extends StatelessWidget {
                       visitAttendanceEntity.customertype == 'Existing'
                           ? attendanceDetailsTitleRow(
                               'Route',
-                              visitAttendanceEntity.route?? '',
+                              visitAttendanceEntity.route ?? '',
                               size,
                               'Area',
                               visitAttendanceEntity.area!,
@@ -471,14 +471,14 @@ class VisitAttendanceDetRpt extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     final controller = Get.put(VisitAttendanceDetRptController());
 
-if (controller.attendanceDetailsList.isEmpty) {
-  controller.initData(
-    from: fromdate,
-    to: todate,
-    mobile: mobileno,
-    filter: existvalue,
-  );
-}
+    if (controller.attendanceDetailsList.isEmpty) {
+      controller.initData(
+        from: fromdate,
+        to: todate,
+        mobile: mobileno,
+        filter: existvalue,
+      );
+    }
     return Scaffold(
       appBar: SfaCustomAppbar(
         title: 'Visit Attendance Details',
@@ -536,9 +536,7 @@ if (controller.attendanceDetailsList.isEmpty) {
           Expanded(
             child: Obx(() {
               if (controller.isDataLoad.value == 0) {
-                return Center(
-                  child:Utility.processLoadingWidget()
-                );
+                return Center(child: Utility.processLoadingWidget());
               }
 
               if (controller.isDataLoad.value == 2) {

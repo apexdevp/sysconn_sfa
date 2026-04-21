@@ -11,6 +11,7 @@ import 'package:sysconn_sfa/screens/expenses/report/user/controller/adv_req_repo
 import 'package:sysconn_sfa/screens/expenses/views/entry/advance_requisition/advance_requisition_entry.dart';
 import 'package:sysconn_sfa/widgets/custom_appbar.dart';
 import 'package:sysconn_sfa/widgets/nodatafoundwidget.dart';
+import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 
 class MyAdvanceRequisitionReport extends StatelessWidget {
   MyAdvanceRequisitionReport({super.key});
@@ -19,8 +20,7 @@ class MyAdvanceRequisitionReport extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: customAppbar(
-        context: context,
+      appBar: SfaCustomAppbar(
         title: 'Advance Requests',
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(60.0),

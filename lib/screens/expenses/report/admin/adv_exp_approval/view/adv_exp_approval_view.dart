@@ -12,6 +12,7 @@ import 'package:sysconn_sfa/screens/expenses/report/admin/adv_exp_approval/contr
 import 'package:sysconn_sfa/widgets/custom_appbar.dart';
 import 'package:sysconn_sfa/widgets/dropdownlist.dart';
 import 'package:sysconn_sfa/widgets/responsive_button.dart';
+import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 
 class AdvExpenseApprView extends StatelessWidget {
   final AdvExpensesEntity expenseDetList;
@@ -45,7 +46,7 @@ class AdvExpenseApprView extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: customAppbar(context: context, title: 'Advanced Approval'),
+      appBar: SfaCustomAppbar( title: 'Advanced Approval'),
       floatingActionButton: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: ResponsiveButton(

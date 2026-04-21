@@ -106,39 +106,38 @@ class ApiCall {
     return 1;
   }
 
-static Future<List<CompanyProfileEntity>> getCompanyProfileAPI() async {
-  List<CompanyProfileEntity> list = [];
+  static Future<List<CompanyProfileEntity>> getCompanyProfileAPI() async {
+    List<CompanyProfileEntity> list = [];
 
-  var url =
-      '${ApiUrl.companyProfileUrl}company_id=${Utility.companyId}&party_id=${Utility.customerPersonaId}&db_nm=${Utility.sysDbName}';
+    var url =
+        '${ApiUrl.companyProfileUrl}company_id=${Utility.companyId}&party_id=${Utility.customerPersonaId}&db_nm=${Utility.sysDbName}';
 
-  if (kDebugMode) {
-    print(url);
-  }
-  final response = await http.get(
-    Uri.parse(url),
-    headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken ),
-  );
+    if (kDebugMode) {
+      print(url);
+    }
+    final response = await http.get(
+      Uri.parse(url),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+    );
 
-  if (response.statusCode == 200) {
-    List data = convert.jsonDecode(response.body)['data'];
+    if (response.statusCode == 200) {
+      List data = convert.jsonDecode(response.body)['data'];
 
-    if (data.isNotEmpty) {
-      for (int i = 0; i < data.length; i++) {
-        CompanyProfileEntity entity =
-            CompanyProfileEntity.fromMap(data[i]);
+      if (data.isNotEmpty) {
+        for (int i = 0; i < data.length; i++) {
+          CompanyProfileEntity entity = CompanyProfileEntity.fromMap(data[i]);
 
-        list.add(entity);
+          list.add(entity);
 
-        print('CompanyProfile ${data[i]}');
+          print('CompanyProfile ${data[i]}');
+        }
       }
     }
+
+    return list;
   }
 
-  return list;
-}
-
-static Future<List<CategoryTypeCategoryEntity>>
+  static Future<List<CategoryTypeCategoryEntity>>
   getCustCategoriesHierarchyAPI({required String categorytypeId}) async {
     List<CategoryTypeCategoryEntity> categoryEntityList = [];
     var url =
@@ -165,7 +164,8 @@ static Future<List<CategoryTypeCategoryEntity>>
 
     return categoryEntityList;
   }
- static Future<List<Personacategory>> getCustomerPersonaAPI({
+
+  static Future<List<Personacategory>> getCustomerPersonaAPI({
     required String companyId,
     required String retailerCode,
   }) async {
@@ -196,7 +196,7 @@ static Future<List<CategoryTypeCategoryEntity>>
     return personaList;
   }
 
-static Future<PartyContactResponse> getPartyContactsDetAPI() async {
+  static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     final url =
         '${ApiUrl.partyContactsMasterUrl}company_id=${Utility.companyId}&retailer_code=${Utility.customerPersonaId}&db_nm=${Utility.sysDbName}';
 
@@ -234,7 +234,7 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     return PartyContactResponse(contacts: contacts, designations: designations);
   }
 
- static Future<List<PartyAddressEntity>> getPartyAddressesDetAPI() async {
+  static Future<List<PartyAddressEntity>> getPartyAddressesDetAPI() async {
     List<PartyAddressEntity> partyAddressesListData = [];
     var partyAddressesDetailsUrl =
         '${ApiUrl.partyAddressessUrl}company_id=${Utility.companyId}&retailer_code=${Utility.customerPersonaId}&db_nm=${Utility.sysDbName}';
@@ -349,7 +349,6 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     }
     return allCmpDtlList;
   }
-
 
   static Future<List<LedgerMasterEntity>> getLedgerDetCMPApi({
     String ledgerId = '',
@@ -577,15 +576,15 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     }
     return vchTypeList;
   }
-   static Future<List<LedgerMasterEntity>> getledgermasterapi({
+
+  static Future<List<LedgerMasterEntity>> getledgermasterapi({
     required String typedata,
     required String ledgerid,
-    String status = '',   // Sakshi 26/03/2026
+    String status = '', // Sakshi 26/03/2026
   }) async {
     List<LedgerMasterEntity> ledgerEntityVal = [];
     var getledgerUrl =
-       
-       '${ApiUrl.ledgerMstGetUrl}&company_id=${Utility.companyId}&type=$typedata&ledger_id=$ledgerid&status=$status&DB_NM=${Utility.sysDbName}';
+        '${ApiUrl.ledgerMstGetUrl}&company_id=${Utility.companyId}&type=$typedata&ledger_id=$ledgerid&status=$status&DB_NM=${Utility.sysDbName}';
     if (kDebugMode) {
       print('getledgerUrl:$getledgerUrl');
     }
@@ -608,7 +607,6 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     }
     return ledgerEntityVal;
   }
-
 
   static Future<List<StockItemEntity>> getStockItemDetApi() async {
     List<StockItemEntity> itemEntityList = [];
@@ -1657,12 +1655,12 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
   //   return collectionReportList;
   // }
 
- static Future<List<SalesRegisterReportEntity>> getCollectionReportAPI({
+  static Future<List<SalesRegisterReportEntity>> getCollectionReportAPI({
     required String type,
   }) async {
     List<SalesRegisterReportEntity> collectionReportList = [];
     var collectionUrl =
-    // 'https://sysconnoms-get.sysconn.ai/Collection/Collection_Report/GetCollectionRegisterData?company_id=211225225411003&from_date=2025-04-01 00:00:00.000&to_date=2027-03-31 00:00:00.000&type=Receipt&db_nm=Sysconn_OMS';
+        // 'https://sysconnoms-get.sysconn.ai/Collection/Collection_Report/GetCollectionRegisterData?company_id=211225225411003&from_date=2025-04-01 00:00:00.000&to_date=2027-03-31 00:00:00.000&type=Receipt&db_nm=Sysconn_OMS';
         '${ApiUrl.collectionReport}company_id=${Utility.companyId}&from_date=${Utility.selectedFromDateOfDateController}&to_date=${Utility.selectedToDateOfDateController}&type=$type&db_nm=${Utility.sysDbName}';
     if (kDebugMode) {
       print(collectionUrl);
@@ -1688,8 +1686,8 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     }
     return collectionReportList;
   }
-  
-   static Future<ReceiptHeaderEntity?> geteditCollectionDetAPI({
+
+  static Future<ReceiptHeaderEntity?> geteditCollectionDetAPI({
     required String uniqueId,
   }) async {
     ReceiptHeaderEntity? salesHedEntity;
@@ -1814,7 +1812,7 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
 
   // sales order
 
-   static Future<SalesOrderHeaderEntity?> getSalesOrderMasterDataAPI({
+  static Future<SalesOrderHeaderEntity?> getSalesOrderMasterDataAPI({
     required String uniqueId,
   }) async {
     SalesOrderHeaderEntity? salesHedEntity;
@@ -1835,7 +1833,6 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     }
     return salesHedEntity;
   }
-
 
   // static Future<List<SOAddToCartEntity>> getSOCartDetailsAPI(
   //   String hedUniqueId,
@@ -2118,15 +2115,13 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     return customerdetailsList;
   }
 
-
-
   static Future<List<dynamic>> getosrecPayGraphAPI({
     required String ageby,
   }) async {
     List graphDataList = [];
     var outrecpaygraphUrl =
         '${ApiUrl.osDashUrl}company_id=${Utility.companyId}&sub_type=ALL&ageing_by=$ageby&db_nm=${Utility.sysDbName}';
-    
+
     if (kDebugMode) {
       print('outrecpaygraphUrl:$outrecpaygraphUrl');
     }
@@ -2593,15 +2588,15 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     return null;
   }
 
-
   static Future<List<SOReportEntity>> getSalesOrderRegisterAPI({
     String approvalStatus = '',
     String? fromdate,
     String? todate,
+    String? partyid, //snehal 17-04-2026 add
   }) async {
     List<SOReportEntity> salesOrderRegisterValue = [];
     String salesOrderRegisterUrl =
-        '${ApiUrl.soReportUrl}company_id=${Utility.companyId}&user_type=&from_date=$fromdate&to_date=$todate&approval_status=$approvalStatus&db_nm=${Utility.sysDbName}';
+        '${ApiUrl.soReportUrl}company_id=${Utility.companyId}&user_type=&from_date=$fromdate&to_date=$todate&approval_status=$approvalStatus&party_id=$partyid&db_nm=${Utility.sysDbName}';
     if (kDebugMode) {
       print(salesOrderRegisterUrl);
     }
@@ -2927,13 +2922,13 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     }
     return expenseHedEntity;
   }
-   //=============================Product====================
+
+  //=============================Product====================
   //shweta 24-02-2026
   static Future<ProductMasterDataEntity> getProdMasterData() async {
     try {
       var masterDataUrl =
           '${ApiUrl.productMasterGetUrl}company_id=${Utility.companyId}&db_nm=${Utility.sysDbName}';
-
 
       final response = await http
           .get(
@@ -3019,7 +3014,6 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     }
     return opportunitiesEntityList;
   }
-
 
   ////post//////////////////////
   ///
@@ -3248,8 +3242,7 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
   ) async {
     List<Map<String, dynamic>> reasonListMap = [];
     reasonListMap.add(reasonEntity.toJson());
-    var reasonUrl =
-        '${ApiUrl.noorderreasonrl}db_nm=${Utility.sysDbName}'; 
+    var reasonUrl = '${ApiUrl.noorderreasonrl}db_nm=${Utility.sysDbName}';
     if (kDebugMode) {
       print(reasonUrl);
       print(convert.jsonEncode({'data': reasonListMap}));
@@ -3292,7 +3285,7 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     }
   }
 
-   static Future<String> salesOrderSavePostApi(
+  static Future<String> salesOrderSavePostApi(
     List<Map<String, dynamic>> soListMap,
   ) async {
     var paymentPostUrl =
@@ -3314,13 +3307,13 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
       return 'Oops there is an Error!';
     }
   }
- static Future<String> deleteSODetAPI(
+
+  static Future<String> deleteSODetAPI(
     SalesOrderHeaderEntity soHeaderEntity,
   ) async {
     List<Map<String, dynamic>> soMapList = [];
     soMapList.add(soHeaderEntity.toMap());
-    var soDeleteUrl =
-        '${ApiUrl.soDeleteUrl}db_nm=${Utility.sysDbName}'; 
+    var soDeleteUrl = '${ApiUrl.soDeleteUrl}db_nm=${Utility.sysDbName}';
     if (kDebugMode) {
       print(soDeleteUrl);
       print(convert.jsonEncode({'data': soMapList}));
@@ -3339,9 +3332,7 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     }
   }
 
-
-
- static Future<String> deleteSOInventoryDetAPI(
+  static Future<String> deleteSOInventoryDetAPI(
     SOAddToCartEntity soinvEntity,
   ) async {
     List<Map<String, dynamic>> soMapList = [];
@@ -3353,18 +3344,15 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     }
     final response = await http.post(
       Uri.parse(soDeleteUrl),
-      headers:  Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
       body: (convert.jsonEncode({'data': soMapList})),
     );
     if (response.statusCode == 200) {
-      return convert.jsonDecode(
-        response.body,
-      )['message']; 
+      return convert.jsonDecode(response.body)['message'];
     } else {
       return 'Oops there is an error!';
     }
   }
-
 
   // static Future<String> postAddtoCardDetAPI(
   //   SOAddToCartEntity soCartEntity,
@@ -3448,7 +3436,7 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     List<Map<String, dynamic>> soBiiledToEntityListMap = [];
     soBiiledToEntityListMap.add(soHeaderEntity.toBilledToMap());
     String soHeaderBilledToUrl =
-        '${ApiUrl.billedToUpdateUrl}db_nm=${Utility.sysDbName}'; 
+        '${ApiUrl.billedToUpdateUrl}db_nm=${Utility.sysDbName}';
     if (kDebugMode) {
       print('soHeaderBilledToUrl $soHeaderBilledToUrl');
       print(convert.jsonEncode({'data': soBiiledToEntityListMap}));
@@ -3467,7 +3455,6 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     }
   }
 
- 
   static Future<String> soStatusUpdation(SalesOrderHeaderEntity sopost) async {
     List<Map<String, dynamic>> soUpdateDetListMap = [];
     soUpdateDetListMap.add(sopost.toMapApprovalStatus());
@@ -4234,33 +4221,30 @@ static Future<PartyContactResponse> getPartyContactsDetAPI() async {
     }
   }
 
- static Future<String> updateCompanyProfileAPI({
-  required Map<String, dynamic> body,
-}) async {
-  var url =
-      '${ApiUrl.updateCompanyProfileUrl}db_nm=${Utility.sysDbName}';
+  static Future<String> updateCompanyProfileAPI({
+    required Map<String, dynamic> body,
+  }) async {
+    var url = '${ApiUrl.updateCompanyProfileUrl}db_nm=${Utility.sysDbName}';
 
-  if (kDebugMode) {
-    print(url);
-    print(convert.jsonEncode(body));
+    if (kDebugMode) {
+      print(url);
+      print(convert.jsonEncode(body));
+    }
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+      body: convert.jsonEncode(body),
+    );
+
+    if (response.statusCode == 200) {
+      return convert.jsonDecode(response.body)['message'];
+    } else {
+      return 'Oops there is an error!';
+    }
   }
 
-  final response = await http.post(
-    Uri.parse(url),
-    headers: Utility.getSystemxsDmsHeaders(
-      token: Utility.loginDmsToken,
-    ),
-    body: convert.jsonEncode(body),
-  );
-
-  if (response.statusCode == 200) {
-    return convert.jsonDecode(response.body)['message'];
-  } else {
-    return 'Oops there is an error!';
-  }
-}
-
-static Future<bool> saveCustomerPersonaAPI({
+  static Future<bool> saveCustomerPersonaAPI({
     required Map<String, dynamic> body,
   }) async {
     var url = '${ApiUrl.personasaveurl}db_nm=${Utility.sysDbName}';
@@ -4286,7 +4270,7 @@ static Future<bool> saveCustomerPersonaAPI({
     }
   }
 
-static Future<String> postCustomerContactApi(
+  static Future<String> postCustomerContactApi(
     List<Map<String, dynamic>> contactEditListMap,
   ) async {
     var customerContactUrl =
@@ -4307,6 +4291,7 @@ static Future<String> postCustomerContactApi(
       return 'Oops there is an Error!';
     }
   }
+
   static Future<String> deleteCustomerContactAPI(
     List<Map<String, dynamic>> customerContactListMap,
   ) async {
@@ -4326,7 +4311,7 @@ static Future<String> postCustomerContactApi(
     }
   }
 
-   static Future<String> postCustomerAddressApi(
+  static Future<String> postCustomerAddressApi(
     List<Map<String, dynamic>> addressEditListMap,
   ) async {
     var customerAddressUrl =
@@ -4347,7 +4332,8 @@ static Future<String> postCustomerContactApi(
       return 'Oops there is an Error!';
     }
   }
- static Future<String> deleteCustomerAddressAPI(
+
+  static Future<String> deleteCustomerAddressAPI(
     List<Map<String, dynamic>> customerContactListMap,
   ) async {
     var customerAddressDelUrl =
@@ -4366,9 +4352,9 @@ static Future<String> postCustomerContactApi(
     }
   }
 
-//collection
+  //collection
 
- /////====================collection============================================//
+  /////====================collection============================================//
 
   static Future collectionHedPostApi(
     ReceiptHeaderEntity collectionHedEntity,
@@ -4442,20 +4428,23 @@ static Future<String> postCustomerContactApi(
     }
   }
 
- //========================Akshay Taskboard==========================
+  //========================Akshay Taskboard==========================
 
- static Future<List<TaskBoardEntity>> getSupportTaskDetApi({bool showAll = false,
+  static Future<List<TaskBoardEntity>> getSupportTaskDetApi({
+    bool showAll = false,
     String? fromdate,
-    String? todate,}) async {
+    String? todate,
+  }) async {
     List<TaskBoardEntity> taskEntityList = [];
 
     String tasListkUrl;
-     if (showAll) {
-     tasListkUrl =
-        '${ApiUrl.supportTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&retailer_code=${Utility.customerPersonaId}&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
-     }else{ tasListkUrl =
-        '${ApiUrl.supportTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
-     }
+    if (showAll) {
+      tasListkUrl =
+          '${ApiUrl.supportTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&retailer_code=${Utility.customerPersonaId}&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
+    } else {
+      tasListkUrl =
+          '${ApiUrl.supportTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
+    }
     if (kDebugMode) {
       print(tasListkUrl);
     }
@@ -4464,9 +4453,9 @@ static Future<String> postCustomerContactApi(
       headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
     );
 
-     if (kDebugMode) {
-    print('Support Task Response: ${supportTaskResponse.body}');
-  }
+    if (kDebugMode) {
+      print('Support Task Response: ${supportTaskResponse.body}');
+    }
     if (supportTaskResponse.statusCode == 200) {
       var supportTaskData = await convert.jsonDecode(
         supportTaskResponse.body,
@@ -4483,16 +4472,19 @@ static Future<String> postCustomerContactApi(
     return taskEntityList;
   }
 
-  static Future<List<TaskBoardEntity>> getSalesTaskDetApi({bool showAll = false,
+  static Future<List<TaskBoardEntity>> getSalesTaskDetApi({
+    bool showAll = false,
     String? fromdate,
-    String? todate,}) async {
+    String? todate,
+  }) async {
     List<TaskBoardEntity> taskEntityList = [];
     String salesTaskListkUrl;
-     if (showAll) {
-     salesTaskListkUrl =
-        '${ApiUrl.salesTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&retailer_code=${Utility.customerPersonaId}&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
-     }else{salesTaskListkUrl =
-        '${ApiUrl.salesTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
+    if (showAll) {
+      salesTaskListkUrl =
+          '${ApiUrl.salesTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&retailer_code=${Utility.customerPersonaId}&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
+    } else {
+      salesTaskListkUrl =
+          '${ApiUrl.salesTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
     }
     if (kDebugMode) {
       print(salesTaskListkUrl);
@@ -4502,9 +4494,9 @@ static Future<String> postCustomerContactApi(
       headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
     );
 
-     if (kDebugMode) {
-    print('Support Task Response: ${salesTaskResponse.body}');
-  }
+    if (kDebugMode) {
+      print('Support Task Response: ${salesTaskResponse.body}');
+    }
     if (salesTaskResponse.statusCode == 200) {
       var salesTaskData = await convert.jsonDecode(
         salesTaskResponse.body,
@@ -4584,32 +4576,36 @@ static Future<String> postCustomerContactApi(
   }
 
   static Future<List<Log>> getAuditLogs({
-  required String model,
-  required String modelId,
-}) async {
-  try {
-    var url =
-        '${ApiUrl.getAuditlog}company_id=${Utility.companyId}&model=$model&modelid=$modelId&db_nm=${Utility.sysDbName}';
+    required String model,
+    required String modelId,
+  }) async {
+    try {
+      var url =
+          '${ApiUrl.getAuditlog}company_id=${Utility.companyId}&model=$model&modelid=$modelId&db_nm=${Utility.sysDbName}';
 
-    final response = await http
-        .get(Uri.parse(url), headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken))
-        .timeout(const Duration(seconds: Utility.tIMEOUTDURATION));
+      final response = await http
+          .get(
+            Uri.parse(url),
+            headers: Utility.getSystemxsDmsHeaders(
+              token: Utility.loginDmsToken,
+            ),
+          )
+          .timeout(const Duration(seconds: Utility.tIMEOUTDURATION));
 
-    if (response.statusCode == 200) {
-      final jsonData = convert.jsonDecode(response.body);
-      List logsList = jsonData['data'];
-      return logsList.map<Log>((e) => Log.fromJson(e)).toList();
-    } else {
-      throw Exception('Failed to load audit logs');
+      if (response.statusCode == 200) {
+        final jsonData = convert.jsonDecode(response.body);
+        List logsList = jsonData['data'];
+        return logsList.map<Log>((e) => Log.fromJson(e)).toList();
+      } else {
+        throw Exception('Failed to load audit logs');
+      }
+    } catch (e) {
+      print("AUDIT LOG API ERROR: $e");
+      rethrow;
     }
-  } catch (e) {
-    print("AUDIT LOG API ERROR: $e");
-    rethrow;
   }
-}
 
-
-//==============================================================
+  //==============================================================
 
   static Future<String> getBizOpportunityList() async {
     try {
@@ -4699,13 +4695,12 @@ static Future<String> postCustomerContactApi(
       return 'Oops there is an error!';
     }
   }
-  
+
   static Future<TaskBizOpportunityDropdownEntity>
   getTaskBizOpportunityDropdown() async {
     try {
       var opportunitiesDropdownUrl =
           '${ApiUrl.dropdownOpportunities}company_id=${Utility.companyId}&db_nm=${Utility.sysDbName}';
-
 
       final response = await http
           .get(
@@ -4728,6 +4723,7 @@ static Future<String> postCustomerContactApi(
       rethrow;
     }
   }
+
   static Future<String> deleteSalesTaskApiCall(
     List<Map<String, dynamic>> salesTaskListMap,
   ) async {
@@ -4778,7 +4774,7 @@ static Future<String> postCustomerContactApi(
 
   //===========================Product===================================
 
-    //Sakshi 14/02/2026
+  //Sakshi 14/02/2026
 
   static Future<String> deleteStockItemApi(
     List<Map<String, dynamic>> itemMasterListMap,
@@ -4804,7 +4800,7 @@ static Future<String> postCustomerContactApi(
     }
   }
 
-   static Future<String> postItemMaster(
+  static Future<String> postItemMaster(
     List<Map<String, dynamic>> itemMasterListMap,
   ) async {
     var itemMasterUrl =
@@ -4827,47 +4823,39 @@ static Future<String> postCustomerContactApi(
 
   //Sakshi 07/04/2026
   static Future<String> postProductImage(
-  String companyId,
-  String productCode,
-  Uint8List imageBytes,
-  String fileName,
-) async {
-  var url =
-      '${ApiUrl.productImageUrl}db_nm=${Utility.sysDbName}';
+    String companyId,
+    String productCode,
+    Uint8List imageBytes,
+    String fileName,
+  ) async {
+    var url = '${ApiUrl.productImageUrl}db_nm=${Utility.sysDbName}';
 
-  print("URL: $url");
+    print("URL: $url");
 
-  var request = http.MultipartRequest('POST', Uri.parse(url));
+    var request = http.MultipartRequest('POST', Uri.parse(url));
 
-  request.headers.addAll({
-    'Authorization': 'Bearer ${Utility.loginDmsToken}',
-  });
-  request.fields['COMPANY_ID'] = companyId;
-  request.fields['PRODUCT_CODE'] = productCode;
+    request.headers.addAll({
+      'Authorization': 'Bearer ${Utility.loginDmsToken}',
+    });
+    request.fields['COMPANY_ID'] = companyId;
+    request.fields['PRODUCT_CODE'] = productCode;
 
-  request.files.add(
-    http.MultipartFile.fromBytes(
-      'file',
-      imageBytes,
-      filename: fileName,
-    ),
-  );
+    request.files.add(
+      http.MultipartFile.fromBytes('file', imageBytes, filename: fileName),
+    );
 
-  request.fields.forEach((k, v) => print("$k : $v"));
-  print("File: $fileName");
+    request.fields.forEach((k, v) => print("$k : $v"));
+    print("File: $fileName");
 
-  var response = await request.send();
-  var responseData = await response.stream.bytesToString();
-  print(responseData);
+    var response = await request.send();
+    var responseData = await response.stream.bytesToString();
+    print(responseData);
 
-  if (response.statusCode == 200) {
-    final resJson = convert.json.decode(responseData);
-    return resJson['message'];
-  } else {
-    return 'Oops there is an error!';
+    if (response.statusCode == 200) {
+      final resJson = convert.json.decode(responseData);
+      return resJson['message'];
+    } else {
+      return 'Oops there is an error!';
+    }
   }
-}
-
-
-
 }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sysconn_sfa/Utility/systemxs_global.dart';
-import 'package:sysconn_sfa/Utility/textFormField.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/api/entity/company/partyentity.dart';
@@ -11,7 +10,9 @@ import 'package:sysconn_sfa/screens/buddy/sales/reports/outstanding/controller/p
 import 'package:sysconn_sfa/screens/drawer/drawer_view.dart';
 import 'package:sysconn_sfa/widgets/responsive_button.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
-import 'package:sysconn_sfa/widgets/sfa_dropdownlist.dart';
+import 'package:sysconn_sfa/widgetscustome/custom_textfield.dart';
+
+import '../../../../../../widgetscustome/dropdowncontroller.dart';
 
 class PaymentFollowUpCreate extends StatelessWidget {
   final String? partyId;
@@ -268,39 +269,54 @@ class PaymentFollowUpCreate extends StatelessWidget {
                                   ),
                                   SizedBox(height: size.height * 0.01),
 
-                                  Row(
-                                    children: [
-                                      Obx(
-                                        () => DropdownList(
-                                          title: 'Followup Type',
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 4,
+                                      right: 4,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child:
+                                              //  Obx(
+                                              //   () =>
+                                              DropdownCustomList(
+                                                title: 'Followup Type',
 
-                                          items: controller.followuptypeForItem
-                                              .map<DropdownMenuItem<String>>((
-                                                String statusForvalue,
-                                              ) {
-                                                return DropdownMenuItem<String>(
-                                                  value: statusForvalue,
-                                                  child: Text(
-                                                    statusForvalue,
-                                                    style: kTxtStl13N,
-                                                  ),
-                                                );
-                                              })
-                                              .toList(),
+                                                items: controller
+                                                    .followuptypeForItem
+                                                    .map<
+                                                      DropdownMenuItem<String>
+                                                    >((String statusForvalue) {
+                                                      return DropdownMenuItem<
+                                                        String
+                                                      >(
+                                                        value: statusForvalue,
+                                                        child: Text(
+                                                          statusForvalue,
+                                                          style: kTxtStl13N,
+                                                        ),
+                                                      );
+                                                    })
+                                                    .toList(),
 
-                                          value: controller
-                                              .followupForSelected
-                                              .value,
-                                          onChanged:
-                                              (String? statusForSelectedValue) {
-                                                controller
-                                                        .followupForSelected
-                                                        .value =
-                                                    statusForSelectedValue!;
-                                              },
+                                                selectedValue: controller
+                                                    .followupForSelected,
+                                                onChanged:
+                                                    (
+                                                      String?
+                                                      statusForSelectedValue,
+                                                    ) {
+                                                      controller
+                                                              .followupForSelected
+                                                              .value =
+                                                          statusForSelectedValue!;
+                                                    },
+                                              ),
                                         ),
-                                      ),
-                                    ],
+                                        // ),
+                                      ],
+                                    ),
                                   ),
                                   SizedBox(height: size.height * 0.01),
                                   Row(

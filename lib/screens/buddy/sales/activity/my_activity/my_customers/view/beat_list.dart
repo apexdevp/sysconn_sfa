@@ -8,6 +8,7 @@ import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/my_customer
 import 'package:sysconn_sfa/screens/drawer/drawer_view.dart';
 import 'package:sysconn_sfa/widgets/nodatafoundwidget.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
+import 'package:sysconn_sfa/widgetscustome/dropdowncontroller.dart';
 
 class MyBeatList extends StatelessWidget {
   MyBeatList({super.key});
@@ -40,8 +41,7 @@ class MyBeatList extends StatelessWidget {
                 title: Text('Quick Search', style: kTxtStl13B),
                 trailing: Icon(Icons.search_outlined),
                 onTap: () {
-    
-            Get.to(() =>  BeatCustomerList(filtertype: 'Party',id: '',));
+                  Get.to(() => BeatCustomerList(filtertype: 'Party', id: ''));
                 },
               ),
             ),
@@ -130,6 +130,7 @@ class MyBeatList extends StatelessWidget {
                     ),
                   ),
                 ),
+
                 SizedBox(width: size.width * 0.01),
                 SizedBox(width: size.width * 0.15, child: Text('Active')),
                 Obx(
@@ -149,7 +150,6 @@ class MyBeatList extends StatelessWidget {
                 if (controller.isDataLoad.value == 0) {
                   return Center(child: Utility.processLoadingWidget());
                 }
-                
 
                 if (controller.isDataLoad.value == 2) {
                   return const NoDataFound();
@@ -181,8 +181,9 @@ class MyBeatList extends StatelessWidget {
                                 Expanded(
                                   child: Text(item.nAME!, style: kTxtStl13B),
                                 ),
-                                controller.filterTypeIdSelected.value != 'Group'?
-                                Text(item.count!, style: kTxtStl13B):Container(),
+                                controller.filterTypeIdSelected.value != 'Group'
+                                    ? Text(item.count!, style: kTxtStl13B)
+                                    : Container(),
                                 Icon(
                                   Icons.chevron_right_sharp,
                                   color: kIconColor,
@@ -191,7 +192,16 @@ class MyBeatList extends StatelessWidget {
                             ),
                           ),
                           onTap: () {
-                            Get.to(() => BeatCustomerList(id: item.iD,filtertype:controller.filterTypeIdSelected.value == 'Group'?controller.filterTypeIdSelected.value:controller.selectedFilterName,));
+                            Get.to(
+                              () => BeatCustomerList(
+                                id: item.iD,
+                                filtertype:
+                                    controller.filterTypeIdSelected.value ==
+                                        'Group'
+                                    ? controller.filterTypeIdSelected.value
+                                    : controller.selectedFilterName,
+                              ),
+                            );
                           },
                         ),
                         Divider(

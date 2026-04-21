@@ -24,10 +24,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'SYSCONN SFA',
       theme: ThemeData(
+          // primarySwatch: Colors.orange,
         colorScheme: ColorScheme.fromSwatch().copyWith(
           surfaceTint: Colors.white,
           outline: Colors.grey.shade500,
           secondary: kAppIconColor,
+         
         ),
         iconTheme: IconThemeData(color: kAppIconColor),
         useMaterial3: true,
