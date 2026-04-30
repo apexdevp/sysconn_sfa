@@ -19,6 +19,7 @@ import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/api/entity/company/bank_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/companyentity.dart';
 import 'package:sysconn_sfa/api/entity/order/sales_order_cart_entity.dart';
+import 'package:sysconn_sfa/api/entity/user/userentity.dart';
 import 'package:sysconn_sfa/chart/flchart.dart';
 import 'package:sysconn_sfa/chart/sampleview.dart';
 import 'package:file_saver/file_saver.dart';
@@ -90,6 +91,9 @@ class Utility {
         ? 'La'
         : 'Rs';
   }
+
+  static UserEntity userMasterEntity =
+      UserEntity();
 
   static String cmpAllowBackdatedAccess = '0';
   static List<FlChartData> flChartData = <FlChartData>[];

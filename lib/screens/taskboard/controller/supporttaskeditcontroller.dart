@@ -11,6 +11,7 @@ import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:intl/intl.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/api/apicall.dart';
+import 'package:sysconn_sfa/api/entity/company/partyentity.dart';
 import 'package:sysconn_sfa/api/entity/taskboard/audit_log_model.dart';
 import 'package:sysconn_sfa/api/entity/taskboard/support_task_dropdown_model.dart';
 import 'package:sysconn_sfa/api/entity/taskboard/task_bizopportunity_get_model.dart';
@@ -76,7 +77,9 @@ class SupportTaskEditController extends GetxController {
   final bizOpList = <BizOpportunityListModel>[].obs;
   final isBizOpLoading = false.obs;
   RxList<Log> indexData = <Log>[].obs;
-  
+  final retailerName = TextEditingController();
+  final retailerCode = TextEditingController();
+  String? customerPriceList;
 
   @override
   void onInit() {
@@ -140,7 +143,14 @@ class SupportTaskEditController extends GetxController {
     }
   }
 
-  void clearFields({bool followUpTask = false}) {
+final partyEntityList = <PartyEntity>[].obs;
+  Future<void> customerListData(String customerName) async {
+    partyEntityList.assignAll(
+      await ApiCall.getCustomerdatalistApi(customerName: customerName),
+    );
+  }
+  
+  void clearFields({bool followUpTask = false, bool partyMasterTask = false}) {
     isEdit = false;
     title.clear();
     description.clear();
@@ -155,14 +165,19 @@ class SupportTaskEditController extends GetxController {
     selectedOwnershipCategory.value = null;
     selectedstatus.value = statuslist.first;
 
-    if (editingRowData.value != null &&
-        customerList.isNotEmpty &&
-        followUpTask) {
-      final row = editingRowData.value!;
-      selectedCustomer.value = customerList.firstWhereOrNull(
-        (c) => c.tallyRetailerCode == row['customer_id'],
-      );
+    // Separate conditions — don't clear customer just because list is empty
+    if (followUpTask || partyMasterTask) {
+      if (editingRowData.value != null) {
+        final row = editingRowData.value!;
+        if (customerList.isNotEmpty) {
+          selectedCustomer.value = customerList.firstWhereOrNull(
+            (c) => c.tallyRetailerCode == row['customer_id'],
+          );
+        }
+        // Don't clear if list is empty — it may still be loading
+      }
     } else {
+      //  Only clear on normal add (not followUp or partyMasterTask)
       selectedCustomer.value = null;
     }
   }
@@ -191,7 +206,17 @@ class SupportTaskEditController extends GetxController {
     tododate.text = rowData['tododate']?.toString() ?? '';
     duedate.text = rowData['duedate']?.toString() ?? '';
 
-    while (customerList.isEmpty ||
+final customerId = rowData['customer_id']?.toString() ?? '';
+  final customerName = rowData['customer_name']?.toString() ?? '';
+  if (customerId.isNotEmpty || customerName.isNotEmpty) {
+    selectedCustomer.value = CustomerList(
+      retailerName: customerName,
+      tallyRetailerCode: customerId,
+    );
+  } else {
+    selectedCustomer.value = null;
+  }
+    while (
         assignedToList.isEmpty ||
         eventList.isEmpty ||
         queryCategoryList.isEmpty ||
@@ -201,11 +226,11 @@ class SupportTaskEditController extends GetxController {
     }
 
     // Assign selections safely (lists may already be populated)
-    if (customerList.isNotEmpty) {
-      selectedCustomer.value = customerList.firstWhereOrNull(
-        (c) => c.tallyRetailerCode == rowData['customer_id'],
-      );
-    }
+    // if (customerList.isNotEmpty) {
+    //   selectedCustomer.value = customerList.firstWhereOrNull(
+    //     (c) => c.tallyRetailerCode == rowData['customer_id'],
+    //   );
+    // }
 
     if (assignedToList.isNotEmpty) {
       selectedAssignedTo.value = assignedToList.firstWhereOrNull(
@@ -366,7 +391,7 @@ class SupportTaskEditController extends GetxController {
           ? editingRowData.value!['id']?.toString() ?? ""
           : "";
       supporttask.companyId = Utility.companyId;
-      supporttask.emailId = Utility.email;
+      supporttask.emailId = Utility.useremailid;
       supporttask.retailerCode = selectedCustomer.value?.tallyRetailerCode;
       supporttask.assignedUserTo = selectedAssignedTo.value?.userEmailid;
       supporttask.title = title.text.trim();
@@ -402,9 +427,9 @@ class SupportTaskEditController extends GetxController {
           : 'Task Created';
       supporttask.activityDescription = isEdit && editingRowData.value != null
           ? (oldStatusId != newStatusId
-                ? 'Task updated status ($oldStatusName -> $newStatusName) by ${Utility.companyName} (${Utility.email}) successfully.'
-                : 'Task updated by ${Utility.companyName} (${Utility.email}) successfully.')
-          : 'Task created by ${Utility.companyName} (${Utility.email}) successfully.';
+                ? 'Task updated status ($oldStatusName -> $newStatusName) by ${Utility.companyName} (${Utility.useremailid}) successfully.'
+                : 'Task updated by ${Utility.companyName} (${Utility.useremailid}) successfully.')
+          : 'Task created by ${Utility.companyName} (${Utility.useremailid}) successfully.';
 
       final response = await ApiCall.postSupportTaskApi([supporttask.toMap()]);
 
@@ -504,7 +529,7 @@ class SupportTaskEditController extends GetxController {
 
       supporttask.supportTaskId = row['id']?.toString() ?? '';
       supporttask.companyId = Utility.companyId;
-      supporttask.emailId = Utility.email;
+      supporttask.emailId = Utility.useremailid;
 
       supporttask.retailerCode = row['customer_id']?.toString() ?? '';
       supporttask.assignedUserTo = row['assigned_to_id']?.toString() ?? '';
@@ -522,7 +547,7 @@ class SupportTaskEditController extends GetxController {
           row['subquery_category_id']?.toString() ?? '';
       supporttask.activity = 'Task Updated';
       supporttask.activityDescription =
-          'Task updated by ${Utility.companyName} (${Utility.email}) successfully.';
+          'Task updated by ${Utility.companyName} (${Utility.useremailid}) successfully.';
 
       List<Map<String, dynamic>> payload = [supporttask.toMap()];
 
@@ -552,7 +577,7 @@ class SupportTaskEditController extends GetxController {
     TaskBoardEntity task = TaskBoardEntity();
     task.supportTaskId = row['id']?.toString() ?? '';
     task.companyId = Utility.companyId;
-    task.emailId = Utility.email;
+    task.emailId = Utility.useremailid;
 
     task.retailerCode = row['customer_id']?.toString() ?? '';
     task.assignedUserTo = row['assigned_to_id']?.toString() ?? '';
@@ -583,7 +608,7 @@ class SupportTaskEditController extends GetxController {
 
     task.activity = 'Task Status Updated';
     task.activityDescription =
-        'Task updated status ($oldStatusName -> $newStatusName) by ${Utility.companyName} (${Utility.email}) successfully.';
+        'Task updated status ($oldStatusName -> $newStatusName) by ${Utility.companyName} (${Utility.useremailid}) successfully.';
 
     List<Map<String, dynamic>> payload = [task.toMap()];
 
@@ -652,7 +677,7 @@ class SupportTaskEditController extends GetxController {
     TaskBoardEntity task = TaskBoardEntity();
     task.supportTaskId = row['id']?.toString() ?? '';
     task.companyId = Utility.companyId;
-    task.emailId = Utility.email;
+    task.emailId = Utility.useremailid;
 
     task.retailerCode = row['customer_id']?.toString() ?? '';
     task.assignedUserTo = row['assigned_to_id']?.toString() ?? '';
@@ -685,7 +710,7 @@ class SupportTaskEditController extends GetxController {
 
     task.activity = 'Task Status Updated';
     task.activityDescription =
-        'Task updated status ($oldStatusName -> $newStatusName) by ${Utility.companyName} (${Utility.email}) successfully.';
+        'Task updated status ($oldStatusName -> $newStatusName) by ${Utility.companyName} (${Utility.useremailid}) successfully.';
 
     List<Map<String, dynamic>> payload = [task.toMap()];
 

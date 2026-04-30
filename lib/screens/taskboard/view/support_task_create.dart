@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_navigation/src/root/parse_route.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/api/entity/taskboard/support_task_dropdown_model.dart';
 import 'package:sysconn_sfa/screens/taskboard/controller/supporttaskeditcontroller.dart';
-import 'package:sysconn_sfa/widgetscustome/custome_dialogbox.dart';
+import 'package:sysconn_sfa/widgets/responsive_button.dart';
+import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 import 'package:sysconn_sfa/widgetscustome/dropdowncontroller.dart';
 import 'package:sysconn_sfa/widgetscustome/custom_textfield.dart';
 
@@ -16,6 +19,7 @@ class SupportTaskCreateDialog extends StatelessWidget {
   final Map<String, dynamic>? rowData;
   final bool hideCustomerSourceBiz;
   final bool followUpTask;
+  final bool partyMasterTask;
   final SupportTaskEditController supportTaskController = Get.find();
   bool get isEdit => rowData != null;
 
@@ -25,75 +29,145 @@ class SupportTaskCreateDialog extends StatelessWidget {
     this.rowData,
     this.hideCustomerSourceBiz = false,
     this.followUpTask = false,
+    this.partyMasterTask = false,
   }) {
+    print(
+      "Dialog Open → EditingRowData: ${supportTaskController.editingRowData.value}",
+    );
     if (rowData != null) {
       // Edit
       supportTaskController.editingRowData.value = rowData;
       supportTaskController.loadTaskForEdit(rowData!);
     } else {
       // Add
-      supportTaskController.clearFields(followUpTask: followUpTask);
+      supportTaskController.clearFields(
+        followUpTask: followUpTask,
+        partyMasterTask: partyMasterTask,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return CustomeDialogbox(
-      title: isEdit
-          ? 'Update Support Task'
-          : followUpTask
-          ? 'Add Follow-up Support Task'
-          : 'Add Support Task',
-      buttontitle: isEdit ? 'Update' : 'Save',
-      maxHeight: 750,
-      maxWidth: 850,
-      function: () async {
-        Utility.processLoadingWidget();
-        await supportTaskController.submitSupportTask();
-      },
-      content: SingleChildScrollView(
+    return Scaffold(
+      appBar: SfaCustomAppbar(
+        title: isEdit
+            ? 'Update Support Task'
+            : followUpTask
+            ? 'Add Follow-up Support Task'
+            : 'Add Support Task',
+      ),
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
+                      // Expanded(
+                      //   child: Column(
+                      //     mainAxisSize: MainAxisSize.min,
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       if (!hideCustomerSourceBiz &&
+                      //           !followUpTask &&
+                      //           !partyMasterTask &&
+                      //           !isEdit)
+                      //         Obx(
+                      //           () => DropdownCustomList<CustomerList>(
+                      //             title: "Customer",
+                      //             hint: "Select Customer",
+                      //             isCompulsory: true,
+                      //             items: supportTaskController.customerList
+                      //                 .map(
+                      //                   (item) =>
+                      //                       DropdownMenuItem<CustomerList>(
+                      //                         value: item,
+                      //                         child: Text(
+                      //                           item.retailerName ?? '',
+                      //                         ),
+                      //                       ),
+                      //                 )
+                      //                 .toList(),
+                      //             selectedValue:
+                      //                 supportTaskController.selectedCustomer,
+                      //             onChanged: (value) {
+                      //               supportTaskController
+                      //                       .selectedCustomer
+                      //                       .value =
+                      //                   value;
+                      //             },
+                      //           ),
+                      //         ),
+                      //     ],
+                      //   ),
+                      // ),
                       Expanded(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (!hideCustomerSourceBiz &&
-                                !followUpTask &&
-                                !isEdit)
-                              Obx(
-                                () => DropdownCustomList<CustomerList>(
-                                  title: "Customer",
-                                  hint: "Select Customer",
-                                  isCompulsory: true,
-                                  items: supportTaskController.customerList
-                                      .map(
-                                        (item) =>
-                                            DropdownMenuItem<CustomerList>(
-                                              value: item,
-                                              child: Text(
-                                                item.retailerName ?? '',
-                                              ),
-                                            ),
+                          if (!hideCustomerSourceBiz && !followUpTask && !partyMasterTask && !isEdit)
+
+                            Obx(() {
+                              final RxString displayName = RxString(
+                                supportTaskController
+                                        .selectedCustomer
+                                        .value
+                                        ?.retailerName ??
+                                    '',
+                              );
+
+                              return DropdownCustomList<String>(
+                                title: "Customer",
+                                hint: "Search Customer",
+                                isCompulsory: true,
+                                items: const [],
+                                selectedValue: displayName,
+
+                                onSearchApi: (query) async {
+                                  await supportTaskController.customerListData(
+                                    query,
+                                  );
+                                  return supportTaskController.partyEntityList
+                                      .map<DropdownMenuItem<String>>(
+                                        (item) => DropdownMenuItem<String>(
+                                          value: item.partyName,
+                                          child: Text(item.partyName ?? ''),
+                                        ),
                                       )
-                                      .toList(),
-                                  selectedValue:
-                                      supportTaskController.selectedCustomer,
-                                  onChanged: (value) {
-                                    supportTaskController
-                                            .selectedCustomer
-                                            .value =
-                                        value;
-                                  },
-                                ),
-                              ),
+                                      .toList();
+                                },
+
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    final customer = supportTaskController
+                                        .partyEntityList
+                                        .firstWhereOrNull(
+                                          (e) => e.partyName == value,
+                                        );
+
+                                    if (customer != null) {
+                                      supportTaskController
+                                          .selectedCustomer
+                                          .value = CustomerList(
+                                        retailerName: customer.partyName,
+                                        tallyRetailerCode: customer.partyId,
+                                      );
+                                    }
+                                  }
+                                },
+
+                                onClear: () {
+                                  supportTaskController.selectedCustomer.value =
+                                      null;
+                                },
+                              );
+                            }),
                           ],
                         ),
                       ),
@@ -132,7 +206,11 @@ class SupportTaskCreateDialog extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 12),
+                    ],
+                  ),
+                  SizedBox(height: size.height * 0.01),
+                  Row(
+                    children: [
                       Expanded(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -167,7 +245,6 @@ class SupportTaskCreateDialog extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: size.height * 0.01),
-
                   Row(
                     children: [
                       Expanded(
@@ -190,12 +267,6 @@ class SupportTaskCreateDialog extends StatelessWidget {
                                     .toList(),
                                 selectedValue:
                                     supportTaskController.selectedQueryCategory,
-                                // onChanged: (value) {
-                                //   supportTaskController
-                                //           .selectedQueryCategory
-                                //           .value =
-                                //       value;
-                                // },
                                 onChanged: supportTaskController
                                     .onQueryCategoryChanged,
                               ),
@@ -203,9 +274,11 @@ class SupportTaskCreateDialog extends StatelessWidget {
                           ],
                         ),
                       ),
-
-                      const SizedBox(width: 12),
-
+                    ],
+                  ),
+                  SizedBox(height: size.height * 0.01),
+                  Row(
+                    children: [
                       Expanded(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -239,8 +312,6 @@ class SupportTaskCreateDialog extends StatelessWidget {
                           ],
                         ),
                       ),
-
-                      // const SizedBox(width: 12),
                     ],
                   ),
                   SizedBox(height: size.height * 0.01),
@@ -280,8 +351,11 @@ class SupportTaskCreateDialog extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 12),
-
+                    ],
+                  ),
+                  SizedBox(height: size.height * 0.01),
+                  Row(
+                    children: [
                       Expanded(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -316,7 +390,6 @@ class SupportTaskCreateDialog extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: size.height * 0.01),
-
                   Row(
                     children: [
                       Expanded(
@@ -364,7 +437,11 @@ class SupportTaskCreateDialog extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 12),
+                    ],
+                  ),
+                  SizedBox(height: size.height * 0.01),
+                  Row(
+                    children: [
                       Expanded(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -394,7 +471,6 @@ class SupportTaskCreateDialog extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: size.height * 0.01),
-
                   Row(
                     children: [
                       Expanded(
@@ -418,6 +494,34 @@ class SupportTaskCreateDialog extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+      // bottomNavigationBar: SafeArea(
+      //   child: Container(
+      //     padding: const EdgeInsets.all(12),
+      //     child: SizedBox(
+      //       // width: size.width * 0.4,
+      //       width: MediaQuery.of(context).size.width * 0.3,
+      //       child: ResponsiveButton(
+      //         title: isEdit ? 'Update' : 'Save',
+      //         function: () async {
+      //           Utility.processLoadingWidget();
+      //           await supportTaskController.submitSupportTask();
+      //         },
+      //       ),
+      //     ),
+      //   ),
+      // ),
+      bottomNavigationBar: SafeArea(
+        child: FractionallySizedBox(
+          widthFactor: 0.3,
+          child: ResponsiveButton(
+            title: isEdit ? 'Update' : 'Save',
+            function: () async {
+              Utility.processLoadingWidget();
+              await supportTaskController.submitSupportTask();
+            },
+          ),
         ),
       ),
     );

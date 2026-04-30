@@ -29,6 +29,11 @@ class TaskController extends GetxController {
     0,
   ).obs;
 
+  //appbar filtered button
+  var isSearch = false.obs;
+  TextEditingController searchController = TextEditingController();
+  List<TrinaRow> _allFilteredRows = [];
+
   @override
   void onInit() {
     super.onInit();
@@ -46,6 +51,41 @@ class TaskController extends GetxController {
     stateManager = null;
     super.onClose();
   }
+
+
+  void onSearchTextChanged(String text) {
+  if (text.isEmpty) {
+    isSearch.value = false;
+    // Restore rows based on current status filter
+    filterByStatus(
+      selectStatus.value.isEmpty ? null : int.tryParse(selectStatus.value),
+    );
+    return;
+  }
+
+  isSearch.value = true;
+
+  // Search within currently filteredRows (respects active status filter)
+  final results = filteredRows
+      .where(
+        (row) =>
+            row.cells['customer_name']
+                ?.value
+                ?.toString()
+                .toLowerCase()
+                .contains(text.toLowerCase()) ??
+            false,
+      )
+      .toList();
+
+  filteredRows.assignAll(results);
+}
+
+void clearSearch() {
+  searchController.clear();
+  onSearchTextChanged('');
+  isSearch.value = false;
+}
 
   //Display ount of rows as per status
   void updateStatusCounts() {
@@ -125,42 +165,42 @@ class TaskController extends GetxController {
   // }
 
   void filterByStatus(int? statusIndex) {
-  selectStatus.value = statusIndex?.toString() ?? '';
+    selectStatus.value = statusIndex?.toString() ?? '';
 
-  List<TrinaRow> tempList;
+    List<TrinaRow> tempList;
 
-  if (statusIndex == null) {
-    tempList = List.from(rows);
-  } else {
-    tempList = rows.where((row) {
-      final cellValue = row.cells['status']?.value;
-      // Handle both int and String stored values
-      if (cellValue is int) return cellValue == statusIndex;
-      return int.tryParse(cellValue?.toString() ?? '') == statusIndex;
-    }).toList();
-  }
+    if (statusIndex == null) {
+      tempList = List.from(rows);
+    } else {
+      tempList = rows.where((row) {
+        final cellValue = row.cells['status']?.value;
+        // Handle both int and String stored values
+        if (cellValue is int) return cellValue == statusIndex;
+        return int.tryParse(cellValue?.toString() ?? '') == statusIndex;
+      }).toList();
+    }
 
-  final newRows = tempList.map((row) {
-    return TrinaRow(
-      cells: Map.fromEntries(
-        row.cells.entries.map(
-          (e) => MapEntry(e.key, TrinaCell(value: e.value.value)),
+    final newRows = tempList.map((row) {
+      return TrinaRow(
+        cells: Map.fromEntries(
+          row.cells.entries.map(
+            (e) => MapEntry(e.key, TrinaCell(value: e.value.value)),
+          ),
         ),
-      ),
-    );
-  }).toList();
+      );
+    }).toList();
 
-  // Update filteredRows first (drives the Obx UI check)
-  filteredRows.assignAll(newRows);
+    // Update filteredRows first (drives the Obx UI check)
+    filteredRows.assignAll(newRows);
 
-  // Update stateManager only if it's ready
-  if (stateManager != null) {
-    stateManager!.removeAllRows();
-    if (newRows.isNotEmpty) {
-      stateManager!.appendRows(newRows);
+    // Update stateManager only if it's ready
+    if (stateManager != null) {
+      stateManager!.removeAllRows();
+      if (newRows.isNotEmpty) {
+        stateManager!.appendRows(newRows);
+      }
     }
   }
-}
 
   // after data load show data as per condition basis
   // void _afterDataLoaded() {
@@ -173,16 +213,16 @@ class TaskController extends GetxController {
   //   }
   // }
   void _afterDataLoaded() {
-  updateStatusCounts();
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    if (showAllInitially) {
-      selectStatus.value = '';
-      filteredRows.assignAll(List.from(rows));
-    } else {
-      filterByStatus(0); // Show "Pending" by default
-    }
-  });
-}
+    updateStatusCounts();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (showAllInitially) {
+        selectStatus.value = '';
+        filteredRows.assignAll(List.from(rows));
+      } else {
+        filterByStatus(0); // Show "Pending" by default
+      }
+    });
+  }
 
   //call only when screentype is support
   Future<void> getSupportTaskData() async {
@@ -208,7 +248,9 @@ class TaskController extends GetxController {
               'assigned_to': TrinaCell(value: data.assignedUserName ?? ''),
               'assigned_to_id': TrinaCell(value: data.assignedUserTo ?? ''),
               // 'status': TrinaCell(value: data.status ?? ''),
-              'status': TrinaCell(value: int.tryParse(data.status?.toString() ?? '') ?? 0),
+              'status': TrinaCell(
+                value: int.tryParse(data.status?.toString() ?? '') ?? 0,
+              ),
               'tododate': TrinaCell(value: data.todoDate ?? ''),
               'duedate': TrinaCell(value: data.dueDate ?? ''),
               'title': TrinaCell(value: data.title ?? ''),
@@ -271,7 +313,9 @@ class TaskController extends GetxController {
               'assigned_to': TrinaCell(value: data.assignedUserName ?? ''),
               'assigned_to_id': TrinaCell(value: data.assignedUserTo ?? ''),
               // 'status': TrinaCell(value: data.status ?? ''),
-              'status': TrinaCell(value: int.tryParse(data.status?.toString() ?? '') ?? 0),
+              'status': TrinaCell(
+                value: int.tryParse(data.status?.toString() ?? '') ?? 0,
+              ),
               'tododate': TrinaCell(value: data.todoDate ?? ''),
               'duedate': TrinaCell(value: data.dueDate ?? ''),
               'title': TrinaCell(value: data.title ?? ''),

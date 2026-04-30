@@ -16,6 +16,7 @@ import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/my_customer
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/my_customers/view/reason_for_noOrder.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/sale_order/view/sale_order_report.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/reports/outstanding/view/os_recpay_bill_details.dart';
+import 'package:sysconn_sfa/screens/taskboard/view/party_master_task.dart';
 import 'package:sysconn_sfa/widgets/responsive_button.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 import 'package:sysconn_sfa/screens/drawer/drawer_view.dart';
@@ -239,6 +240,16 @@ class RetailerDetails extends StatelessWidget {
 
                           onPressed: () async {
                             Get.to(() => PartyMasterContacts());
+                          },
+                        ),
+                        editButton(
+                          title: 'Support',
+
+                          titleColor: Colors.black,
+
+                          onPressed: () async {
+                           Get.to(() => PartyMasterTask(type: "support",partyid: pARTYID,
+                                          partyname: pARTYNAME,),);
                           },
                         ),
                       ],
@@ -715,7 +726,7 @@ class RetailerDetails extends StatelessWidget {
                                   },
                                 ),
 
-                                // ✅ Task Card
+                                //  Task Card
                                 dashboardCardWidget(
                                   context: context,
                                   title: 'Task',
@@ -724,7 +735,12 @@ class RetailerDetails extends StatelessWidget {
                                   firstValue: '0',
                                   secondLabel: 'Last Task Date',
                                   secondValue: '1111',
-                                  onTap: () {},
+                                  onTap: () {
+                                    Get.to(
+                                      () => PartyMasterTask(type: "sales",partyid: pARTYID,
+                                          partyname: pARTYNAME,),
+                                    );
+                                  },
                                 ),
                               ],
                             ),

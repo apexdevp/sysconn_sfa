@@ -11,6 +11,7 @@ import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:intl/intl.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/api/apicall.dart';
+import 'package:sysconn_sfa/api/entity/company/partyentity.dart';
 import 'package:sysconn_sfa/api/entity/taskboard/audit_log_model.dart';
 import 'package:sysconn_sfa/api/entity/taskboard/sales_task_dropdown_model.dart';
 import 'package:sysconn_sfa/api/entity/taskboard/task_bizopportunity_get_model.dart';
@@ -18,13 +19,12 @@ import 'package:sysconn_sfa/api/entity/taskboard/taskboard_report_entity.dart';
 import 'package:sysconn_sfa/screens/taskboard/controller/taskrptcontroller.dart';
 
 class SalesTaskEditController extends GetxController {
-  
   // TaskController get productController => Get.find<TaskController>();
   // int isdataLoad = 0;
   // List<TrinaRow> rows = [];
   // TrinaGridStateManager? stateManager;
 
-  //Dropdown fwtch api
+  //Dropdown fetch api
   final isLoading = false.obs;
 
   //Manual type field controller
@@ -32,7 +32,6 @@ class SalesTaskEditController extends GetxController {
   final tododate = TextEditingController();
   final duedate = TextEditingController();
   final description = TextEditingController();
-
 
   //This is for Dropdown List fetch
   final customerList = <CustomerList>[].obs;
@@ -84,7 +83,15 @@ class SalesTaskEditController extends GetxController {
 
   RxList<Log> indexData = <Log>[].obs;
 
-  // Rx<String?> selectedSource = "Business Opportunities".obs;
+  final retailerName = TextEditingController();
+  final retailerCode = TextEditingController();
+  String? customerPriceList;
+
+  // String version = '';
+  // String username = '';
+  // String email = '';
+  // String expirydate = '';
+  // String? profileimage;
 
   @override
   void onInit() {
@@ -93,6 +100,7 @@ class SalesTaskEditController extends GetxController {
       print("Controller Initialized");
     }
     fetchSalesDropdownData();
+    // _getUserDetails();
 
     ever(editingRowData, (row) {
       if (row != null) {
@@ -150,7 +158,14 @@ class SalesTaskEditController extends GetxController {
     }
   }
 
-  void clearFields({bool followUpTask = false}) {
+  final partyEntityList = <PartyEntity>[].obs;
+  Future<void> customerListData(String customerName) async {
+    partyEntityList.assignAll(
+      await ApiCall.getCustomerdatalistApi(customerName: customerName),
+    );
+  }
+
+  void clearFields({bool followUpTask = false, bool partyMasterTask = false}) {
     isEdit.value = false;
     title.clear();
     description.clear();
@@ -167,20 +182,29 @@ class SalesTaskEditController extends GetxController {
     selectedstatus.value = statuslist.first;
 
     if (editingRowData.value != null && followUpTask) {
+      // Follow-up: preselect customer + biz opportunity
       final row = editingRowData.value!;
-
       if (customerList.isNotEmpty) {
         selectedCustomer.value = customerList.firstWhereOrNull(
           (c) => c.tallyRetailerCode == row['customer_id'],
         );
       }
-
       if (bizCategoryList.isNotEmpty) {
         selectedBizCategory.value = bizCategoryList.firstWhereOrNull(
           (b) => b.businessopportunityid == row['business_opportunity_id'],
         );
       }
+    } else if (editingRowData.value != null && partyMasterTask) {
+      // PartyMasterTask: preselect customer only, rest filled manually
+      final row = editingRowData.value!;
+      if (customerList.isNotEmpty) {
+        selectedCustomer.value = customerList.firstWhereOrNull(
+          (c) => c.tallyRetailerCode == row['customer_id'],
+        );
+      }
+      selectedBizCategory.value = null; //  not preselected
     } else {
+      //  Normal add — clear everything
       selectedCustomer.value = null;
       selectedBizCategory.value = null;
     }
@@ -195,7 +219,17 @@ class SalesTaskEditController extends GetxController {
     tododate.text = rowData['tododate']?.toString() ?? '';
     duedate.text = rowData['duedate']?.toString() ?? '';
 
-    while (customerList.isEmpty ||
+final customerId = rowData['customer_id']?.toString() ?? '';
+  final customerName = rowData['customer_name']?.toString() ?? '';
+  if (customerId.isNotEmpty || customerName.isNotEmpty) {
+    selectedCustomer.value = CustomerList(
+      retailerName: customerName,
+      tallyRetailerCode: customerId,
+    );
+  } else {
+    selectedCustomer.value = null;
+  }
+    while (
         assignedToList.isEmpty ||
         eventList.isEmpty ||
         bizCategoryList.isEmpty ||
@@ -204,11 +238,11 @@ class SalesTaskEditController extends GetxController {
     }
 
     // Assign selections safely (lists may already be populated)
-    if (customerList.isNotEmpty) {
-      selectedCustomer.value = customerList.firstWhereOrNull(
-        (c) => c.tallyRetailerCode == rowData['customer_id'],
-      );
-    }
+    // if (customerList.isNotEmpty) {
+    //   selectedCustomer.value = customerList.firstWhereOrNull(
+    //     (c) => c.tallyRetailerCode == rowData['customer_id'],
+    //   );
+    // }
 
     if (assignedToList.isNotEmpty) {
       selectedAssignedTo.value = assignedToList.firstWhereOrNull(
@@ -281,6 +315,16 @@ class SalesTaskEditController extends GetxController {
       return false;
     }
 
+    if (selectedBizCategory.value == null) {
+      Utility.showAlert(
+        icons: Icons.error_outline_outlined,
+        iconcolor: Colors.redAccent,
+        title: 'Alert',
+        msg: "Business Opportunity required",
+      );
+      return false;
+    }
+
     if (selectedEvent.value == null) {
       // Utility.showErrorSnackBar("Event required");
       Utility.showAlert(
@@ -288,6 +332,17 @@ class SalesTaskEditController extends GetxController {
         iconcolor: Colors.redAccent,
         title: 'Alert',
         msg: "Event required",
+      );
+      return false;
+    }
+
+    if (selectedstatus.value == null) {
+      // Utility.showErrorSnackBar("Status required");
+      Utility.showAlert(
+        icons: Icons.error_outline_outlined,
+        iconcolor: Colors.redAccent,
+        title: 'Alert',
+        msg: "Status required",
       );
       return false;
     }
@@ -367,6 +422,18 @@ class SalesTaskEditController extends GetxController {
     }
   }
 
+  // void _getUserDetails() async {
+  //     PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  //     SharedPreferences shaprefs = await SharedPreferences.getInstance();
+  //     setState(() {
+  //       username = (shaprefs.getString('UserName')) ?? '';
+  //       email = (shaprefs.getString('Email_Id')) ?? '';
+  //       expirydate = (shaprefs.getString('ExpiryDate')) ?? '';
+  //       version = packageInfo.version;
+  //       profileimage = shaprefs.getString('profile_image');
+  //     });
+  //   }
+
   Future<void> submitSalesTask() async {
     bool isValid = await validateProduct();
     if (!isValid) return;
@@ -383,7 +450,7 @@ class SalesTaskEditController extends GetxController {
           ? editingRowData.value!['id']?.toString() ?? ""
           : "";
       salestask.companyId = Utility.companyId;
-      salestask.emailId = Utility.email;
+      salestask.emailId = Utility.useremailid;
       salestask.retailerCode = selectedCustomer.value?.tallyRetailerCode;
       salestask.assignedUserTo = selectedAssignedTo.value?.userEmailid;
       salestask.title = title.text.trim();
@@ -420,11 +487,11 @@ class SalesTaskEditController extends GetxController {
           : 'Task Created';
       salestask.activityDescription =
           isEdit.value && editingRowData.value != null
-          // ? 'Task updated by ${Utility.companyName} (${Utility.email}) successfully.'
+          // ? 'Task updated by ${Utility.companyName} (${Utility.useremailid}) successfully.'
           ? (oldStatusId != newStatusId
-                ? 'Task updated status ($oldStatusName -> $newStatusName) by ${Utility.companyName} (${Utility.email}) successfully.'
-                : 'Task updated by ${Utility.companyName} (${Utility.email}) successfully.')
-          : 'Task created by ${Utility.companyName} (${Utility.email}) successfully.';
+                ? 'Task updated status ($oldStatusName -> $newStatusName) by ${Utility.companyName} (${Utility.useremailid}) successfully.'
+                : 'Task updated by ${Utility.companyName} (${Utility.useremailid}) successfully.')
+          : 'Task created by ${Utility.companyName} (${Utility.useremailid}) successfully.';
 
       List<Map<String, dynamic>> salesTaskEditListMap = [salestask.toMap()];
 
@@ -523,7 +590,7 @@ class SalesTaskEditController extends GetxController {
 
       salestask.salesTaskId = row['id']?.toString() ?? '';
       salestask.companyId = Utility.companyId;
-      salestask.emailId = Utility.email;
+      salestask.emailId = Utility.useremailid;
 
       salestask.retailerCode = row['customer_id']?.toString() ?? '';
       salestask.assignedUserTo = row['assigned_to_id']?.toString() ?? '';
@@ -540,7 +607,7 @@ class SalesTaskEditController extends GetxController {
 
       salestask.activity = 'Task Updated';
       salestask.activityDescription =
-          'Task updated by ${Utility.companyName} (${Utility.email}) successfully.';
+          'Task updated by ${Utility.companyName} (${Utility.useremailid}) successfully.';
 
       List<Map<String, dynamic>> payload = [salestask.toMap()];
 
@@ -573,7 +640,7 @@ class SalesTaskEditController extends GetxController {
     TaskBoardEntity task = TaskBoardEntity();
     task.salesTaskId = row['id']?.toString() ?? '';
     task.companyId = Utility.companyId;
-    task.emailId = Utility.email;
+    task.emailId = Utility.useremailid;
     task.retailerCode = row['customer_id']?.toString() ?? '';
     task.assignedUserTo = row['assigned_to_id']?.toString() ?? '';
     task.title = row['title']?.toString() ?? '';
@@ -604,7 +671,7 @@ class SalesTaskEditController extends GetxController {
 
     task.activity = 'Task Status Updated';
     task.activityDescription =
-        'Task updated status ($oldStatusName -> $newStatusName) by ${Utility.companyName} (${Utility.email}) successfully.';
+        'Task updated status ($oldStatusName -> $newStatusName) by ${Utility.companyName} (${Utility.useremailid}) successfully.';
 
     List<Map<String, dynamic>> payload = [task.toMap()];
 
@@ -627,7 +694,7 @@ class SalesTaskEditController extends GetxController {
       }
 
       if (message == 'Data Inserted Successfully') {
-        // ✅ Only update UI after success
+        //  Only update UI after success
         editingRowData.update((val) {
           if (val != null) val['status'] = newStatus;
         });
@@ -645,7 +712,7 @@ class SalesTaskEditController extends GetxController {
         taskController.updateStatusCounts();
         // Utility.showSuccessSnackBar("Status updated successfully");
       } else {
-        // ❌ Show API error, do not update UI
+        //  Show API error, do not update UI
         // Utility.showErrorSnackBar("Error updating status: $message");
         Utility.showAlert(
           icons: Icons.error_outline_outlined,
@@ -674,7 +741,7 @@ class SalesTaskEditController extends GetxController {
     TaskBoardEntity task = TaskBoardEntity();
     task.salesTaskId = row['id']?.toString() ?? '';
     task.companyId = Utility.companyId;
-    task.emailId = Utility.email;
+    task.emailId = Utility.useremailid;
     task.retailerCode = row['customer_id']?.toString() ?? '';
     task.assignedUserTo = row['assigned_to_id']?.toString() ?? '';
     task.title = row['title']?.toString() ?? '';
@@ -707,7 +774,7 @@ class SalesTaskEditController extends GetxController {
 
     task.activity = 'Task Status Updated';
     task.activityDescription =
-        'Task updated status ($oldStatusName -> $newStatusName) by ${Utility.companyName} (${Utility.email}) successfully.';
+        'Task updated status ($oldStatusName -> $newStatusName) by ${Utility.companyName} (${Utility.useremailid}) successfully.';
 
     List<Map<String, dynamic>> payload = [task.toMap()];
 
@@ -730,7 +797,7 @@ class SalesTaskEditController extends GetxController {
       }
 
       if (message == 'Data Inserted Successfully') {
-        // ✅ Only update UI after success
+        //  Only update UI after success
         editingRowData.update((val) {
           if (val != null) val['status'] = newStatus;
         });

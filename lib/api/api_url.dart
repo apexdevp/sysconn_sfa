@@ -369,6 +369,8 @@ class ApiUrl {
       'https://${Utility.getApiHostUrlDms}/Taskboard/Task_ActivityLog_List/GetActivityLogList?'; 
   static String tskviewbizopportunity =
       'https://${Utility.getApiHostUrlDms}/bizopportunity/Biz_Opportunity_DatList/GetBizDataList?';
+  static String partylistMasterUrl =
+      'https://${Utility.getApiHostUrlDms}/Customer/Customer_List/GetCustomerData?';
   
 
   static String salesTaskPostUrl =

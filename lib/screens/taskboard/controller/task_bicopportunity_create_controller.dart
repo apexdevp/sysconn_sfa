@@ -47,8 +47,22 @@ class TaskBizOpportunitiesCreateController extends GetxController {
   String selectedProductNameForApi = '';
   String selectedPriceListId = '';
   String selectedRate = '0';
-
   var isRateEditable = true.obs;
+  RxnInt selectedStageId = RxnInt(null); 
+  RxnInt selectedStatusId = RxnInt(null); 
+final Map<int, String> stageList = {
+    0: "New",
+    1: "InDiscussion",
+    2: "InNegotiation",
+    3: "Hold",
+    4: "Completed"
+  };
+
+  final Map<int, String> statusList = {
+    0: "Open",
+    1: "Declined",
+    2: "Fulfilled",
+  };
 
   @override
   void onInit() {
@@ -64,8 +78,6 @@ class TaskBizOpportunitiesCreateController extends GetxController {
   void clearFields() {
     isEdit = false;
     selectedCustomer.value = null;
-    // selectedProduct.value = null;
-    // selectedproductPriceList.value = null;
     selectedSourceId.value = null;
     selectedPriority.value = null;
     rateController.clear();
@@ -82,6 +94,10 @@ class TaskBizOpportunitiesCreateController extends GetxController {
     productCode.clear();
     productDesc.clear();
     selectedProductName.value = '';
+
+    selectedStageId.value = 0;
+    selectedStatusId.value = 0;
+
   }
 
   void preselectCustomer(String? retailerCode) {
@@ -210,8 +226,7 @@ class TaskBizOpportunitiesCreateController extends GetxController {
         barrierDismissible: false,
       );
 
-      TaskBizOpportunitiesCreateEntity opportunity =
-          TaskBizOpportunitiesCreateEntity();
+      TaskBizOpportunitiesCreateEntity opportunity = TaskBizOpportunitiesCreateEntity();
 
       List<Map<String, dynamic>> opportunityListMap = [];
       opportunity.taskId = taskId;
@@ -243,10 +258,14 @@ class TaskBizOpportunitiesCreateController extends GetxController {
       // print(
       //   "Selected Product Price List ID: ${selectedproductPriceList.value?.priceList}",
       // );
-      opportunity.stage = 0;
-      opportunity.status = 0;
+      opportunity.stage = selectedStageId.value ?? 0;
+      opportunity.status = selectedStatusId.value ?? 0;
 
       opportunity.priority = selectedPriority.value ?? '';
+
+      opportunity.activity = "Opportunity Created";
+      opportunity.activityDescription = "Opportunity created by ${Utility.companyName} (${Utility.useremailid}) successfully.";
+
 
       opportunityListMap.add(opportunity.toJson());
 

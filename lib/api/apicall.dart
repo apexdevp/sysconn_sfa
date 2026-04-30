@@ -4430,21 +4430,18 @@ class ApiCall {
 
   //========================Akshay Taskboard==========================
 
-  static Future<List<TaskBoardEntity>> getSupportTaskDetApi({
-    bool showAll = false,
+  static Future<List<TaskBoardEntity>> getSupportTaskDetApi({bool showAll = false,
     String? fromdate,
-    String? todate,
-  }) async {
+    String? todate,}) async {
     List<TaskBoardEntity> taskEntityList = [];
 
     String tasListkUrl;
-    if (showAll) {
-      tasListkUrl =
-          '${ApiUrl.supportTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&retailer_code=${Utility.customerPersonaId}&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
-    } else {
-      tasListkUrl =
-          '${ApiUrl.supportTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
-    }
+     if (showAll) {
+     tasListkUrl =
+        '${ApiUrl.supportTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&retailer_code=${Utility.customerPersonaId}&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
+     }else{ tasListkUrl =
+        '${ApiUrl.supportTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
+     }
     if (kDebugMode) {
       print(tasListkUrl);
     }
@@ -4453,9 +4450,9 @@ class ApiCall {
       headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
     );
 
-    if (kDebugMode) {
-      print('Support Task Response: ${supportTaskResponse.body}');
-    }
+     if (kDebugMode) {
+    print('Support Task Response: ${supportTaskResponse.body}');
+  }
     if (supportTaskResponse.statusCode == 200) {
       var supportTaskData = await convert.jsonDecode(
         supportTaskResponse.body,
@@ -4472,19 +4469,16 @@ class ApiCall {
     return taskEntityList;
   }
 
-  static Future<List<TaskBoardEntity>> getSalesTaskDetApi({
-    bool showAll = false,
+  static Future<List<TaskBoardEntity>> getSalesTaskDetApi({bool showAll = false,
     String? fromdate,
-    String? todate,
-  }) async {
+    String? todate,}) async {
     List<TaskBoardEntity> taskEntityList = [];
     String salesTaskListkUrl;
-    if (showAll) {
-      salesTaskListkUrl =
-          '${ApiUrl.salesTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&retailer_code=${Utility.customerPersonaId}&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
-    } else {
-      salesTaskListkUrl =
-          '${ApiUrl.salesTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
+     if (showAll) {
+     salesTaskListkUrl =
+        '${ApiUrl.salesTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&retailer_code=${Utility.customerPersonaId}&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
+     }else{salesTaskListkUrl =
+        '${ApiUrl.salesTaskUrl}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
     }
     if (kDebugMode) {
       print(salesTaskListkUrl);
@@ -4494,9 +4488,9 @@ class ApiCall {
       headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
     );
 
-    if (kDebugMode) {
-      print('Support Task Response: ${salesTaskResponse.body}');
-    }
+     if (kDebugMode) {
+    print('Support Task Response: ${salesTaskResponse.body}');
+  }
     if (salesTaskResponse.statusCode == 200) {
       var salesTaskData = await convert.jsonDecode(
         salesTaskResponse.body,
@@ -4576,34 +4570,59 @@ class ApiCall {
   }
 
   static Future<List<Log>> getAuditLogs({
-    required String model,
-    required String modelId,
-  }) async {
-    try {
-      var url =
-          '${ApiUrl.getAuditlog}company_id=${Utility.companyId}&model=$model&modelid=$modelId&db_nm=${Utility.sysDbName}';
+  required String model,
+  required String modelId,
+}) async {
+  try {
+    var url =
+        '${ApiUrl.getAuditlog}company_id=${Utility.companyId}&model=$model&modelid=$modelId&db_nm=${Utility.sysDbName}';
 
-      final response = await http
-          .get(
-            Uri.parse(url),
-            headers: Utility.getSystemxsDmsHeaders(
-              token: Utility.loginDmsToken,
-            ),
-          )
-          .timeout(const Duration(seconds: Utility.tIMEOUTDURATION));
+    final response = await http
+        .get(Uri.parse(url), headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken))
+        .timeout(const Duration(seconds: Utility.tIMEOUTDURATION));
 
-      if (response.statusCode == 200) {
-        final jsonData = convert.jsonDecode(response.body);
-        List logsList = jsonData['data'];
-        return logsList.map<Log>((e) => Log.fromJson(e)).toList();
-      } else {
-        throw Exception('Failed to load audit logs');
-      }
-    } catch (e) {
-      print("AUDIT LOG API ERROR: $e");
-      rethrow;
+    if (response.statusCode == 200) {
+      final jsonData = convert.jsonDecode(response.body);
+      List logsList = jsonData['data'];
+      return logsList.map<Log>((e) => Log.fromJson(e)).toList();
+    } else {
+      throw Exception('Failed to load audit logs');
     }
+  } catch (e) {
+    print("AUDIT LOG API ERROR: $e");
+    rethrow;
   }
+}
+
+  static Future<List<PartyEntity>> getCustomerdatalistApi({
+    String customerName = '',
+   }) async {
+    List<PartyEntity> partyListData = [];
+    //Manisha C 24-03-2026 added
+    var partyDetailsUrl =
+        '${ApiUrl.partylistMasterUrl}pageNumber=1&pageSize=10&company_id=${Utility.companyId}&type_parameter=$customerName&customerview=${Utility.userMasterEntity.customerviewdata}&db_nm=${Utility.sysDbName}'; //pratiksha p 13-04-2026 add
+    if (kDebugMode) {
+      print(partyDetailsUrl);
+    }
+    final partyDtlReponse = await http.get(
+      Uri.parse(partyDetailsUrl),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+    );
+    if (partyDtlReponse.statusCode == 200) {
+      List partyDtlValue = convert.jsonDecode(partyDtlReponse.body)['data'];
+      if (partyDtlValue.isNotEmpty) {
+        for (int i = 0; i < partyDtlValue.length; i++) {
+          PartyEntity partyEntity = PartyEntity.formPartyMap(partyDtlValue[i]);
+          partyListData.add(partyEntity);
+          if (kDebugMode) {
+            print('partyListData ${partyDtlValue[i]}');
+          }
+        }
+      }
+    }
+    return partyListData;
+  }
+
 
   //==============================================================
 
@@ -4616,6 +4635,13 @@ class ApiCall {
         Uri.parse(url),
         headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
       );
+
+      if (kDebugMode) {
+      print ("test biz");
+      print (Utility.loginDmsToken);
+
+      print(url);
+    }
 
       if (response.statusCode == 200) {
         return response.body;
@@ -4695,12 +4721,14 @@ class ApiCall {
       return 'Oops there is an error!';
     }
   }
+  
 
   static Future<TaskBizOpportunityDropdownEntity>
   getTaskBizOpportunityDropdown() async {
     try {
       var opportunitiesDropdownUrl =
           '${ApiUrl.dropdownOpportunities}company_id=${Utility.companyId}&db_nm=${Utility.sysDbName}';
+
 
       final response = await http
           .get(
@@ -4723,7 +4751,6 @@ class ApiCall {
       rethrow;
     }
   }
-
   static Future<String> deleteSalesTaskApiCall(
     List<Map<String, dynamic>> salesTaskListMap,
   ) async {
@@ -4771,7 +4798,7 @@ class ApiCall {
       return 'Oops there is an error!';
     }
   }
-
+  
   //===========================Product===================================
 
   //Sakshi 14/02/2026

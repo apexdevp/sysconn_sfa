@@ -21,6 +21,9 @@ class TaskBizOpportunitiesCreateEntity {
   String? orderId;
   String? productPriceListId;
 
+  String? activity;
+  String? activityDescription;
+
   TaskBizOpportunitiesCreateEntity({
     this.businessOpportunityId,
     this.companyId,
@@ -43,6 +46,9 @@ class TaskBizOpportunitiesCreateEntity {
     this.taskType,
     this.orderId,
     this.productPriceListId,
+
+    this.activity,
+    this.activityDescription,
   });
 
   factory TaskBizOpportunitiesCreateEntity.fromJson(Map<String, dynamic> json) {
@@ -97,6 +103,10 @@ class TaskBizOpportunitiesCreateEntity {
       'orderid': orderId ?? "",
 
       'productpricelistid': productPriceListId ?? "",
+
+      'activity': activity ?? "",
+      'activitydescription': activityDescription ?? "",
+
     };
   }
 }

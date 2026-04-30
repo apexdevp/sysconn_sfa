@@ -24,13 +24,16 @@ class FloatingButton extends StatelessWidget {
           ? ((title ?? '').length * 15)
           : icon.size,   
       child: FloatingActionButton.extended(
-        shape: isExtended
-            ? RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14.0),
-              )
-            : const CircleBorder(),
+        // shape: isExtended
+        //     ? RoundedRectangleBorder(
+        //         borderRadius: BorderRadius.circular(14.0),
+        //       )
+        //     : const CircleBorder(),
+        shape: RoundedRectangleBorder( //  always rectangle
+      borderRadius: BorderRadius.circular(8), // adjust radius as needed
+    ),
         icon: icon,
-        backgroundColor: Get.theme.colorScheme.secondary,  // GetX theme
+        backgroundColor: Colors.black,  //Get.theme.colorScheme.secondary,  // GetX theme
         onPressed: () => function(),
         isExtended: isExtended,
         label: Text(

@@ -27,6 +27,9 @@ class UserEntity{
   String? _partyname;   // komal // 15-2-2023 // party id added for retailer app
   String? _fcmtoken; //snehal 1-07-2023 add fcm token for notification
 
+  String? customerviewdata; //add for customer key search  // akshay
+
+
   UserEntity();
 
   String? get customeruniquecode => _customeruniquecode;
@@ -197,6 +200,8 @@ String? get isloccompulsory => _islocompulsory;
     emailid = map['user_emailid'];
     usertype = map['user_type'];
     fcmtoken = map['fcm_token'];
+    customerviewdata = map['customer_view_data'];  //add for customer key search  // akshay
+
   }
  
 
@@ -226,6 +231,8 @@ String? get isloccompulsory => _islocompulsory;
     map['MODULE_NAME'] = _modulename;
     map['ATTENDANCE_TYPE'] = _attendancetype; // mayuri 12-12-2022 add  _attendancetype
     map['PARTY_ID'] = _partyid;   // komal // 15-2-2023 // party id added for retailer app
+    map['customer_view_data'] = customerviewdata;   //add for customer key search  // akshay
+
     return map;
   }
 }

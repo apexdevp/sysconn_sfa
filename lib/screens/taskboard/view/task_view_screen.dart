@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/api/entity/taskboard/audit_log_model.dart';
 import 'package:sysconn_sfa/screens/taskboard/controller/salestaskeditcontroller.dart';
 import 'package:sysconn_sfa/screens/taskboard/controller/supporttaskeditcontroller.dart';
@@ -240,14 +241,14 @@ class SupportTaskView extends StatelessWidget {
             //     onTap: () => taskcontroller.isPinnedPanelOpen.value = false,
             //     child: Container(color: Colors.black.withOpacity(0.2)),
             //   ),
-            Obx(() {
-              if (!taskcontroller.isPinnedPanelOpen.value)
-                return const SizedBox.shrink();
-              return GestureDetector(
-                onTap: () => taskcontroller.isPinnedPanelOpen.value = false,
-                child: Container(color: Colors.black.withOpacity(0.2)),
-              );
-            }),
+            // Obx(() {
+            //   if (!taskcontroller.isPinnedPanelOpen.value)
+            //     return const SizedBox.shrink();
+            //   return GestureDetector(
+            //     onTap: () => taskcontroller.isPinnedPanelOpen.value = false,
+            //     child: Container(color: Colors.black.withOpacity(0.2)),
+            //   );
+            // }),
             Obx(() {
               final row = taskcontroller.screenType == "support"
                   ? supportTaskController.editingRowData.value
@@ -313,11 +314,22 @@ class TaskHeaderCard extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           //#CID${row['customer_id'] ?? "0"}
-          "Task ID: $taskId | Created At: $createdAt | Assign To: $assignedTo",
+          "Task ID: $taskId\nCreated At: $createdAt\nAssign To: $assignedTo",
           style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
         ),
       ],
     );
+
+    bool isToday(String? createdAt) {
+    if (createdAt == null || createdAt.isEmpty) return false;
+    try {
+      final d = DateTime.parse(createdAt);
+      final now = DateTime.now();
+      return d.year == now.year && d.month == now.month && d.day == now.day;
+    } catch (_) {
+      return false;
+    }
+  }
 
     final actionSection = Wrap(
       spacing: 12,
@@ -379,22 +391,69 @@ class TaskHeaderCard extends StatelessWidget {
         //     }
         //   },
         // ),
+        // _iconBox(
+        //   Icons.access_alarm,
+        //   tooltip: "Add Follow-up Task",
+        //   onTap: () {
+        //     print("Alarm clicked");
+
+        //     // if (screenType == "support") {
+        //     //   Get.dialog(SupportTaskCreateDialog(size));
+        //     // } else {
+        //     //   Get.dialog(SalesTaskCreateDialog(size));
+        //     // }
+
+        //     Get.dialog(
+        //       screenType == "support"
+        //           ? SupportTaskCreateDialog(size, followUpTask: true)
+        //           : SalesTaskCreateDialog(size, followUpTask: true),
+        //     );
+        //   },
+        // ),
         _iconBox(
           Icons.access_alarm,
           tooltip: "Add Follow-up Task",
           onTap: () {
-            print("Alarm clicked");
-
-            // if (screenType == "support") {
-            //   Get.dialog(SupportTaskCreateDialog(size));
-            // } else {
-            //   Get.dialog(SalesTaskCreateDialog(size));
-            // }
-
             Get.dialog(
               screenType == "support"
-                  ? SupportTaskCreateDialog(size, followUpTask: true)
-                  : SalesTaskCreateDialog(size, followUpTask: true),
+                  ? SupportTaskCreateDialog(size, followUpTask: true) // ✅
+                  : SalesTaskCreateDialog(size, followUpTask: true), // ✅
+            );
+          },
+        ),
+        _iconBox(
+          Icons.edit,
+          tooltip: "Edit Task",
+          onTap: () {
+            if (screenType == "support") {
+              // Get.dialog(SupportTaskCreateDialog(size, rowData: rowData));
+              Get.to(() => SupportTaskCreateDialog(size, rowData: rowData));
+            } else {
+              // Get.dialog(SalesTaskCreateDialog(size, rowData: rowData));
+              Get.to(() => SalesTaskCreateDialog(size, rowData: rowData));
+            }
+          },
+        ),
+        if (isToday(rowData['created_at']?.toString()))
+        _iconBox(
+          Icons.delete,
+          tooltip: "Delete Task",
+          onTap: () {
+            final controller = Get.find<TaskController>();
+            Utility.showAlertYesNo(
+              iconData: Icons.warning_amber_rounded,
+              iconcolor: Colors.red,
+              title: "Delete Item",
+              msg: "Are you sure you want to delete?",
+              yesBtnFun: () async {
+                final id = rowData['id']?.toString() ?? '';
+                
+                if (screenType == "support") {
+                  await controller.deleteSupportTaskApi(supportTaskId: id);
+                } else {
+                  await controller.deleteSalesTaskApi(salesTaskId: id);
+                }
+              },
             );
           },
         ),
@@ -440,45 +499,45 @@ class TaskHeaderCard extends StatelessWidget {
               ),
 
             // const PopupMenuDivider(),
-            ActionMenuItem(
-              value: 'edit',
-              icon: Icons.edit,
-              text: 'Edit Task',
-              iconColor: Colors.grey,
-              onTap: () {
-                print("Edit clicked");
+            // ActionMenuItem(
+            //   value: 'edit',
+            //   icon: Icons.edit,
+            //   text: 'Edit Task',
+            //   iconColor: Colors.grey,
+            //   onTap: () {
+            //     print("Edit clicked");
 
-                try {
-                  if (screenType == "support") {
-                    final controller = Get.find<SupportTaskEditController>();
+            //     try {
+            //       if (screenType == "support") {
+            //         final controller = Get.find<SupportTaskEditController>();
 
-                    controller.loadTaskForEdit(rowData); // ✅ DIRECT USE
+            //         controller.loadTaskForEdit(rowData); // ✅ DIRECT USE
 
-                    Get.dialog(
-                      SupportTaskCreateDialog(
-                        MediaQuery.of(context).size,
-                        rowData: rowData,
-                        hideCustomerSourceBiz: true,
-                      ),
-                    );
-                  } else {
-                    final controller = Get.find<SalesTaskEditController>();
-                    controller.loadTaskForEdit(rowData); // ✅ DIRECT USE
+            //         Get.dialog(
+            //           SupportTaskCreateDialog(
+            //             MediaQuery.of(context).size,
+            //             rowData: rowData,
+            //             hideCustomerSourceBiz: true,
+            //           ),
+            //         );
+            //       } else {
+            //         final controller = Get.find<SalesTaskEditController>();
+            //         controller.loadTaskForEdit(rowData); // ✅ DIRECT USE
 
-                    Get.dialog(
-                      SalesTaskCreateDialog(
-                        MediaQuery.of(context).size,
-                        rowData: rowData,
-                        hideCustomerSourceBiz: true,
-                      ),
-                    );
-                  }
-                } catch (e, st) {
-                  debugPrint("Error loading task for edit: $e\n$st");
-                  Get.snackbar("Error", "Failed to load task for edit");
-                }
-              },
-            ),
+            //         Get.dialog(
+            //           SalesTaskCreateDialog(
+            //             MediaQuery.of(context).size,
+            //             rowData: rowData,
+            //             hideCustomerSourceBiz: true,
+            //           ),
+            //         );
+            //       }
+            //     } catch (e, st) {
+            //       debugPrint("Error loading task for edit: $e\n$st");
+            //       Get.snackbar("Error", "Failed to load task for edit");
+            //     }
+            //   },
+            // ),
             // ActionMenuItem(
             //   value: 'delete',
             //   icon: Icons.delete,
@@ -883,7 +942,8 @@ class _LeftPanel extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    "${item.rate} × ${item.qty}",
+                                    // "${item.rate} × ${item.qty}",
+                                    "${(double.tryParse(item.rate ?? '0') ?? 0).toStringAsFixed(2)} × ${item.qty}",
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),

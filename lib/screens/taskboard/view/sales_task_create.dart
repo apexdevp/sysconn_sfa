@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_navigation/src/root/parse_route.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/api/entity/taskboard/sales_task_dropdown_model.dart';
 import 'package:sysconn_sfa/screens/taskboard/controller/salestaskeditcontroller.dart';
+import 'package:sysconn_sfa/widgets/responsive_button.dart';
+import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 import 'package:sysconn_sfa/widgetscustome/custom_textfield.dart';
-import 'package:sysconn_sfa/widgetscustome/custome_dialogbox.dart';
 import 'package:sysconn_sfa/widgetscustome/dropdowncontroller.dart';
 
 // ignore: must_be_immutable
@@ -15,6 +18,7 @@ class SalesTaskCreateDialog extends StatelessWidget {
   final Size size;
   final Map<String, dynamic>? rowData;
   final bool hideCustomerSourceBiz;
+  final bool partyMasterTask;
   final bool followUpTask;
 
   final SalesTaskEditController salesTaskController = Get.find();
@@ -25,42 +29,82 @@ class SalesTaskCreateDialog extends StatelessWidget {
     super.key,
     this.rowData,
     this.hideCustomerSourceBiz = false,
+    this.partyMasterTask = false,
     this.followUpTask = false,
   }) {
+    print(
+      "Dialog Open → EditingRowData: ${salesTaskController.editingRowData.value}",
+    );
     if (rowData != null) {
       //Edit
       salesTaskController.editingRowData.value = rowData;
       salesTaskController.loadTaskForEdit(rowData!);
     } else {
       //Add
-      salesTaskController.clearFields(followUpTask: followUpTask);
+      salesTaskController.clearFields(
+        followUpTask: followUpTask,
+        partyMasterTask: partyMasterTask,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return CustomeDialogbox(
-      title: isEdit
-          ? 'Update Sales Task'
-          : followUpTask
-          ? 'Add Follow-up Sales Task'
-          : 'Add Sales Task',
-      buttontitle: isEdit ? 'Update' : 'Save',
-      maxHeight: 750,
-      maxWidth: 850,
-      function: () async {
-        Utility.processLoadingWidget();
-        await salesTaskController.submitSalesTask();
-      },
-      content: SingleChildScrollView(
+    return Scaffold(
+      appBar: SfaCustomAppbar(
+        title: isEdit
+            ? 'Update Sales Task'
+            : followUpTask
+            ? 'Add Follow-up Sales Task'
+            : 'Add Sales Task',
+      ),
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
+                      // Expanded(
+                      //   child: Column(
+                      //     mainAxisSize: MainAxisSize.min,
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       if (!hideCustomerSourceBiz &&
+                      //           !followUpTask &&
+                      //           !partyMasterTask &&
+                      //           !isEdit)
+                      //         Obx(
+                      //           () => DropdownCustomList<CustomerList>(
+                      //             title: "Customer",
+                      //             hint: "Select Customer",
+                      //             isCompulsory: true,
+                      //             items: salesTaskController.customerList
+                      //                 .map(
+                      //                   (item) =>
+                      //                       DropdownMenuItem<CustomerList>(
+                      //                         value: item,
+                      //                         child: Text(
+                      //                           item.retailerName ?? '',
+                      //                         ),
+                      //                       ),
+                      //                 )
+                      //                 .toList(),
+                      //             selectedValue:
+                      //                 salesTaskController.selectedCustomer,
+                      //             onChanged: (value) {
+                      //               salesTaskController.selectedCustomer.value =
+                      //                   value;
+                      //             },
+                      //           ),
+                      //         ),
+                      //     ],
+                      //   ),
+                      // ),
                       Expanded(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -68,31 +112,63 @@ class SalesTaskCreateDialog extends StatelessWidget {
                           children: [
                             if (!hideCustomerSourceBiz &&
                                 !followUpTask &&
+                                !partyMasterTask &&
                                 !isEdit)
-                              Obx(
-                                () => DropdownCustomList<CustomerList>(
-                                  title: "Customer",
-                                  hint: "Select Customer",
-                                  isCompulsory: true,
-                                  items: salesTaskController.customerList
-                                      .map(
-                                        (item) =>
-                                            DropdownMenuItem<CustomerList>(
-                                              value: item,
-                                              child: Text(
-                                                item.retailerName ?? '',
-                                              ),
-                                            ),
+                            Obx(() {
+                              final RxString displayName = RxString(
+                                salesTaskController
+                                        .selectedCustomer
+                                        .value
+                                        ?.retailerName ??
+                                    '',
+                              );
+
+                              return DropdownCustomList<String>(
+                                title: "Customer",
+                                hint: "Search Customer",
+                                isCompulsory: true,
+                                items: const [],
+                                selectedValue: displayName,
+
+                                onSearchApi: (query) async {
+                                  await salesTaskController.customerListData(
+                                    query,
+                                  );
+                                  return salesTaskController.partyEntityList
+                                      .map<DropdownMenuItem<String>>(
+                                        (item) => DropdownMenuItem<String>(
+                                          value: item.partyName,
+                                          child: Text(item.partyName ?? ''),
+                                        ),
                                       )
-                                      .toList(),
-                                  selectedValue:
-                                      salesTaskController.selectedCustomer,
-                                  onChanged: (value) {
-                                    salesTaskController.selectedCustomer.value =
-                                        value;
-                                  },
-                                ),
-                              ),
+                                      .toList();
+                                },
+
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    final customer = salesTaskController
+                                        .partyEntityList
+                                        .firstWhereOrNull(
+                                          (e) => e.partyName == value,
+                                        );
+
+                                    if (customer != null) {
+                                      salesTaskController
+                                          .selectedCustomer
+                                          .value = CustomerList(
+                                        retailerName: customer.partyName,
+                                        tallyRetailerCode: customer.partyId,
+                                      );
+                                    }
+                                  }
+                                },
+
+                                onClear: () {
+                                  salesTaskController.selectedCustomer.value =
+                                      null;
+                                },
+                              );
+                            }),
                           ],
                         ),
                       ),
@@ -130,7 +206,11 @@ class SalesTaskCreateDialog extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 12),
+                    ],
+                  ),
+                  SizedBox(height: size.height * 0.01),
+                  Row(
+                    children: [
                       if (!hideCustomerSourceBiz && !followUpTask)
                         Expanded(
                           child: Column(
@@ -142,6 +222,7 @@ class SalesTaskCreateDialog extends StatelessWidget {
                                   () => DropdownCustomList<BizCategory>(
                                     title: "Business Opportunity",
                                     hint: "Select Opportunity",
+                                    isCompulsory: true,
                                     items: salesTaskController.bizCategoryList
                                         .map(
                                           (item) =>
@@ -166,7 +247,6 @@ class SalesTaskCreateDialog extends StatelessWidget {
                         ),
                     ],
                   ),
-
                   SizedBox(height: size.height * 0.01),
 
                   Row(
@@ -200,8 +280,11 @@ class SalesTaskCreateDialog extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      // if (isEdit)
+                    ],
+                  ),
+                  SizedBox(height: size.height * 0.01),
+                  Row(
+                    children: [
                       Expanded(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -266,7 +349,11 @@ class SalesTaskCreateDialog extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 12),
+                    ],
+                  ),
+                  SizedBox(height: size.height * 0.01),
+                  Row(
+                    children: [
                       Expanded(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -302,7 +389,6 @@ class SalesTaskCreateDialog extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: size.height * 0.01),
-
                   Row(
                     children: [
                       Expanded(
@@ -319,9 +405,11 @@ class SalesTaskCreateDialog extends StatelessWidget {
                           ],
                         ),
                       ),
-
-                      const SizedBox(width: 12),
-
+                    ],
+                  ),
+                  SizedBox(height: size.height * 0.01),
+                  Row(
+                    children: [
                       Expanded(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -354,7 +442,6 @@ class SalesTaskCreateDialog extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: size.height * 0.01),
-
                   Row(
                     children: [
                       Expanded(
@@ -383,7 +470,11 @@ class SalesTaskCreateDialog extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 12),
+                    ],
+                  ),
+                  SizedBox(height: size.height * 0.01),
+                  Row(
+                    children: [
                       Expanded(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -412,7 +503,6 @@ class SalesTaskCreateDialog extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: size.height * 0.01),
-
                   Row(
                     children: [
                       Expanded(
@@ -436,6 +526,33 @@ class SalesTaskCreateDialog extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+      // bottomNavigationBar: SafeArea(
+      //   child: Container(
+      //     padding: const EdgeInsets.all(12),
+      //     child: SizedBox(
+      //       width: MediaQuery.of(context).size.width * 0.3,
+      //       child: ResponsiveButton(
+      //         title: isEdit ? 'Update' : 'Save',
+      //         function: () async {
+      //           Utility.processLoadingWidget();
+      //           await salesTaskController.submitSalesTask();
+      //         },
+      //       ),
+      //     ),
+      //   ),
+      // ),
+      bottomNavigationBar: SafeArea(
+        child: FractionallySizedBox(
+          widthFactor: 0.3,
+          child: ResponsiveButton(
+            title: isEdit ? 'Update' : 'Save',
+            function: () async {
+              Utility.processLoadingWidget();
+              await salesTaskController.submitSalesTask();
+            },
+          ),
         ),
       ),
     );
