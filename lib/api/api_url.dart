@@ -396,4 +396,22 @@ class ApiUrl {
       'https://${Utility.postApiHostUrlDms}/Company/Product_Master/ProductAdd?'; //shweta 24-02-2026 added
      static String productImageUrl =
       'https://${Utility.postApiHostUrlDms}/Company/Product_Image/Product_Img_Func?'; //Sakshi 07/04/2026
+
+  //================================= Opportunities & Deals ========================================
+  //Shweta 20-04-2026
+
+  static String opportunitiesDealsUrl =
+      'https://${Utility.getApiHostUrlDms}/bizopportunity/Biz_Opportunity_DatList/GetBizDataList?'; //shweta 09-03-26
+
+  static String opportunitiesDeleteUrl =
+      'https://${Utility.postApiHostUrlDms}/bizopportunity/Del_BizOpportunity/BizOpportunityDelete?'; //shweta 09-03-26
+
+  // static String partylistMasterUrl = 
+  //     'https://${Utility.getApiHostUrlDms}/Customer/Customer_List/GetCustomerData?';//pratiksha p 13-04-2026
+
+  static String partyNotesMasterUrl =
+      'https://${Utility.getApiHostUrlDms}/Company/Customer_Notes_List/GetCustomerNotes?'; // Manoj 13-03-2026
+
+  static String customerNotesPostUrl =
+      'https://${Utility.postApiHostUrlDms}/Customer/Customer_Notes_Add/NotesAdd?'; // Manoj 13-03-2026
 }

@@ -5,6 +5,7 @@ import 'package:sysconn_sfa/Utility/image_list.dart';
 import 'package:sysconn_sfa/Utility/report_menu.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
+import 'package:sysconn_sfa/screens/bizOpportunities/view/opportunities_deals_report.dart';
 import 'package:sysconn_sfa/screens/buddy/cold_visit/view/cold_visit_rpt.dart';
 import 'package:sysconn_sfa/screens/buddy/collection/view/collection_report.dart';
 import 'package:sysconn_sfa/screens/buddy/sale_order/view/sale_order_report.dart';
@@ -203,6 +204,13 @@ class SalesMenuView extends StatelessWidget {
             title: 'Product Master Report',
             function: () {
               Get.to(() => ProductMasterReport());
+            },
+           ),
+           //Shweta 20-04-2026
+           ReportMenu(
+            title: 'Opportunities & Deals Report',
+            function: () {
+              Get.to(() => OpportunitiesDealsReport());
             },
            ),
         ],

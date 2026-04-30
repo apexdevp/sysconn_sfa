@@ -13,7 +13,8 @@ class OpportunitiesDealsRepEntity {
   String? description;
   int? stage;
   int? status;
-  int? rate;
+  // int? rate;
+  double? rate;           //shweta 20-04-26
   int? qty;
   double? total;
   String? priority;
@@ -44,6 +45,13 @@ class OpportunitiesDealsRepEntity {
   String? taskId;
   String? orderId;
   String? taskType;
+
+  String? privateid;        //shweta 20-04-26
+  String? rating;
+  String? activity;
+  String? activityDescription;
+  String? updatedat;
+  
   
   late RxString itemapprovalstatusRx;
   late TextEditingController preCloseCtrl;
@@ -84,6 +92,12 @@ class OpportunitiesDealsRepEntity {
     this.orderId,
     this.taskType,
 
+    this.privateid,   //shweta 20-04-26
+    this.rating,
+    this.activity,
+    this.activityDescription,
+    this.updatedat,
+
 
   }){
     // Initialize reactive & controllers properly
@@ -108,7 +122,8 @@ class OpportunitiesDealsRepEntity {
       description: json['description']?.toString() ?? '',
       stage: parseInt(json['stage']),
       status: parseInt(json['status']),
-      rate: parseInt(json['rate']),
+      // rate: parseInt(json['rate']),
+      rate: parseDouble(json['rate']),        //shweta 20-04-26
       qty: parseInt(json['qty']),
       total: parseDouble(json['total']),
       priority: json['priority']?.toString() ?? '',
@@ -117,6 +132,11 @@ class OpportunitiesDealsRepEntity {
       taskId: json['taskid']?.toString() ?? '',
       orderId: json['orderid']?.toString() ?? '',
       taskType: json['tasktype']?.toString() ?? '',
+      privateid: json['privateid']?.toString() ?? '',      //shweta 20-04-26
+      rating: json['rating']?.toString() ?? '',
+      activity: json['activity']?.toString() ?? '',
+      activityDescription: json['activityDescription']?.toString() ?? '',
+      updatedat: json['updatedat']?.toString() ?? '',
     );
   }
 
@@ -165,6 +185,11 @@ class OpportunitiesDealsRepEntity {
       'taskid': taskId ?? "",
       'orderid': orderId ?? "",
       'tasktype': taskType ?? "",
+      'privateid': privateid ?? "",       //shweta 20-04-26
+      'rating': rating ?? "",
+      'activity': activity ?? "",
+      'activityDescription': activityDescription ?? "",
+      'updatedat': updatedat ?? "",
     };
   }
 

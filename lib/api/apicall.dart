@@ -6,12 +6,14 @@ import 'package:sysconn_sfa/api/api_url.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/Utility/date_list_view.dart';
 import 'package:sysconn_sfa/api/entity/business_opportunity/opportunities_deals_rep_entity.dart';
+import 'package:sysconn_sfa/api/entity/business_opportunity/opportunities_dropdown_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/categoty_type_enity.dart';
 import 'package:sysconn_sfa/api/entity/company/company_profile_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/party_address_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/party_contact_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/party_contact_response_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/party_designation_entity.dart';
+import 'package:sysconn_sfa/api/entity/company/party_notes_response_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/persona_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/product_%20master_data_entity.dart';
 import 'package:sysconn_sfa/api/entity/sales/retailer_complaint_entity.dart';
@@ -4886,4 +4888,248 @@ class ApiCall {
       return 'Oops there is an error!';
     }
   }
+
+  // =============================================== Opportunities & Deals ===========================================
+// Shweta 20-04-2026
+
+  static Future<String> deleteOpportunitiesApi(
+    List<Map<String, dynamic>> opportunitiesListMap,
+  ) async {
+    var deleteOpportunitiesUrl =
+        '${ApiUrl.opportunitiesDeleteUrl}db_nm=${Utility.sysDbName}';
+
+    if (kDebugMode) {
+      print(deleteOpportunitiesUrl);
+      print(convert.jsonEncode({'data': opportunitiesListMap}));
+    }
+
+    try {                                         //shweta 17-04-26
+      final response = await http.post(
+        Uri.parse(deleteOpportunitiesUrl),
+        headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+        body: convert.jsonEncode({'data': opportunitiesListMap}),
+      );
+
+      print("STATUS CODE: ${response.statusCode}");
+      print("RAW RESPONSE: ${response.body}");
+
+      return response.body;
+    }
+    catch (e) {
+     print("API ERROR: $e");
+      return jsonEncode({
+        "message": "EXCEPTION",
+        "error": e.toString(),
+      });
+    }
+
+    // if (response.statusCode == 200) {
+    //   return convert.jsonDecode(response.body)['message'];
+    // } else {
+    //   return 'Oops there is an error!';
+    // }
+  }
+
+
+  static Future<List<OpportunitiesDealsRepEntity>> getOpportunitiesDealsDetApi({bool showAll = false}) async {
+    List<OpportunitiesDealsRepEntity> opportunitiesEntityList = [];
+
+    String opportunitiesUrl;
+     if (showAll) {
+     opportunitiesUrl =
+        '${ApiUrl.opportunitiesDealsUrl}company_id=${Utility.companyId}&from_date=${Utility.selectedFromDateOfDateController}&to_date=${Utility.selectedToDateOfDateController}&retailer_code=${Utility.customerPersonaId}&db_nm=${Utility.sysDbName}'; // &partner_code=${Utility.partnerCode}
+     }else{ opportunitiesUrl =
+        '${ApiUrl.opportunitiesDealsUrl}company_id=${Utility.companyId}&from_date=${Utility.selectedFromDateOfDateController}&to_date=${Utility.selectedToDateOfDateController}&db_nm=${Utility.sysDbName}';
+     }
+
+    if (kDebugMode) {
+      print("FINAL opportunity URL: $opportunitiesUrl");
+    }
+    var opportunitiesResponse = await http.get(
+      Uri.parse(opportunitiesUrl),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+    );
+    if (opportunitiesResponse.statusCode == 200) {
+      var opportunitiesData = await convert.jsonDecode(
+        opportunitiesResponse.body,
+      )['data'];
+      if (opportunitiesData.isNotEmpty) {
+        for (int i = 0; i < opportunitiesData.length; i++) {
+          OpportunitiesDealsRepEntity entity =
+              OpportunitiesDealsRepEntity.fromJson(opportunitiesData[i]);
+          opportunitiesEntityList.add(entity);
+        }
+      }
+      print("responce_opportunity: ${opportunitiesResponse.body}");
+    }
+    return opportunitiesEntityList;
+  }
+
+  //shweta 09-03-26
+  static Future<BizOpportunityDropdownEntity>
+  getBizOpportunityDropdown() async {
+    try {
+      var opportunitiesDropdownUrl =
+          '${ApiUrl.dropdownOpportunities}company_id=${Utility.companyId}&db_nm=${Utility.sysDbName}';
+      if (kDebugMode) {
+        print("MASTER DATA URL: $opportunitiesDropdownUrl");
+
+        print("HEADERS:");
+
+        print(Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken));
+      }
+
+      final response = await http
+          .get(
+            Uri.parse(opportunitiesDropdownUrl),
+            headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+          )
+          .timeout(const Duration(seconds: Utility.tIMEOUTDURATION));
+      if (kDebugMode) {
+        print("STATUS CODE: ${response.statusCode}");
+        print("RESPONSE BODY:");
+        print(response.body);
+      }
+      if (response.statusCode == 200) {
+        final jsonData = convert.jsonDecode(response.body);
+        if (kDebugMode) {
+          print("JSON DECODE SUCCESS");
+        }
+        return BizOpportunityDropdownEntity.fromJson(jsonData);
+      } else {
+        throw Exception('Failed to load master data');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("API ERROR: $e");
+      }
+      rethrow;
+    }
+  }
+
+
+  // static Future<List<PartyEntity>> getCustomerdatalistApi({
+  //   String customerName = '',
+  //  }) async {
+  //   List<PartyEntity> partyListData = [];
+  //   //Manisha C 24-03-2026 added
+  //   var partyDetailsUrl =
+  //       '${ApiUrl.partylistMasterUrl}pageNumber=1&pageSize=10&company_id=${Utility.companyId}&type_parameter=$customerName&customerview=${Utility.userMasterEntity.customerviewdata}&db_nm=${Utility.sysDbName}'; //pratiksha p 13-04-2026 add
+  //   if (kDebugMode) {
+  //     print(partyDetailsUrl);
+  //   }
+  //   final partyDtlReponse = await http.get(
+  //     Uri.parse(partyDetailsUrl),
+  //     headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+  //   );
+  //   if (partyDtlReponse.statusCode == 200) {
+  //     List partyDtlValue = convert.jsonDecode(partyDtlReponse.body)['data'];
+  //     if (partyDtlValue.isNotEmpty) {
+  //       for (int i = 0; i < partyDtlValue.length; i++) {
+  //         PartyEntity partyEntity = PartyEntity.formPartyMap(partyDtlValue[i]);
+  //         partyListData.add(partyEntity);
+  //         if (kDebugMode) {
+  //           print('partyListData ${partyDtlValue[i]}');
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return partyListData;
+  // }
+
+  //shweta 18-04-2026
+  static Future<List<TaskBoardEntity>> getSalesTaskForOpportunity({
+    required String modelId,
+  }) async {
+    List<TaskBoardEntity> taskEntityList = [];
+
+    final salesOpportunityUrl =
+      '${ApiUrl.salesTaskUrl}company_id=${Utility.companyId}&retailer_code=${Utility.customerPersonaId}&model_id=$modelId&db_nm=${Utility.sysDbName}';
+
+    if (kDebugMode) {
+      print('salesOpportunityUrl: $salesOpportunityUrl');
+    }
+    var salesTaskResponse = await http.get(
+      Uri.parse(salesOpportunityUrl),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+    );
+    if (salesTaskResponse.statusCode == 200) {
+      var salesTaskData = await convert.jsonDecode(
+        salesTaskResponse.body,
+      )['data'];
+      if (salesTaskData.isNotEmpty) {
+        for (int i = 0; i < salesTaskData.length; i++) {
+          TaskBoardEntity taskListEntity = TaskBoardEntity.fromMap(
+            salesTaskData[i],
+          );
+          taskEntityList.add(taskListEntity);
+        }
+      }
+    }
+    return taskEntityList;
+  }
+
+  //shweta 24-03-2026
+  static Future<PartyNotesResponse> getOpportunityNotesDetAPI(
+    String retailerCode,
+  ) async {
+    final url =
+        '${ApiUrl.partyNotesMasterUrl}company_id=${Utility.companyId}&retailer_code=$retailerCode&db_nm=${Utility.sysDbName}';
+
+    if (kDebugMode) {
+      print("API URL: $url");
+    }
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+    );
+
+    List<PartyNotesDetailsEntity> notesdetails = [];
+    List<PartyNotesCategoryEntity> category = [];
+
+    if (response.statusCode == 200) {
+      final decoded = convert.jsonDecode(response.body);
+      final data = decoded['data'];
+
+      if (data['notesdetails'] != null) {
+        notesdetails = (data['notesdetails'] as List)
+            .map((e) => PartyNotesDetailsEntity.formPartyMap(e))
+            .toList();
+      }
+
+      if (data['category'] != null) {
+        category = (data['category'] as List)
+            .map((e) => PartyNotesCategoryEntity.formPartyDesignationMap(e))
+            .toList();
+      }
+    }
+
+    return PartyNotesResponse(notesdetails: notesdetails, category: category);
+  }
+
+  static Future<String> postCustomerNotesApi(
+    List<Map<String, dynamic>> notesEditListMap,
+  ) async {
+    var customerNotesUrl =
+        '${ApiUrl.customerNotesPostUrl}db_nm=${Utility.sysDbName}';
+    if (kDebugMode) {
+      print(customerNotesUrl);
+      print(convert.jsonEncode({'data': notesEditListMap}));
+    }
+    final response = await http.post(
+      Uri.parse(customerNotesUrl),
+      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+      body: convert.jsonEncode({'data': notesEditListMap}),
+    );
+    if (kDebugMode) {
+      print(response.body);
+    }
+    if (response.statusCode == 200) {
+      return convert.jsonDecode(response.body)['message'];
+    } else {
+      return 'Oops there is an Error!';
+    }
+  }
+
 }
