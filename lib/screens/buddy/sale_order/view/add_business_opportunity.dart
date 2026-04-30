@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
-import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/sale_order/controller/business_opportunity_controller.dart';
-import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/sale_order/controller/so_create_controller.dart';
+import 'package:sysconn_sfa/screens/buddy/sale_order/controller/business_opportunity_controller.dart';
+import 'package:sysconn_sfa/screens/buddy/sale_order/controller/so_create_controller.dart';
 import 'package:sysconn_sfa/widgets/nodatafoundwidget.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 import 'package:sysconn_sfa/widgets/trinagrid_rpt_theme.dart';

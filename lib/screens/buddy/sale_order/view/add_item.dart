@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/api/entity/order/so_inv_report_entity.dart';
-import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/sale_order/controller/so_create_controller.dart';
+import 'package:sysconn_sfa/screens/buddy/sale_order/controller/so_create_controller.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 import 'package:sysconn_sfa/widgetscustome/custom_textfield.dart';
 import 'package:sysconn_sfa/widgetscustome/dropdowncontroller.dart';

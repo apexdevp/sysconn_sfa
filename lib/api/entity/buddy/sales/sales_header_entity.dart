@@ -1,7 +1,9 @@
+
 import 'package:sysconn_sfa/api/entity/buddy/sales/sales_inventory_entity.dart';
 import 'package:sysconn_sfa/api/entity/sales/sales_ledger_entity.dart';
 
 class SalesHeaderEntity {
+  String? groupId;
   String? companyId;
   String? mobileno;
   String? uniqueId;
@@ -16,6 +18,7 @@ class SalesHeaderEntity {
   String? paymentTerms;
   String? narration;
   String? address;
+  String? billedaddress2;
   String? gstin;
   String? state;
   String? partyMobileNo;
@@ -26,6 +29,7 @@ class SalesHeaderEntity {
   String? mailingName;
   String? consigneename;
   String? shippedtoaddress;
+  String? shippedtoaddress2;
   String? shippedtogstin;
   String? shippedToState;
   String? originalInvoiceNo;
@@ -40,26 +44,25 @@ class SalesHeaderEntity {
   String? cardAmount;
   String? giftReferenceNo;
   String? giftAmount;
-  String? shippedTocity;
+  String? shippedTocity; //pooja // 08-08-2024 // add city and pincode
   String? shippedTopincode;
-  String? dueDate;
-  String? isGstAutoCal;
-  String? isTalyEntry;
   String? instrumentDate;
   String? instrumentNo;
   String? bankName;
   String? transactionType;
   String? recPartyAmt;
   String? bankCashCode;
-  String? approver; //snehal 06-11-2024 add for expenses
-  String? approvalRemark; //snehal 06-11-2024 add for expenses
-  String? approvalDate; //snehal 06-11-2024 add for expenses
-  String? approvalStatus; //snehal 08-11-2024 add for expenses
+  String? isGstAutoCal;
+  String? isTalyEntry;
+  String? termncondition;
+  String? issueSlipNo;
+  String? salespersonid;//pratiksha p 15-04-2026 
+  String? salespersonname;//pratiksha p 15-04-2026 
   List<SalesInventoryEntity>? items;
   List<SalesLedgerEntity>? ledger;
   // List<SalesPaymentDetailsEntity>? payment;
 
-  SalesHeaderEntity({this.invoiceNo});
+  SalesHeaderEntity();
 
   SalesHeaderEntity.fromALLJson(Map<String, dynamic> json) {
     uniqueId = json['unique_id'];
@@ -74,6 +77,7 @@ class SalesHeaderEntity {
     paymentTerms = json['payment_terms'];
     narration = json['narration'];
     address = json["address"];
+    billedaddress2 = json["bill_to_address2"];
     gstin = json["gstin"];
     state = json["state"];
     partyMobileNo = json['party_mobile_no'];
@@ -84,6 +88,7 @@ class SalesHeaderEntity {
     mailingName = json["mailing_name"];
     consigneename = json["consignee_name"];
     shippedtoaddress = json["shipped_to_address"];
+    shippedtoaddress2 = json["shipped_to_address2"];
     shippedtogstin = json["shipped_to_gstin"];
     shippedToState = json["shipped_to_state"];
     originalInvoiceNo = json['original_invoice_no'];
@@ -98,16 +103,21 @@ class SalesHeaderEntity {
     cardAmount = json['card_amount'];
     giftReferenceNo = json['gift_reference'];
     giftAmount = json['gift_amount'];
-    shippedTocity = json['shipped_to_city'];
+    shippedTocity =
+        json['shipped_to_city']; //pooja // 08-08-2024 // add city and pincode
     shippedTopincode = json['shipped_to_pincode'];
-    isGstAutoCal = json['enable_auto_gst'];
-    isTalyEntry = json['is_tally_entry'];
     instrumentDate = json['instrument_date'];
     instrumentNo = json['instrument_no'];
     bankName = json['bank_name'];
     transactionType = json['rec_transaction_type'];
     recPartyAmt = json['rec_party_amount'];
     bankCashCode = json['bank_cash_code'];
+    isGstAutoCal = json['enable_auto_gst'];
+    isTalyEntry = json['is_tally_entry'];
+    termncondition = json['terms_n_condition'];
+    issueSlipNo = json['issue_slip_no'];//pratiksha p 31-03-2026 add 
+    salespersonid = json['sales_person'];//pratiksha p 31-03-2026 add 
+    salespersonname = json['sales_person_name'];//pratiksha p 31-03-2026 add 
     if (json['inventory'] != null) {
       items = <SalesInventoryEntity>[];
       json['inventory'].forEach((v) {
@@ -128,18 +138,11 @@ class SalesHeaderEntity {
     // }
   }
 
-  SalesHeaderEntity.fromJson(Map<String, dynamic> json) {
-    voucherTypeName = json['vchtype_name'];
-    date = json['date'];
-    dueDate = json['due_date'];
-    narration = json['narration'];
-    partyName = json['party_name'];
-    invoiceNo = json['invoice_no'];
-    totalAmount = json['total_amount'];
-  }
-
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    if (groupId != null) {
+      data['group_id'] = groupId;
+    }
     if (companyId != null) {
       data['company_id'] = companyId;
     }
@@ -169,6 +172,9 @@ class SalesHeaderEntity {
     }
     if (narration != null) {
       data['narration'] = narration;
+    }
+    if (isGstAutoCal != null) {
+      data['enable_auto_gst'] = isGstAutoCal;
     }
     if (address != null) {
       data['address'] = address;
@@ -247,13 +253,11 @@ class SalesHeaderEntity {
       data['gift_amount'] = giftAmount;
     }
     if (shippedTocity != null) {
+      //pooja // 08-08-2024 // add  city and pincode
       data['shipped_to_city'] = shippedTocity;
     }
     if (shippedTopincode != null) {
       data['shipped_to_pincode'] = shippedTopincode;
-    }
-    if (isGstAutoCal != null) {
-      data['enable_auto_gst'] = isGstAutoCal;
     }
     if (instrumentDate != null) {
       data['instrument_date'] = instrumentDate;
@@ -273,18 +277,14 @@ class SalesHeaderEntity {
     if (bankCashCode != null) {
       data['bank_cash_code'] = bankCashCode;
     }
-    if (approver != null) {
-      data['approver'] = approver;
-    } //snehal 06-11-2024 add for expenses
-    if (approvalDate != null) {
-      data['approval_date'] = approvalDate;
-    } //snehal 06-11-2024 add for expenses
-    if (approvalRemark != null) {
-      data['approver_remark'] = approvalRemark;
-    } //snehal 06-11-2024 add for expenses
-    if (approvalStatus != null) {
-      data['approval_status'] = approvalStatus;
-    } //snehal 08-11-2024 add for expenses
+     if (issueSlipNo != null) {
+      data['issue_slip_no'] = issueSlipNo;
+    }
+    if(salespersonid!=null){//pratiksha p 15-04-2026 add
+      data['sales_person'] = salespersonid;
+    }
+    
+
     return data;
   }
 }

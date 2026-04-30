@@ -15,6 +15,7 @@ import 'package:sysconn_sfa/api/entity/company/party_designation_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/persona_entity.dart';
 import 'package:sysconn_sfa/api/entity/company/product_%20master_data_entity.dart';
 import 'package:sysconn_sfa/api/entity/sales/retailer_complaint_entity.dart';
+import 'package:sysconn_sfa/api/entity/sales/sales_register_entity.dart';
 import 'package:sysconn_sfa/api/entity/sales/unbilled_item_entity.dart';
 import 'package:sysconn_sfa/api/entity/taskboard/audit_log_model.dart';
 import 'package:sysconn_sfa/api/entity/taskboard/sales_task_dropdown_model.dart';
@@ -1308,17 +1309,16 @@ class ApiCall {
     return salesHedEntity;
   }
 
-  static Future<List<SalesRegisterReportEntity>> getSalesRegisterReport(
-    String? fromdate,
-    String? todate,
-    String? partyid,
-    String? vchtype,
-  ) async {
-    List<SalesRegisterReportEntity> salesRegisterReportValue = [];
+//pratiksha p 10-04-2026 add
+  static Future<List<SalesRegisterEntity>> getSalesRegisterReport({
+    required String vchType,
+    required String partyid, //pratiksha p 08-04-2026 add
+  }) async {
+    List<SalesRegisterEntity> salesRegisterReportValue = [];
     var salesRegisterRepUrl =
-        '${ApiUrl.salesRegisterRpt}company_id=${Utility.companyId}&from_date=$fromdate&to_date=$todate&party_id=$partyid&vch_type=$vchtype&db_nm=${Utility.sysDbName}';
+        '${ApiUrl.salesRegisterRpt}company_id=${Utility.companyId}&from_date=${Utility.selectedFromDateOfDateController}&to_date=${Utility.selectedToDateOfDateController}&party_id=$partyid&vch_type=$vchType&filtertype=&id=&customerview=&db_nm=${Utility.sysDbName}'; //pratiksha p 09-04-2026 add
     if (kDebugMode) {
-      print('salesRegisterRepUrl:$salesRegisterRepUrl');
+      print(salesRegisterRepUrl);
     }
     var salesRegisterRepResponse = await http
         .get(
@@ -1333,13 +1333,14 @@ class ApiCall {
       if (salesRegisterRepData.isNotEmpty) {
         for (int i = 0; i < salesRegisterRepData.length; i++) {
           salesRegisterReportValue.add(
-            SalesRegisterReportEntity.fromJson(salesRegisterRepData[i]),
+            SalesRegisterEntity.fromJson(salesRegisterRepData[i]),
           );
         }
       }
     }
     return salesRegisterReportValue;
   }
+
 
   static Future<SalesLedgerEntity> getSalesLedgerAPI({
     required String masterId,
@@ -1380,7 +1381,7 @@ class ApiCall {
       var outRecValue = convert.jsonDecode(salesInventoryResponse.body)['data'];
       if (outRecValue.isNotEmpty) {
         for (int i = 0; i < outRecValue.length; i++) {
-          salesInventoryEntity = SalesInventoryEntity.fromJson(outRecValue[i]);
+          salesInventoryEntity = SalesInventoryEntity.fromMap(outRecValue[i]);
         }
       }
     }
@@ -1415,29 +1416,29 @@ class ApiCall {
     return outstandingRecDashboardDataList;
   }
 
-  static Future<SalesHeaderEntity> getSalesheaderAPI({
-    required String masterId,
-  }) async {
-    SalesHeaderEntity salesHeaderEntity = SalesHeaderEntity();
-    var inventoryUrl =
-        '${ApiUrl.salesHeaderGetUrl}company_id=${Utility.companyId}&master_id=$masterId&db_nm=${Utility.sysDbName}';
-    if (kDebugMode) {
-      print(inventoryUrl);
-    }
-    final salesInventoryResponse = await http.get(
-      Uri.parse(inventoryUrl),
-      headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
-    );
-    if (salesInventoryResponse.statusCode == 200) {
-      var outRecValue = convert.jsonDecode(salesInventoryResponse.body)['data'];
-      if (outRecValue.isNotEmpty) {
-        for (int i = 0; i < outRecValue.length; i++) {
-          salesHeaderEntity = SalesHeaderEntity.fromJson(outRecValue[i]);
-        }
-      }
-    }
-    return salesHeaderEntity;
-  }
+  // static Future<SalesHeaderEntity> getSalesheaderAPI({
+  //   required String masterId,
+  // }) async {
+  //   SalesHeaderEntity salesHeaderEntity = SalesHeaderEntity();
+  //   var inventoryUrl =
+  //       '${ApiUrl.salesHeaderGetUrl}company_id=${Utility.companyId}&master_id=$masterId&db_nm=${Utility.sysDbName}';
+  //   if (kDebugMode) {
+  //     print(inventoryUrl);
+  //   }
+  //   final salesInventoryResponse = await http.get(
+  //     Uri.parse(inventoryUrl),
+  //     headers: Utility.getSystemxsDmsHeaders(token: Utility.loginDmsToken),
+  //   );
+  //   if (salesInventoryResponse.statusCode == 200) {
+  //     var outRecValue = convert.jsonDecode(salesInventoryResponse.body)['data'];
+  //     if (outRecValue.isNotEmpty) {
+  //       for (int i = 0; i < outRecValue.length; i++) {
+  //         salesHeaderEntity = SalesHeaderEntity.fromJson(outRecValue[i]);
+  //       }
+  //     }
+  //   }
+  //   return salesHeaderEntity;
+  // }
 
   //pratiksha p 07-10-2024 add this
   static Future<List<PaymentFollowupEntity>> getPaymentFollowupList(

@@ -6,7 +6,7 @@ import 'package:sysconn_sfa/Utility/systemxs_global.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
 import 'package:sysconn_sfa/api/entity/buddy/visitAttendanceEntity.dart';
-import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/cold_visit/controller/clod_visit_create_controller.dart';
+import 'package:sysconn_sfa/screens/buddy/cold_visit/controller/clod_visit_create_controller.dart';
 import 'package:sysconn_sfa/widgets/customautocompletefield.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 import 'package:sysconn_sfa/widgetscustome/custom_textfield.dart';

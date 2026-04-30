@@ -5,11 +5,12 @@ import 'package:sysconn_sfa/Utility/image_list.dart';
 import 'package:sysconn_sfa/Utility/report_menu.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
-import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/collection/view/collection_report.dart';
-import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/sale_order/view/sale_order_report.dart';
+import 'package:sysconn_sfa/screens/buddy/cold_visit/view/cold_visit_rpt.dart';
+import 'package:sysconn_sfa/screens/buddy/collection/view/collection_report.dart';
+import 'package:sysconn_sfa/screens/buddy/sale_order/view/sale_order_report.dart';
+import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/my_customers/view/report/sales_register.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/reports/my_customer_list/view/my_customer_list.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/reports/outstanding/view/outstanding_recpay.dart';
-import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/cold_visit/view/cold_visit_rpt.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/my_customers/view/beat_list.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/my_customers/view/reason_for_noOrder.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/reports/daily_performance_report/view/daily_performance_rpt.dart';
@@ -162,7 +163,9 @@ class SalesMenuView extends StatelessWidget {
               // Get.to(() => DailyPerformanceReport());
             },
           ),
-          ReportMenu(title: 'My Sales Register', function: () {}),
+          ReportMenu(title: 'My Sales Register', function: () {
+            Get.to(() => SalesRegister(vchType: 'Sales',));
+          }),
           ReportMenu(title: 'My Collection Register', function: () {}),
           ReportMenu(
             title: 'My Customer List',

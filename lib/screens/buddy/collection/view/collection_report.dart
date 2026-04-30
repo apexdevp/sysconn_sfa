@@ -7,16 +7,16 @@ import 'package:sysconn_sfa/Utility/floating_point_action_button.dart';
 import 'package:sysconn_sfa/Utility/systemxs_global.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
-import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/sale_order/controller/sales_order_report_controller.dart';
-import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/sale_order/view/so_create.dart';
+import 'package:sysconn_sfa/screens/buddy/collection/controller/collection_report_controller.dart';
+import 'package:sysconn_sfa/screens/buddy/collection/view/collection_create.dart';
 import 'package:sysconn_sfa/widgets/nodatafoundwidget.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 
-class SalesOrderReport extends StatelessWidget {
-  final String partyId;
-  SalesOrderReport({super.key, this.partyId = ''});
+class CollectionReport extends StatelessWidget {
+  final String type;
+  CollectionReport({super.key, required this.type});
 
-  Row subtitleRow(String title, String value) {
+  Row subtitleVoucherRow(String title, String value) {
     return Row(
       children: [
         Container(
@@ -34,17 +34,17 @@ class SalesOrderReport extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SalesOrderReportController controller = Get.put(
-      SalesOrderReportController(partyid: partyId),
+    final CollectionReportController controller = Get.put(
+      CollectionReportController(type),
     );
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: SfaCustomAppbar(title: 'Sales Order Report'),
+      appBar: SfaCustomAppbar(title: 'Collection Register'),
       floatingActionButton: FloatingButton(
         isExtended: false,
         icon: Icon(Icons.add),
         function: () async {
-          await Get.to(() => SoCreate());
+          await Get.to(() => CollectionCreate(vchType: type));
         },
       ),
       body: Column(
@@ -67,7 +67,7 @@ class SalesOrderReport extends StatelessWidget {
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
+                children: [                  
                   Icon(
                     FontAwesomeIcons.indianRupeeSign,
                     size: size.height * 0.06,
@@ -97,36 +97,38 @@ class SalesOrderReport extends StatelessWidget {
           Expanded(
             child: Obx(() {
               if (controller.isDataLoad.value == 0) {
-                return Center(child: Utility.processLoadingWidget());
+                return Center(
+                  child: Utility.processLoadingWidget()
+                );
               }
+
               if (controller.isDataLoad.value == 2) {
                 return Center(child: NoDataFound());
               }
               return ListView.builder(
-                itemCount: controller.sODetailsList.length,
+                itemCount: controller.collectionDetailsList.length,
                 itemBuilder: (context, i) {
-                  final item = controller.sODetailsList[i];
+                  final item = controller.collectionDetailsList[i];
                   return Card(
                     child: ListTile(
-                      title: Text(item.partyName!, style: kTxtStl13B),
+                      title: Text(item.invoiceno!, style: kTxtStl13B),
                       subtitle: Column(
                         children: [
-                          subtitleRow('Order No', item.invoiceNo!),
-                          subtitleRow('Date', item.date!),
-                          subtitleRow('Quantity', item.quantity!),
+                          subtitleVoucherRow('Voucher Name', item.vouchername!),
+                          subtitleVoucherRow('Date', item.date!),
                         ],
                       ),
                       trailing: Text(
-                        indianRupeeFormat(double.parse(item.totalAmount!)),
+                        indianRupeeFormat(double.parse(item.totalammount!)),
                         style: kTxtStl13B,
                       ),
-                      onTap: () async {
-                        // Get.to(() => SoCreate(hedId: item.uniqueId));
-                        await Get.to(
-                          () => SoCreate(hedId: item.uniqueId),
-                        )?.then((value) async {
-                          await controller.getSoDataApi();
-                        });
+                      onTap: () {
+                        Get.to(
+                          () => CollectionCreate(
+                            hedId: item.uniqueid,
+                            vchType: type,
+                          ),
+                        );
                       },
                     ),
                   );

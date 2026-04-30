@@ -1,4 +1,5 @@
-class SalesInventoryEntity{
+class SalesInventoryEntity {
+  String? groupId;
   String? companyid;
   String? mobileno;
   String? invId;
@@ -9,14 +10,14 @@ class SalesInventoryEntity{
   String? rate;
   // String? partyId;
   String? discount;
-  String? value;
+  String? totalvalue;
   String? gstrate;
   String? cessrate;
   String? gstvalue;
   String? cessvalue;
   String? netValue;
   String? remark;
-  String? soVchNo;
+  String? soinvid;
   String? soVchDate;
   // String? soVchQty;
   // String? soVchAmt;
@@ -24,16 +25,13 @@ class SalesInventoryEntity{
   String? unit;
   String? altQty;
   String? altQtyPer;
-  String? itemDescription;
-  double? taxRate;
-  double? cessper;
-  String? unitName;
-  String? postingledgerid;//pooja // 13-11-2024
-  String? godownid;//pooja // 13-11-2024
+  String? postingledgerid; //pooja // 13-11-2024
+  String? godownid; //pooja // 13-11-2024
   String? postingledgerName;
   String? godownName;
 
   SalesInventoryEntity({
+    this.groupId,
     this.companyid,
     this.mobileno,
     this.invId,
@@ -43,20 +41,22 @@ class SalesInventoryEntity{
     this.rate,
     // this.partyId,
     this.discount,
-    this.value,
+    this.totalvalue,
     this.gstrate,
     this.cessrate,
     this.gstvalue,
     this.cessvalue,
     this.netValue,
     this.remark,
-    this.soVchNo,
+    this.soinvid,
     this.soVchDate,
-    this.postingledgerid,//pooja // 13-11-2024 
-    this.godownid, //pooja // 13-11-2024 
+    this.postingledgerid, //pooja // 13-11-2024
+    this.godownid, //pooja // 13-11-2024
+    this.altQty,
+    this.altQtyPer,
   });
 
-  SalesInventoryEntity.fromMap(Map<String,dynamic> json){
+  SalesInventoryEntity.fromMap(Map<String, dynamic> json) {
     invId = json['inv_id'];
     itemId = json["item_id"];
     itemName = json["item_name"];
@@ -71,7 +71,7 @@ class SalesInventoryEntity{
     cessvalue = json["cess_value"];
     netValue = json["net_value"];
     remark = json["remark"];
-    value = json["value"];
+    totalvalue = json["value"];
     altQty = json['alt_qty'];
     altQtyPer = json['alt_qty_per'];
     postingledgerid = json['posting_led_id'];
@@ -79,20 +79,12 @@ class SalesInventoryEntity{
     godownid = json['godown_id'];
     godownName = json['godown_name'];
   }
-  
-  SalesInventoryEntity.fromJson(Map<String, dynamic> json) {
-    itemDescription = json['item_description'];
-    qty = json['qty'];
-    rate = json['rate'];
-    discount = json['discount'];
-    value = json['value'];
-    hsnCode = json['hsn_code'];
-    taxRate = json['gstper'];
-    cessper = json['cessper'];
-    unitName = json['unit_name'];
-  }
+
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = {};
+    if (groupId != null) {
+      data['group_id'] = groupId;
+    }
     if (companyid != null) {
       data['company_id'] = companyid;
     }
@@ -120,8 +112,8 @@ class SalesInventoryEntity{
     if (discount != null) {
       data['discount'] = discount;
     }
-    if (value != null) {
-      data['value'] = value;
+    if (totalvalue != null) {
+      data['value'] = totalvalue;
     }
     if (gstrate != null) {
       data['gst_rate'] = gstrate;
@@ -144,16 +136,16 @@ class SalesInventoryEntity{
     if (altQty != null) {
       data['alt_qty'] = altQty;
     }
-    if(altQtyPer != null) {
+    if (altQtyPer != null) {
       data['alt_qty_per'] = altQtyPer;
     }
-    if (soVchNo != null) {
-      data['so_vch_no'] = soVchNo;
+    if (soinvid != null) {
+      data['so_inv_id'] = soinvid;
     }
     if (soVchDate != null) {
       data['so_vch_date'] = soVchDate;
     }
-    //pooja// 13-11-2024 // add 
+    //pooja// 13-11-2024 // add
     if (postingledgerid != null) {
       data['posting_ledger_id'] = postingledgerid;
     }

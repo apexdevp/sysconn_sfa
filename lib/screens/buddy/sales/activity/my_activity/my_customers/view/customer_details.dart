@@ -14,7 +14,7 @@ import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/my_customer
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/my_customers/view/party_master_contact.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/my_customers/view/price_list_rpt.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/my_customers/view/reason_for_noOrder.dart';
-import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/sale_order/view/sale_order_report.dart';
+import 'package:sysconn_sfa/screens/buddy/sale_order/view/sale_order_report.dart';
 import 'package:sysconn_sfa/screens/buddy/sales/reports/outstanding/view/os_recpay_bill_details.dart';
 import 'package:sysconn_sfa/screens/taskboard/view/party_master_task.dart';
 import 'package:sysconn_sfa/widgets/responsive_button.dart';

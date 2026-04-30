@@ -84,8 +84,8 @@ class _HomeViewState extends State<HomeView> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: menuCard(size, 'assets/images/Sales.png', 'Sales Management', () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => 
-                    SalesBillsDashDetails(salessummarytype: 'Party',type: 'Sales',dashboardNavTo: 'Report',id: '',)));
+                    // Navigator.of(context).push(MaterialPageRoute(builder: (context) => 
+                    // SalesBillsDashDetails(salessummarytype: 'Party',type: 'Sales',dashboardNavTo: 'Report',id: '',)));
                   }),
                 )),
                 Expanded(

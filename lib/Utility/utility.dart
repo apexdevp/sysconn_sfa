@@ -100,18 +100,48 @@ class Utility {
   static BankEntity bbpsBankRegisteredEntity = BankEntity();
   static String expVchPrefix = ''; //snehal 16-10-2024 add for expenses
   static String expVchtTypeName = ''; //snehal 16-10-2024 add for expenses
-  static Future<dynamic> showCircularLoadingWid(BuildContext context) {
+  // static Future<dynamic> showCircularLoadingWid(BuildContext context) {
+  //   return showDialog(
+  //     context: context,
+  //     builder: (_) {
+  //       return Center(
+  //         child: Platform.isIOS
+  //             ? const CupertinoActivityIndicator()
+  //             : const CircularProgressIndicator(),
+  //       );
+  //     },
+  //   );
+  // }
+
+
+   //pratiksha p 30-04-2026
+  // ── REPLACE the old commented-out showCircularLoadingWid with these 3 ──
+  static Future<void> showCircularLoadingWid(BuildContext context) {
+    if (Get.isDialogOpen ?? false) return Future.value();
     return showDialog(
       context: context,
-      builder: (_) {
-        return Center(
-          child: Platform.isIOS
-              ? const CupertinoActivityIndicator()
-              : const CircularProgressIndicator(),
-        );
-      },
+      barrierDismissible: false,
+      barrierColor: Colors.black26,
+      builder: (_) => const _LoadingDialog(),
     );
   }
+
+  static void hideLoading() {
+    if (Get.isDialogOpen ?? false) Get.back();
+  }
+
+  static Future<T> runWithLoading<T>(
+    BuildContext context,
+    Future<T> Function() task,
+  ) async {
+    showCircularLoadingWid(context);
+    try {
+      return await task();
+    } finally {
+      hideLoading();
+    }
+  }
+ /////////////
 
   void cursorPosition(txtController, text) {
     txtController.value = txtController.value.copyWith(
@@ -1329,6 +1359,40 @@ class Utility {
       duration: const Duration(seconds: 2),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       animationDuration: const Duration(milliseconds: 300),
+    );
+  }
+}
+
+//pratiksha p 30-04-2026 add
+class _LoadingDialog extends StatelessWidget {
+  const _LoadingDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      child: Center(
+        child: Container(
+          width: 72,
+          height: 72,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Center(
+            child: Platform.isIOS
+                ? const CupertinoActivityIndicator(radius: 14)
+                : const CircularProgressIndicator(strokeWidth: 2.5),
+          ),
+        ),
+      ),
     );
   }
 }

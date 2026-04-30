@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
-import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/collection/controller/collection_create_controller.dart';
+import 'package:sysconn_sfa/screens/buddy/collection/controller/collection_create_controller.dart';
 import 'package:sysconn_sfa/widgets/customautocompletefield.dart';
 import 'package:sysconn_sfa/widgets/sfa_custom_appbar.dart';
 import 'package:sysconn_sfa/widgetscustome/custom_textfield.dart';

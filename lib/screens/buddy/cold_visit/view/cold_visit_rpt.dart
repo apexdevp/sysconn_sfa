@@ -8,7 +8,7 @@ import 'package:sysconn_sfa/Utility/floating_point_action_button.dart';
 import 'package:sysconn_sfa/Utility/systemxs_global.dart';
 import 'package:sysconn_sfa/Utility/textstyles.dart';
 import 'package:sysconn_sfa/Utility/utility.dart';
-import 'package:sysconn_sfa/screens/buddy/sales/activity/my_activity/cold_visit/view/cold_visit_create.dart';
+import 'package:sysconn_sfa/screens/buddy/cold_visit/view/cold_visit_create.dart';
 import 'package:sysconn_sfa/screens/drawer/drawer_view.dart';
 import 'package:sysconn_sfa/widgets/calendarsingleview.dart';
 import 'package:sysconn_sfa/widgets/nodatafoundwidget.dart';
